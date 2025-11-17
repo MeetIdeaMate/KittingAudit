@@ -5,8 +5,8 @@ export const PrintStickerLabels = ({
     stickers,
     tabDetails,
 }) => {
-    const { labeledinfoMap } = stickers;
-    const entries = Object.entries(labeledinfoMap ?? {});
+    const { templabeledinfoMap, tempduplicateInfoMap , isDublicate  } = stickers;
+    const entries = Object.entries( (isDublicate ? tempduplicateInfoMap : templabeledinfoMap) ?? {});
     const lastEntry = entries?.[entries?.length - 1];
 
     const labelInfo = tabDetails?.activeTab === "individual" ? lastEntry?.[1] : 12;

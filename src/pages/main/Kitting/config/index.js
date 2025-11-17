@@ -1,4 +1,4 @@
-import { barcodeIcon } from "../../../../assets/images";
+import { printer } from "../../../../assets/images";
 
 export const kittingPartColumn = ({ handleKittingPart }) => [
     {
@@ -41,8 +41,8 @@ export const kittingPartColumn = ({ handleKittingPart }) => [
         dataIndex: "",
         render: (_, details) =>
             details?.isAllow || details?.isDublicate ?
-                <img src={barcodeIcon} alt="" style={{ cursor: "pointer" }} onClick={() => handleKittingPart(details, details?.key)} /> :
-                <img src={barcodeIcon} alt="" style={{ cursor: "not-allowed" }} />
+                <img src={printer} alt="" style={{ cursor: "pointer" }} onClick={() => handleKittingPart(details, details?.key)} /> :
+                <img src={printer} alt="" style={{ cursor: "not-allowed" }} />
     },
     {
         title: "Description",

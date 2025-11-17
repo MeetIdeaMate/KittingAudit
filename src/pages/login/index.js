@@ -137,7 +137,7 @@ export const Login = () => {
 
     return <React.Fragment>
         <div className="login">
-            <div className="login__block" style={{ backgroundColor: "red" }}>
+            <div className="login__block" style={{ backgroundColor: "#2b2d2eff" }}>
                 <figure className="login__inner">
                     <img src={SignInBG} alt="Login Background" />
                     <figcaption>

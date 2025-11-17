@@ -67,7 +67,7 @@ export const ExcelUpload = () => {
                 setCrExcelDetails({});
                 fetchAllCrExcels();
             } else {
-                showToast.error("Error", uploadResponse?.response?.data?.message);
+                showToast.error("Error", uploadResponse?.response?.data?.error?.message);
             }
         },
         refetchOnWindowFocus: false,

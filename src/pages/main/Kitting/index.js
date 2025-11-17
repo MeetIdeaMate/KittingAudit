@@ -30,6 +30,7 @@ export const Kitting = () => {
     const [activeTabDetails, setActiveTabDetails] = useState({ activeTab: "individual", tabKey: "1" });
     const [options, setOptions] = useState({ crOptions: [] });
     const [selectedCrExcelDetails, setSelectedCrExcelDetails] = useState({});
+    const [printingDetails, setPrintingDetails] = useState({});
 
     const getCrExcelById = (crNumber) => api.get(`${KITTINGINFO}/byCrNumber/${crNumber}`);
     const createBarCodeKittingInfo = (payload, partId, kittingId, isDublicate) => api.patch(`${KITTINGINFO}/${isDublicate ? "updateDuplicateQty" : "updateLabelQty"}/${kittingId}?partId=${partId}`, payload);
@@ -38,6 +39,7 @@ export const Kitting = () => {
         content: () => stickerRef?.current,
         onAfterPrint: () => {
             setIsOpen((prev) => ({ ...prev, isOpenPrinter: false }));
+            setPrintingDetails({});
         },
         pageStyle: `
             @page {
@@ -75,6 +77,8 @@ export const Kitting = () => {
         onSuccess: (updatedPartDetailsResponse) => {
             if (updatedPartDetailsResponse?.status === 200) {
                 queryClient.prefetchQuery(["GET_CR_BY_ID", ""], () => getCrExcelById(selectedCrExcelDetails?.crNumber));
+                setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
+                setPrintingDetails(selectedPartDetails?.afterDetails);
                 handleClose("main");
                 showToast.success("Success ,", updatedPartDetailsResponse?.data?.result?.success);
             } else {
@@ -107,7 +111,7 @@ export const Kitting = () => {
             balanceQty,
             templabeledinfoMap: tempMap,
             tempduplicateInfoMap: details?.isDublicate
-                ? { 1: balanceQty }
+                ? { 1: details?.quantity }
                 : null
         };
         setSelectedPartDetails(prev => ({
@@ -209,7 +213,7 @@ export const Kitting = () => {
     };
 
     const handleSearch = (searchValue) => {
-        const crExcelList = handleFindParentOrChild(crExcelData?.result?.barCodeKittingInfo?.partDetailsResponses?.map((part, index) => {return {...part, key: index + 1}} ));
+        const crExcelList = handleFindParentOrChild(crExcelData?.result?.barCodeKittingInfo?.partDetailsResponses?.map((part, index) => { return { ...part, key: index + 1 } }));
         const filteredParts = crExcelList?.filter((family) => {
             return family?.partNumber
                 ?.toString()
@@ -304,7 +308,7 @@ export const Kitting = () => {
             return { ...partDetails, isSelectd: false }
         });
         setSelectedCrExcelDetails((prev) => ({ ...prev, partDetails: updatedParts }));
-        setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: prev.isOpenDublicateDrawer ? true : false, isOpenDublicateDrawer: false }));
+        setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: false, isOpenDublicateDrawer: false }));
         setSelectedPartDetails((prev) => ({ ...prev, beforeDetails: {}, afterDetails: status === "main" ? {} : { ...prev.afterDetails } }));
     };
 
@@ -390,7 +394,7 @@ export const Kitting = () => {
             subContent={"Please confirm if you wish to reprint."}
         />
         <div style={{ display: "none", width: "100%" }}>
-            <PrintSticker ref={stickerRef} stickers={selectedPartDetails?.afterDetails} activeTab={activeTabDetails} />
+            <PrintSticker ref={stickerRef} stickers={printingDetails} activeTab={activeTabDetails} />
         </div>
     </React.Fragment>
 };

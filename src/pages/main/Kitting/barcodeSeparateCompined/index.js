@@ -25,7 +25,7 @@ export const BarcodeSepareateAndCompained = ({
         </div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <UiTab tabs={tabsData} activeTabKey={tabsDataDetails?.tabKey} onChange={handleChangeTab} />
-            <p>Balance.Qty: {selectedPartDetails?.isDublicate ? selectedPartDetails?.quantity : selectedPartDetails?.balanceQty}</p>
+            {!selectedPartDetails?.isDublicate && <p>Balance.Qty: {selectedPartDetails?.isDublicate ? selectedPartDetails?.quantity : selectedPartDetails?.balanceQty}</p>}
         </div>
         {
             Object.entries((selectedPartDetails?.isDublicate ? selectedPartDetails?.tempduplicateInfoMap : selectedPartDetails?.templabeledinfoMap) ?? {})?.map(([key, value], index) => (
@@ -39,13 +39,13 @@ export const BarcodeSepareateAndCompained = ({
                             placeholder="Ex: 12"
                             value={value}
                             style={{ width: "100%" }}
-                            disabled={selectedPartDetails?.isDublicate ? selectedPartDetails?.duplicateInfoMap?.hasOwnProperty(key) : selectedPartDetails?.labeledinfoMap?.hasOwnProperty(key)}
+                            disabled={selectedPartDetails?.isDublicate ? false : selectedPartDetails?.labeledinfoMap?.hasOwnProperty(key)}
                             onChange={(field) => handleChangeFieldValue(field?.target?.value, key)}
                         />
                     </div>
                     <div style={{ width: "10%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                         {(selectedPartDetails?.isDublicate
-                            ? !selectedPartDetails?.duplicateInfoMap?.hasOwnProperty(key)
+                            ? true
                             : !selectedPartDetails?.labeledinfoMap?.hasOwnProperty(key)
                         ) && tabsDataDetails?.activeTab === "grouped" && Object.entries((selectedPartDetails?.isDublicate ? selectedPartDetails?.tempduplicateInfoMap : selectedPartDetails?.templabeledinfoMap) ?? {})?.length > 1 &&
                             <img src={deleteIcon} style={{ cursor: "pointer", width: "70%" }} title="Remove" onClick={() => handleRemovePartQty(key)} alt="" />}
