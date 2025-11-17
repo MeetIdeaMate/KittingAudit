@@ -1,0 +1,21 @@
+.sticky-header .ant-table-thead > tr > th{
+     position: sticky !important;
+            top: 0;
+            z-index: 2;
+}
+
+.sticky-header td {
+    margin: 0 !important;
+    padding: 5px !important;
+    height: auto !important;
+    line-height: normal !important;
+    text-align: center;
+}
+
+.sticky-header th {
+    margin: 0 !important;
+    padding: 10px !important;
+    height: auto !important;
+    line-height: normal !important;
+    text-align: center !important;
+}

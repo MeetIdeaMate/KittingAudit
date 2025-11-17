@@ -1,0 +1,10 @@
+.ant-input::placeholder {
+    font-size: calc(var(--body-font-size) - 2px);
+}
+
+/* Remove spinner controls in Webkit browsers (Chrome, Safari) */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

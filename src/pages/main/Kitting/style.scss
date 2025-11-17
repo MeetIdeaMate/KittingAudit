@@ -1,0 +1,23 @@
+.custom-row{
+    background-color: #faddc9 !important;
+}
+
+.ant-table-tbody > tr.custom-row:hover > td {
+  background-color: #faddc9 !important;
+}
+
+.selectd-row {
+    background-color: #d7f7fc !important;
+}
+
+.ant-table-tbody > tr.selectd-row:hover > td {
+  background-color: #d7f7fc !important;
+}
+
+.parent-with-select-row {
+    background-color: #d7f7fc !important;
+}
+
+.ant-table-tbody > tr.parent-with-select-row:hover > td {
+  background-color: #d7f7fc !important;
+}

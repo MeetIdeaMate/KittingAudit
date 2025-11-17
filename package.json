@@ -1,0 +1,56 @@
+{
+  "name": "barcodekitting",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^6.1.0",
+    "@firebase/app": "^0.10.18",
+    "@firebase/messaging": "^0.12.23",
+    "@reduxjs/toolkit": "^2.10.1",
+    "@tanstack/react-query": "^4.29.12",
+    "@tanstack/react-query-devtools": "^4.29.12",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "antd": "^5.28.1",
+    "axios": "^1.13.2",
+    "dayjs": "^1.11.19",
+    "formik": "^2.4.9",
+    "react": "^18.2.0",
+    "react-barcode": "^1.6.1",
+    "react-dom": "^18.2.0",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.9.5",
+    "react-scripts": "5.0.1",
+    "react-to-print": "^2.15.1",
+    "react-toastify": "^11.0.5",
+    "sass": "^1.94.0",
+    "web-vitals": "^2.1.4",
+    "yup": "^1.7.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

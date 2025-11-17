@@ -1,0 +1,40 @@
+// export const AadhieGearMenu = () => [
+//     { MenuName: 'Stock', subMenu: [] },
+//     { MenuName: 'Production', subMenu: [] },
+//     { MenuName: 'JobCards', subMenu: [] },
+//     { MenuName: 'CustomerOrder', subMenu: [] },
+//     { MenuName: 'Dispatch', subMenu: [] },
+//     { MenuName: 'DC', subMenu: [] },
+//     { MenuName: 'Purchase', subMenu: [] },
+//     { MenuName: 'PurchaseView', subMenu: [] },
+//     { MenuName: 'Assembly', subMenu: [] },
+//     { MenuName: 'AssemblyConfig', subMenu: [] },
+//     { MenuName: 'StorePass', subMenu: [] },
+//     { MenuName: 'Packing', subMenu: [] },
+//     { MenuName: 'UpdateStock', subMenu: [] },
+//     { MenuName: 'OrderMonitoring', subMenu: [] },
+//     { MenuName: 'ReturnManagement', subMenu: [] },
+//     { MenuName: 'MasterSearch',subMenu:[]},
+//     { MenuName: "ProductPrice", subMenu: [] },
+//     { MenuName: 'Master', subMenu: [{ menuName: "Supplier" }, { menuName: 'Product' }, { menuName: 'Customer' }, { menuName: 'Transporters' }, { menuName: 'SpecificationMaster' }, { menuName: 'ConfigMaster' }, { menuName: 'JobWorker' }, { menuName: 'Employee' }, { menuName: 'User' }, { menuName: 'AccessController' }] },
+//     { MenuName: 'Report', subMenuReport: [{ menuName: "ProcessTimingReport" }, { menuName: 'SalesReport' }] },
+// ];
+export const KbMenus = () => [
+    { MenuName: 'ExcelUpload', subMenu: [] },
+    { MenuName: 'Kitting', subMenu: [] },
+    { MenuName: 'Download', subMenu: [] },
+    {
+        MenuName: 'Master', subMenu: [
+            { menuName: 'Product' },
+            { menuName: 'Customer' },
+            { menuName: "Supplier" },
+            { menuName: 'Transporters' },
+            { menuName: 'SpecificationMaster' },
+            { menuName: 'ConfigMaster' },
+            { menuName: 'Employee' },
+            { menuName: 'User' },
+            { menuName: 'Questionnaire' },
+            { menuName: 'JobWorker' },
+        ]
+    },
+];

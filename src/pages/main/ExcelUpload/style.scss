@@ -1,0 +1,74 @@
+/* Header */
+.excel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.excel-header h3 {
+  margin: 0;
+}
+
+.excel-header-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Main Container */
+.excel-container {
+  display: flex;
+  gap: 10px;
+  height: calc(100vh - 100px);
+}
+
+/* Left Panel */
+.excel-left {
+  width: 35%;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+/* Sticky Button */
+.submit-area {
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  padding: 5px 0;
+}
+
+/* Right Panel */
+.excel-right {
+  width: 65%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .excel-container {
+    flex-direction: column;
+  }
+  .excel-left,
+  .excel-right {
+    width: 100%;
+    height: auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .excel-header-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .excel-header h3 {
+    margin-bottom: 10px;
+  }
+}

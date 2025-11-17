@@ -1,0 +1,16 @@
+{
+    "common": {
+        "title1": "Tech",
+        "title2": "Lamdas",
+        "search": "Search",
+        "error": "Something went wrong! Please try again later."
+    },
+     "signin": {
+        "text1": "Welcome to the ",
+        "text2": "TechLambdas",
+        "text3": "Production Management Application.",
+        "heading": "Welcome Back !",
+        "title": "Sign in ",
+        "subTitle": "Enter your credentials to access your account. "
+    }
+}

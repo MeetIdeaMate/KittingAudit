@@ -1,0 +1,12 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+.layout {
+    position: relative;
+    padding-left: 245px;
+    background-color: var(--bg-color);
+
+    &__container {
+        // padding: 10px;
+        min-height: calc(100vh - 75px);
+    }
+}

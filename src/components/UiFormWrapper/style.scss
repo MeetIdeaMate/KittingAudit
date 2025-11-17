@@ -1,0 +1,25 @@
+@import 'src/scss/variables';
+@import 'src/scss/mixins';
+
+.form-btn {
+  @include display-flex(flex);
+  @include align-items(center);
+  @include justify-content(space-between);
+}
+
+.form-wrapper {
+  @include position(relative);
+  min-height: calc(100vh - 110px);
+  padding-bottom: 60px;
+}
+
+.btn {
+  @include position(absolute, $bottom: 0px, $right: 0);
+
+  &-cancel {
+    @include position(absolute, $bottom: 0px, $left: 0);
+  }
+}
+.error-message {
+  color: red;
+}

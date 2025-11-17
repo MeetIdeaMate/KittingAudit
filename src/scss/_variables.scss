@@ -1,0 +1,36 @@
+:root {
+    --html-font-size: 100%;
+    --font-family-thin: "DMSansThin", sans-serif; // 100
+    --font-family-light: "DMSansLight", sans-serif; // 300
+    --font-family-regular: "DMSansRegular", sans-serif; // 400
+    --font-family-medium: "DMSansMedium", sans-serif; // 500
+    --font-family-semi: "DMSansSemiBold", sans-serif; // 600
+    --font-family-bold: "DMSansBold", sans-serif; // 700
+    --font-family-black: "DMSansBlack", sans-serif; // 900
+    --fluid-width: var(--html-font-size);
+    --body-font-size: 16px;
+    --primary-color: #1D1D41;
+    --secondary-color: #FF7A00;
+    --bg-color: #F5F5F5;
+    --bg-secondary-color: #F0F0F0;
+    --bg-blue-color:#005DB2;
+    --border-color: #dadada;
+    --secondary-box-shadow: 0 0 0 2px rgb(255 128 5 / 6%);
+
+    --warning-color: #ffcc41;
+    --error-color: #ff3434;
+    --success-color: #21a67a;
+    --white-color: #ffffff;
+    --text-on-primary: #000000;
+    --text-on-secondary: #8C8C8C;
+    --text-on-teritary: #BABABA;
+    --disable-color: #c5c9d9;
+
+    --progress-bar: #b9dffe;
+    --strip-bg: #e2f2ff;
+    --filter-bg: #e8eaef;
+    --status-green: #daffd3;
+    --status-green-text: #3bc424;
+    --status-red: #ffd3d3;
+    --status-red-text: #f56663;
+}

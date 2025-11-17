@@ -1,0 +1,19 @@
+@import 'src/scss/mixins';
+@import 'src/scss/variables';
+
+.counter {
+    min-width: 36px;
+    min-height: 36px;
+    border-radius: 50%;
+    background-color: var(--white-color);
+    font-size: calc(var(--body-font-size) + 2px);
+    text-align: center;
+    font-weight: 700;
+    line-height: calc(var(--body-font-size) + 21px);
+    padding: 0 10px;
+
+    &--primary {
+        background-color: var(--bg-secondary-color);
+        color: var(--secondary-color);
+    }
+}

@@ -1,0 +1,73 @@
+body {
+  background-color: var(--bg-color);
+  color: var(--text-on-primary);
+  font-family: var(--font-family-regular);
+  font-size: var(--body-font-size);
+  line-height: 24px;
+}
+
+.container {
+  margin: 0 auto;
+  // max-width: 1366px;
+  padding: 0 15px;
+  width: 100%;
+}
+
+/* Works on Firefox */
+.scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
+}
+
+/* Works on Chrome, Edge, and Safari */
+.scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 20px;
+  border: 3px solid transparent;
+}
+
+.color-orange {
+  color: #FF7A00;
+}
+
+.flexible {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 0;
+  gap: 10px;
+}
+
+.flexible-end {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  padding: 5px 0;
+  gap: 10px;
+}
+
+.flexible-start {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 5px 0;
+  gap: 10px;
+}
+
+.padding-remove {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.border {
+  border: 1px solid #999;
+  border-radius: 5px;
+}

@@ -1,0 +1,25 @@
+@import 'src/scss/mixins';
+@import 'src/scss/variables';
+
+.custom-drawer {
+    .close-icon {
+        @include position(absolute, $top: 19px, $right: 22px);
+        font-size: calc(var(--body-font-size) + 2px);
+        cursor: pointer;
+    }
+}
+
+.footer {
+    @include display-flex(flex);
+    @include align-items(center);
+    @include justify-content(space-evenly);
+}
+
+.ant-drawer-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.ant-drawer-body::-webkit-scrollbar {
+  display: none;
+}

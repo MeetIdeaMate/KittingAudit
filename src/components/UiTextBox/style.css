@@ -1,0 +1,6 @@
+.ant-input::-moz-placeholder {
+  font-size: calc(var(--body-font-size) - 2px);
+}
+.ant-input::placeholder {
+  font-size: calc(var(--body-font-size) - 2px);
+}/*# sourceMappingURL=style.css.map */
