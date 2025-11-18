@@ -154,7 +154,7 @@ export const Kitting = () => {
 
             if (!item?.isParent && item?.balanceQty !== 0) {
                 acc[item?.parentId].push(getDepth(item?.level));
-            } else {
+            } else if (item.isParent && item?.balanceQty !== 0) {
                 acc[item?.parentId] = [];
             }
             return acc;
