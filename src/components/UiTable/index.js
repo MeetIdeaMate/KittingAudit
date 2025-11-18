@@ -14,6 +14,7 @@ const UiTable = ({
         <Table
             className={` ${"sticky-header"}`.trim()}
             columns={columns}
+            sticky={true}
             dataSource={dataSource}
             pagination={pagination}
             components={components}
