@@ -50,7 +50,7 @@ export const Kitting = () => {
 
     const getCrExcelById = (crNumber, fimNumber) => api.get(`${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""}`);
     const getAllFimNos = (crNumber) => api.get(`${KITTINGINFO}/fimNumbers/${crNumber}`);
-    const createBarCodeKittingInfo = (payload, partId, kittingId, isDublicate, type) => api.patch(`${KITTINGINFO}/${isDublicate ? "updateDuplicateQty" : "updateLabelQty"}/${kittingId}?partId=${partId}&printingType=${type.toUpperCase()}`, payload);
+    const createBarCodeKittingInfo = (payload, partId, kittingId, type) => api.patch(`${KITTINGINFO}/${"updateLabelQty"}/${kittingId}?partId=${partId}&printingType=${type.toUpperCase()}`, payload);
     const createBarcodeMaster = (payload, kittingId) => api.patch(`${KITTINGINFO}/updateScannedMap/${kittingId}`, payload);
     const getMissingParts = (avlPart, kittingId, partId) => api.get(`${KITTINGINFO}/missingBarcodes/${kittingId}?partId=${partId}`, avlPart);
     const updateDubParts = (payload, kittingId) => api.patch(`${KITTINGINFO}/updateDuplicateQtyByBarCode/${kittingId}`, payload);
@@ -109,7 +109,7 @@ export const Kitting = () => {
             if (updatedPartDetailsResponse?.status === 200) {
                 fetchCrExcelUpdated();
                 setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
-                setPrintingDetails(selectedPartDetails?.afterDetails);
+                setPrintingDetails({ ...selectedPartDetails?.afterDetails, mode: mode });
                 handleClose("main");
                 showToast.success("Success ,", updatedPartDetailsResponse?.data?.result?.success);
             } else {
@@ -301,7 +301,7 @@ export const Kitting = () => {
                     setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true, isMainPart: details?.type === "PARENT" }));
                 }
             } else {
-                setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true}));
+                setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true }));
                 setMode("update");
                 handleSetLabelinfo(details, activeTabDetails?.tabKey, "update");
             }
@@ -453,7 +453,7 @@ export const Kitting = () => {
     };
 
     const handlePrintTheStickers = () => {
-        const { templabeledinfoMap, labelMap, isDublicate, partId, barCodeKittingInfoId, type, caseInfo, dublicateBarcode } = selectedPartDetails?.afterDetails;
+        const { templabeledinfoMap, labelMap, partId, barCodeKittingInfoId, type, caseInfo, dublicateBarcode } = selectedPartDetails?.afterDetails;
         const payload = activeTabDetails?.tabKey === "1" ? expandToSequence(templabeledinfoMap) : templabeledinfoMap;
         const dublicatePayload = dublicateBarcode?.map((detail) => { return detail?.barCodeId });
         if (type === "PARENT") {
@@ -478,7 +478,7 @@ export const Kitting = () => {
                     showToast.warning("Warning", "Not match the parts");
                 }
             } else {
-                queryClient.prefetchQuery(["UPDATE_PARTS", ""], () => createBarCodeKittingInfo(payload, partId, barCodeKittingInfoId, isDublicate, activeTabDetails?.activeTab))
+                queryClient.prefetchQuery(["UPDATE_PARTS", ""], () => createBarCodeKittingInfo(payload, partId, barCodeKittingInfoId, activeTabDetails?.activeTab))
             }
         }
     };
@@ -575,7 +575,7 @@ export const Kitting = () => {
 
     useEffect(() => {
         const { templabeledinfoMap, tempduplicateInfoMap, isDublicate, quantity, type } = selectedPartDetails?.afterDetails;
-        const targetMap = isDublicate ? tempduplicateInfoMap : templabeledinfoMap;
+        const targetMap = isDublicate && mode !== "edit" ? tempduplicateInfoMap : templabeledinfoMap;
         const totalEntered = Object.entries(targetMap ?? {}).reduce(
             (sum, [, value]) => sum + Number(value),
             0

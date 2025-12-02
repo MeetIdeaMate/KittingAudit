@@ -37,6 +37,10 @@ export const kittingPartColumn = ({ handleKittingPart }) => [
         render: (_, details) => details?.type === "PARENT" ? details?.kittedQty : details?.totalLabeledQty
     },
     {
+        title: "Scanned Qty",
+        dataIndex: "scannedQty",
+    },
+    {
         title: "Balanced Count",
         dataIndex: "balanceQty"
     },
