@@ -298,7 +298,7 @@ export const Kitting = () => {
                         { boxNo: "Case 1", barcodes: [], selectedCase: true }
                     ];
                     setSelectedPartDetails((prev) => ({ ...prev, afterDetails: { ...details, caseInfo: caseDetails } }));
-                    setIsOpen((prev) => ({ ...prev, isMainPart: details?.type === "PARENT" }));
+                    setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true, isMainPart: details?.type === "PARENT" }));
                 }
             } else {
                 setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true}));
