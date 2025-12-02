@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { UiButton, UiFileUploader, UiRangePicker, UiSearchBox, UiTable, UiTextBox } from "../../../components";
+import { UiButton, UiFileUploader, UiRangePicker, UiSearchBox, UiTable } from "../../../components";
 import './style.scss';
 import { ExcelUploadTaleColumn } from "./config";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ export const ExcelUpload = () => {
     const [selectedDetails, setSelectedDetails] = useState({});
 
     const getAllCrExcels = (details) => api.get(`${KITTING}/get-by-page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&commonSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&fromDate=${details?.fromDate}&toDate=${details?.toDate}` : ""}`);
-    const uploadExcel = (no, file) => api.patch(`${KITTING}/file-upload?crNumber=${no}`, file);
+    const uploadExcel = (file) => api.patch(`${KITTING}/file-upload`, file);
     const getExcelDownload = (id) => api.get(`${KITTING}/download-file/${id}`);
 
     const { isFetching: isFetchCrExcel, refetch: fetchAllCrExcels } = useQuery(["", filterValue?.page, filterValue?.size, filterValue?.searchValue, filterValue?.fromDate, filterValue?.toDate], () => getAllCrExcels(filterValue), {
@@ -123,11 +123,11 @@ export const ExcelUpload = () => {
     const handleUploadExcel = async () => {
         const payload = new FormData();
         payload.append("file", crExcelDetails?.excel);
-        queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(crExcelDetails?.crNumber, payload));
+        queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload));
     };
 
     useEffect(() => {
-        let isValid = crExcelDetails?.crNumber && crExcelDetails?.excel?.name;
+        let isValid = crExcelDetails?.excel?.name;
         setIsValidate(Boolean(isValid));
     }, [crExcelDetails]);
 
@@ -148,14 +148,6 @@ export const ExcelUpload = () => {
 
             <div className="excel-container">
                 <div className="excel-left">
-                    <UiTextBox
-                        required
-                        name="crNumber"
-                        value={crExcelDetails?.crNumber}
-                        placeholder="CR-0123"
-                        label="CR Number"
-                        onChange={(field) => handleChangeFieldValue(field?.target?.value, "crNumber")}
-                    />
                     <UiFileUploader onFileSelect={(file) => handleChangeFieldValue(file, "excel")} />
                     <div className="submit-area">
                         <UiButton

@@ -12,6 +12,7 @@ import printer from "./printer.svg";
 import exclamationCircle from "./ExclamationCircle.svg";
 import deleteIcon from "./icon-delete.svg";
 import barcodeIcon from "./barcode-icon.svg";
+import DownArrow from "./downArrow.svg";
 export {
     TechLambdasLogo,
     SignInBG,
@@ -25,6 +26,7 @@ export {
     exclamationCircle,
     deleteIcon,
     barcodeIcon,
+    DownArrow,
     // techlambdasRightCornerLogo,
 };
 
