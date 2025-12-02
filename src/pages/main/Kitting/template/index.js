@@ -5,16 +5,16 @@ export const PrintStickerLabels = ({
     stickers,
     tabDetails,
 }) => {
-    const { templabeledinfoMap, dublicateBarcode , isDublicate  } = stickers;
-    
+    const { templabeledinfoMap, dublicateBarcode, isDublicate, mode } = stickers;
+
     const filteredEntries = (dublicateBarcode || [])
-    ?.map(code => code?.barcodeId?.split("-").pop())
-    ?.filter(key => templabeledinfoMap?.hasOwnProperty(key))
-    ?.map(key => [key, templabeledinfoMap[key]]);
+        ?.map(code => code?.barcodeId?.split("-").pop())
+        ?.filter(key => templabeledinfoMap?.hasOwnProperty(key))
+        ?.map(key => [key, templabeledinfoMap[key]]);
 
     const filteredMap = Object.fromEntries(filteredEntries);
-    
-    const entries = Object.entries( (isDublicate ? filteredMap : templabeledinfoMap) ?? {});
+
+    const entries = Object.entries((isDublicate && mode !== "edit" ? filteredMap : templabeledinfoMap) ?? {});
     const lastEntry = entries?.[entries?.length - 1];
 
     const labelInfo = tabDetails?.activeTab === "individual" ? lastEntry?.[1] : 12;
