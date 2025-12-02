@@ -5,8 +5,16 @@ export const PrintStickerLabels = ({
     stickers,
     tabDetails,
 }) => {
-    const { templabeledinfoMap, tempduplicateInfoMap , isDublicate  } = stickers;
-    const entries = Object.entries( (isDublicate ? tempduplicateInfoMap : templabeledinfoMap) ?? {});
+    const { templabeledinfoMap, dublicateBarcode , isDublicate  } = stickers;
+    
+    const filteredEntries = (dublicateBarcode || [])
+    ?.map(code => code?.barcodeId?.split("-").pop())
+    ?.filter(key => templabeledinfoMap?.hasOwnProperty(key))
+    ?.map(key => [key, templabeledinfoMap[key]]);
+
+    const filteredMap = Object.fromEntries(filteredEntries);
+    
+    const entries = Object.entries( (isDublicate ? filteredMap : templabeledinfoMap) ?? {});
     const lastEntry = entries?.[entries?.length - 1];
 
     const labelInfo = tabDetails?.activeTab === "individual" ? lastEntry?.[1] : 12;
@@ -34,11 +42,11 @@ export const PrintStickerLabels = ({
                         }}
                     >
                         <div >
-                            <h3>{stickers?.partNumber}</h3>
+                            <h3>{stickers?.partNumber}-{index + 1}</h3>
 
                         </div>
                         <div style={{ textAlign: "center" }}>
-                            <Barcode value={stickers?.partNumber ? `${stickers?.partNumber} ` : "BARCODE"}
+                            <Barcode value={stickers?.partNumber ? `${stickers?.partNumber} - ${index + 1} ` : "BARCODE"}
                                 width={1}
                                 height={17}
                                 fontSize={10}

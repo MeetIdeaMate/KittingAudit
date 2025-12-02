@@ -1,36 +1,15 @@
-import { printer } from "../../../../assets/images";
+import { deleteIcon, printer } from "../../../../assets/images";
 
 export const kittingPartColumn = ({ handleKittingPart }) => [
     {
-        title: "-",
+        title: "S.No",
         dataIndex: "level",
         align: "left",
-        render: (level, details) => {
-            if (details?.isParent) {
-                const num = level.replace(/\D/g, "");
-                return num;
-            }
-            const dotCount = (level.match(/\./g) || []).length;
-            const suffix = level.replace(/\./g, "");
-            return (
-                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <div style={{ display: "flex", gap: "4px" }}>
-                        {Array.from({ length: dotCount }).map((_, idx) => (
-                            <div
-                                key={idx}
-                                style={{
-                                    width: "10px",
-                                    height: "10px",
-                                    borderRadius: "50%",
-                                    backgroundColor: "#F6822B",
-                                }}
-                            ></div>
-                        ))}
-                    </div>
-                    <span>{suffix}</span>
-                </div>
-            );
-        }
+        render: (_, details, index) => index + 1,
+    },
+    {
+        title: "FIM No",
+        dataIndex: "fimNumber",
     },
     {
         title: "Part Number",
@@ -53,34 +32,32 @@ export const kittingPartColumn = ({ handleKittingPart }) => [
         dataIndex: "quantity",
     },
     {
-        title: "UOM",
-        dataIndex: "uom"
-    },
-    {
         title: "Labeled Count",
         dataIndex: "totalLabeledQty",
+        render: (_, details) => details?.type === "PARENT" ? details?.kittedQty : details?.totalLabeledQty
     },
     {
         title: "Balanced Count",
         dataIndex: "balanceQty"
     },
-    {
-        title: "Param List",
-        dataIndex: "paramList",
-        render: (paramList) => paramList?.length > 0 ? paramList?.map((param, index) => <p style={{ textAlign: "left" }}> {index + 1}. {param}</p>) : "",
-        width: 250,
-    },
-    {
-        title: "ODS",
-        dataIndex: "ods1"
-    },
-    {
-        title: "ODS",
-        dataIndex: "ods2"
-    }
 ];
 
 export const tabsData = [
     { key: "1", label: "Individual", content: "individual" },
     { key: "2", label: "Grouped", content: "grouped" },
+];
+
+export const mainPartCase = ({ handleRemoveSpecificPart }) => [
+    {
+        title: "Part No",
+        render: (part) => part?.replace(/-\d+$/, ""),
+    },
+    {
+        title: "Bar Code ID",
+        render: (part) => part,
+    },
+    {
+        title: "_",
+        render: (_, details, index) => <img src={deleteIcon} alt="" style={{ cursor: "pointer" }} onClick={() => handleRemoveSpecificPart(index)} />
+    }
 ];

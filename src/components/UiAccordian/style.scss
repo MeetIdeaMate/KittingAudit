@@ -1,0 +1,72 @@
+@import 'src/scss/mixins';
+
+.accordion {
+    &__card {
+        border: 1px solid var(--border-color);
+        border-radius: 5px;
+        margin-bottom: 10px;
+        overflow: hidden;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        &.no-border {
+            border: transparent;
+        }
+    }
+
+    &__header,
+    &__body {
+        padding: 15px;
+    }
+
+    &__title {
+        @include position(relative);
+        font-weight: 400;
+        font-size: calc(var(--body-font-size) - 3px);
+        color: var(--text-on-primary);
+        margin-bottom: 0;
+        padding-bottom: 0;
+        transition: 0.3s;
+    }
+
+    &__sub-title {
+        padding-top: 4px;
+        color: rgba(0, 0, 0, 0.45);
+    }
+
+    &__toggle {
+        @include display-flex(flex);
+        @include align-items(center);
+        @include justify-content(space-between);
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    &__body {
+        @include flex(1 1 auto);
+        min-height: 1px;
+    }
+
+    &__collapse {
+        position: relative;
+        height: 0;
+        overflow: hidden;
+        transition: height 0.35s ease;
+    }
+}
+
+.show {
+    height: auto;
+}
+
+
+.no-border .accordion__header,
+.no-border .accordion__body {
+    padding: 0;
+}
+
+.no-border .accordion__body {
+    padding-top: 12px;
+}

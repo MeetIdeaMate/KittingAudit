@@ -17,6 +17,7 @@ import UiTab from "./UiTab";
 import UiTextArea from "./UiTextArea";
 import UiFileUploader from "./UiFileUpload";
 import UiLoadingSpinner from "./UiLoadingSpinner";
+import UiAccordian from "./UiAccordian";
 export {
     UiTextBox,
     UiFormWrapper,
@@ -37,4 +38,5 @@ export {
     UiTextArea,
     UiFileUploader,
     UiLoadingSpinner,
+    UiAccordian,
 };
