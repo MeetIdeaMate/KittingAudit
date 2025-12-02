@@ -43,7 +43,6 @@ export const PrintStickerLabels = ({
                     >
                         <div >
                             <h3>{stickers?.partNumber}-{index + 1}</h3>
-
                         </div>
                         <div style={{ textAlign: "center" }}>
                             <Barcode value={stickers?.partNumber ? `${stickers?.partNumber}-${index + 1}` : "BARCODE"}
