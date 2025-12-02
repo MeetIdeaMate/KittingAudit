@@ -54,7 +54,7 @@ export const Kitting = () => {
     const createBarcodeMaster = (payload, kittingId) => api.patch(`${KITTINGINFO}/updateScannedMap/${kittingId}`, payload);
     const getMissingParts = (avlPart, kittingId, partId) => api.get(`${KITTINGINFO}/missingBarcodes/${kittingId}?partId=${partId}`, avlPart);
     const updateDubParts = (payload, kittingId) => api.patch(`${KITTINGINFO}/updateDuplicateQtyByBarCode/${kittingId}`, payload);
-    const getBarcodeByKittingId = (id) => api.get(`${KITTINGINFO}/${"feb67b5b47c14ae68ebfa56087c61da5"}`);
+    const getBarcodeByKittingId = (id) => api.get(`${KITTINGINFO}/${id}`);
 
     const handlePrint = useReactToPrint({
         content: () => isOpen?.isOpenMasterPrinter ? masterStickerRef?.current : stickerRef?.current,
@@ -174,8 +174,8 @@ export const Kitting = () => {
         enabled: false,
         onSuccess: (kittingResponse) => {
             if (kittingResponse?.statusCode === 200) {
-                setIsOpen((prev) => ({ ...prev, isOpenMasterPrinter: true }));
                 setMainPartPdfDetails(kittingResponse?.result?.barCodeKittingInfo);
+                setIsOpen((prev) => ({ ...prev, isOpenMasterPrinter: true }));
             } else {
                 showToast.error("Error", kittingResponse?.response?.data?.error);
             }
@@ -290,13 +290,18 @@ export const Kitting = () => {
                 return { ...partDetails, isSelectd: partDetails?.key === position }
             });
             setSelectedCrExcelDetails((prev) => ({ ...prev, partDetails: updatedParts }));
-            setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true, isMainPart: details?.type === "PARENT" }));
             if (details?.type === "PARENT") {
-                const caseDetails = [
-                    { boxNo: "Case 1", barcodes: [], selectedCase: true }
-                ];
-                setSelectedPartDetails((prev) => ({ ...prev, afterDetails: { ...details, caseInfo: caseDetails } }));
+                if (details?.quantity === details?.scannedQty) {
+                    queryClient.prefetchQuery(["GET_BORCODE_BY_ID", ""], () => getBarcodeByKittingId(details?.barCodeKittingInfoId));
+                } else {
+                    const caseDetails = [
+                        { boxNo: "Case 1", barcodes: [], selectedCase: true }
+                    ];
+                    setSelectedPartDetails((prev) => ({ ...prev, afterDetails: { ...details, caseInfo: caseDetails } }));
+                    setIsOpen((prev) => ({ ...prev, isMainPart: details?.type === "PARENT" }));
+                }
             } else {
+                setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true}));
                 setMode("update");
                 handleSetLabelinfo(details, activeTabDetails?.tabKey, "update");
             }
