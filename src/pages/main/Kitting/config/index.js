@@ -5,44 +5,50 @@ export const kittingPartColumn = ({ handleKittingPart }) => [
         title: "S.No",
         dataIndex: "level",
         align: "left",
+      width:40,
         render: (_, details, index) => index + 1,
     },
+   
     {
-        title: "FIM No",
-        dataIndex: "fimNumber",
+        title: "Part No",
+        dataIndex: "partNumber",
+         width:100,
+    },
+     {
+        title: "Qty",
+         dataIndex: "quantity",
+                width:70,
+    },
+     {
+        title: "Lbl Qty",
+         dataIndex: "totalLabeledQty",
+                width:70,
+        render: (_, details) => details?.type === "PARENT" ? details?.kittedQty : details?.totalLabeledQty
     },
     {
-        title: "Part Number",
-        dataIndex: "partNumber",
+        title: "Bal Qty",
+        dataIndex: "balanceQty",
+        width:70,
     },
     {
         title: "Print",
         dataIndex: "",
+                width:70,
         render: (_, details) =>
             details?.isAllow || details?.isDublicate ?
                 <img src={printer} alt="" style={{ cursor: "pointer" }} onClick={() => handleKittingPart(details, details?.key)} /> :
                 <img src={printer} alt="" style={{ cursor: "not-allowed" }} />
     },
     {
-        title: "Description",
+        title: <p style={{ padding: "0", margin: "0",textAlign:"start" }}>Description</p>,
         dataIndex: "description",
+        render: (_, rec) => <p style={{ padding: "0", margin: "0", textAlign: "start" }}>{rec?.description}</p>,
     },
-    {
-        title: "Quantity",
-        dataIndex: "quantity",
-    },
-    {
-        title: "Labeled Count",
-        dataIndex: "totalLabeledQty",
-        render: (_, details) => details?.type === "PARENT" ? details?.kittedQty : details?.totalLabeledQty
-    },
-    {
-        title: "Scanned Qty",
-        dataIndex: "scannedQty",
-    },
-    {
-        title: "Balanced Count",
-        dataIndex: "balanceQty"
+   
+   
+     {
+        title: "FIM No",
+        dataIndex: "fimNumber",
     },
 ];
 
@@ -58,7 +64,7 @@ export const mainPartCase = ({ handleRemoveSpecificPart }) => [
     },
     {
         title: "Bar Code ID",
-        render: (part) => part,
+        render: (barqty,rec) =>rec?.barqty,
     },
     {
         title: "_",
