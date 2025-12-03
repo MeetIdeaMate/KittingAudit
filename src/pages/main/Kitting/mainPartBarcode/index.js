@@ -23,6 +23,11 @@ export const MainPartBarcode = ({
 }) => {
   const [isMissingOpen, setIsMissingOpen] = useState(1);
 
+  const totalLabelQty =(barcodes)=> barcodes.reduce(
+    (sum, item) => sum + (item.labelQty || 0),
+    0
+  );
+
   useEffect(() => {
     inputRef.current?.focus();
   }, [inputRef]);
@@ -46,9 +51,7 @@ export const MainPartBarcode = ({
             style={{ backgroundColor: "transparent" }}
             key={missingParCode?.missingList?.length || 1}
             data={{
-              label: `Missing Bar Codes ${
-                missingParCode?.missingList?.length || 0
-              }`,
+              label: `Missing Bar Codes - ${missingParCode?.missingList?.length || 0 }`,
               subLabel: "",
               id: 1,
             }}
@@ -75,7 +78,7 @@ export const MainPartBarcode = ({
               }}
               key={index}
               data={{
-                label: details?.boxNo,
+                label: `${details?.boxNo} - ${totalLabelQty(details?.barcodes) || 0}`,
                 subLabel: "",
                 id: index,
               }}
