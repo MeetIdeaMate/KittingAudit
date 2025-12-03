@@ -60,11 +60,11 @@ export const tabsData = [
 export const mainPartCase = ({ handleRemoveSpecificPart }) => [
     {
         title: "Part No",
-        render: (part) => part?.replace(/-\d+$/, ""),
+        render: (_,rec) => rec?.part,
     },
     {
         title: "Bar Code ID",
-        render: (barqty,rec) =>rec?.barqty,
+        render: (barqty,rec) =>rec?.labelQty,
     },
     {
         title: "_",

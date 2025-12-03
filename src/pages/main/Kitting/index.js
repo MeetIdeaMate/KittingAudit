@@ -727,7 +727,7 @@ export const Kitting = () => {
       const payload = caseInfo?.map((details, index) => {
         return {
           boxNo: index + 1,
-          barcodes: details?.barcodes,
+          barcodes: details?.barcodes?.map((code) => ({ part: code })),
         };
       });
       queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
@@ -763,7 +763,7 @@ export const Kitting = () => {
   const handleGetMissingPart = () => {
     const { caseInfo, barCodeKittingInfoId, partId } =
       selectedPartDetails?.afterDetails;
-    const payload = caseInfo?.[0]?.barcodes;
+    const payload = caseInfo?.[0]?.barcodes?.map((code) => code?.part);
     queryClient.prefetchQuery(["GET_MISSING_PART", ""], () =>
       getMissingParts(payload, barCodeKittingInfoId, partId)
     );
@@ -811,8 +811,8 @@ export const Kitting = () => {
     const barId = selectedPartDetails?.afterDetails?.barCodeKittingInfoId;
     const caseInfo =
       selectedPartDetails?.afterDetails?.caseInfo
-        ?.map((code) => code?.barcodes)
-        ?.flat() || [];
+        ?.map((code) => code?.barcodes?.map((code) => code?.barcodeNumbers))
+        ?.flat(Infinity) || [];
     if (barId && caseInfo?.length > 0) {
       queryClient.prefetchQuery(["GET_ERIFY_PARTNO", ""], () =>
         verifyPartNo({ id: barId, payload: caseInfo })
@@ -867,28 +867,55 @@ export const Kitting = () => {
     setLastBarcode(field);
   };
 
-  const hanldePressEnter = (field) => {
-    if (field.key === "Enter") {
-      const value = field?.target?.value.trim();
-      if (!value) return;
-      const updatedCaseDetails =
-        selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
-          if (details?.selectedCase) {
-            return {
-              ...details,
-              barcodes: [value, ...(details?.barcodes || [])],
+ const hanldePressEnter = (field) => {
+  if (field.key === "Enter") {
+    const value = field?.target?.value.trim();
+    if (!value) return;
+    const mainCode = value.replace(/-\d+$/, "");
+    const splitCode = value.split("-");
+    const fintCode = selectedCrExcelDetails?.partDetails?.find(p => p?.partNumber === mainCode);
+      const labelQty = fintCode?.labelMap?.[splitCode?.[1]] || 0;
+      const checkGrpPrintType = fintCode?.printingType === "GROUPED";
+      
+    const updatedCaseDetails =selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
+        if (!details?.selectedCase) return details;
+        const partName = checkGrpPrintType ? value : mainCode;
+        const existing = details?.barcodes || [];
+        const idx = existing.findIndex((b) => b.part === mainCode);
+        let updatedList = [...existing];
+        if (idx !== -1 && !checkGrpPrintType) {
+          let item = updatedList[idx];
+          const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
+          if (!barcodeAlreadyAdded) {
+            item = {
+              ...item,
+              labelQty: (item.labelQty || 0) + (labelQty||0),
+              barcodeNumbers: [...item.barcodeNumbers, value],
             };
+            updatedList[idx] = item;
           }
-          return details;
-        });
-      setSelectedPartDetails((prev) => ({
-        ...prev,
-        afterDetails: { ...prev.afterDetails, caseInfo: updatedCaseDetails },
-      }));
-      setLastBarcode("");
-    }
+        } else {
+          const newItem = {
+            part:partName,
+            labelQty: labelQty,
+            barcodeNumbers: [value], 
+          };
+          updatedList = [newItem, ...existing];
+        }
+        return {
+          ...details,
+          barcodes: updatedList,
+        };
+      });
+
+    setSelectedPartDetails((prev) => ({
+      ...prev,
+      afterDetails: { ...prev.afterDetails, caseInfo: updatedCaseDetails },
+    }));
+    setLastBarcode("");
     inputRef.current?.focus();
-  };
+  }
+};
 
   const handleCloseModal = () => {
     setIsOpen((prev) => ({ ...prev, isOpenDublicateDrawer: false }));
