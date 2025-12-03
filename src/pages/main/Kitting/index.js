@@ -82,8 +82,7 @@ export const Kitting = () => {
 
   const getCrExcelById = (crNumber, fimNumber) =>
     api.get(
-      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${
-        fimNumber ? `&fimNumber=${fimNumber}` : ""
+      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""
       }`
     );
   const getAllFimNos = (crNumber) =>
@@ -197,6 +196,8 @@ export const Kitting = () => {
             missingParCode?.isVerifyCheck
           ) {
             handlePrintTheStickers();
+          } else {
+            showToast.warning('Warning', 'Please update the missing Parts');
           }
         } else {
           showToast.error(
@@ -284,7 +285,7 @@ export const Kitting = () => {
     getMissingParts,
     {
       enabled: false,
-      onSuccess: (missingResponse) => {},
+      onSuccess: (missingResponse) => { },
       refetchOnWindowFocus: false,
     }
   );
@@ -488,7 +489,7 @@ export const Kitting = () => {
               ...details,
               caseInfo:
                 details?.parentPartNumber ===
-                prev?.afterDetails?.parentPartNumber
+                  prev?.afterDetails?.parentPartNumber
                   ? prev?.afterDetails?.caseInfo
                   : caseDetails,
             },
@@ -497,7 +498,7 @@ export const Kitting = () => {
             ...prev,
             missingList:
               details?.parentPartNumber ===
-              selectedPartDetails?.afterDetails?.parentPartNumber
+                selectedPartDetails?.afterDetails?.parentPartNumber
                 ? prev?.missingList
                 : [],
           }));
@@ -688,17 +689,17 @@ export const Kitting = () => {
         ...prev.afterDetails,
         ...(mode === "reprint"
           ? {
-              tempduplicateInfoMap: {
-                ...prev.afterDetails?.tempduplicateInfoMap,
-                [key]: Number(value),
-              },
-            }
+            tempduplicateInfoMap: {
+              ...prev.afterDetails?.tempduplicateInfoMap,
+              [key]: Number(value),
+            },
+          }
           : {
-              templabeledinfoMap: {
-                ...prev.afterDetails?.templabeledinfoMap,
-                [key]: Number(value),
-              },
-            }),
+            templabeledinfoMap: {
+              ...prev.afterDetails?.templabeledinfoMap,
+              [key]: Number(value),
+            },
+          }),
       },
     }));
   };
@@ -907,6 +908,7 @@ export const Kitting = () => {
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
 
+      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.part) || [];
       const updatedCaseDetails =
         selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
           if (!details?.selectedCase) return details;
@@ -914,6 +916,7 @@ export const Kitting = () => {
           const existing = details?.barcodes || [];
           const idx = existing.findIndex((b) => b.part === mainCode);
           let updatedList = [...existing];
+          const isPartExistsGlobally = allExistingParts?.includes(partName);
           if (idx !== -1 && !checkGrpPrintType) {
             let item = updatedList[idx];
             const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
@@ -931,10 +934,7 @@ export const Kitting = () => {
               labelQty: labelQty,
               barcodeNumbers: [value],
             };
-            const isCheckPart = existing
-              ?.map((p) => p?.part)
-              ?.includes(newItem?.part);
-            updatedList = !isCheckPart ? [newItem, ...existing] : existing;
+            updatedList = !isPartExistsGlobally ? [newItem, ...existing] : existing;
           }
           return {
             ...details,
@@ -1062,10 +1062,10 @@ export const Kitting = () => {
           return details?.type === "PARENT" && details?.isSelectd
             ? "parent-with-select-row"
             : details?.type === "PARENT"
-            ? "custom-row"
-            : details?.isSelectd
-            ? "selectd-row"
-            : "";
+              ? "custom-row"
+              : details?.isSelectd
+                ? "selectd-row"
+                : "";
         }}
       />
       <UiDrawer
@@ -1097,20 +1097,20 @@ export const Kitting = () => {
             )}
             {(isOpen?.isMainPart
               ? missingParCode?.isPrint &&
-                missingParCode?.missingList?.length === 0
+              missingParCode?.missingList?.length === 0
               : true) && (
-              <UiButton
-                type="primary"
-                disabled={
-                  !isOpen?.isButtonValidate ||
-                  isFetchMasterBarcode ||
-                  isFetchDubParts
-                }
-                onClick={() => handlePrintTheStickers()}
-              >
-                Print
-              </UiButton>
-            )}
+                <UiButton
+                  type="primary"
+                  disabled={
+                    !isOpen?.isButtonValidate ||
+                    isFetchMasterBarcode ||
+                    isFetchDubParts
+                  }
+                  onClick={() => handleVerify(false)}
+                >
+                  Print
+                </UiButton>
+              )}
           </div>
         }
         mask={false}
