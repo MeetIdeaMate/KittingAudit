@@ -5,7 +5,7 @@ export const PrintStickerLabels = ({
     stickers,
     tabDetails,
 }) => {
-    const { templabeledinfoMap, dublicateBarcode, isDublicate, mode } = stickers;
+    const { templabeledinfoMap, dublicateBarcode, isDublicate, labelMap, mode } = stickers;
 
     const filteredEntries = (dublicateBarcode || [])
         ?.map(code => code?.barcodeId?.split("-").pop())
@@ -14,11 +14,32 @@ export const PrintStickerLabels = ({
 
     const filteredMap = Object.fromEntries(filteredEntries);
 
-    const entries = Object.entries((isDublicate && mode !== "edit" ? filteredMap : templabeledinfoMap) ?? {});
-    const lastEntry = entries?.[entries?.length - 1];
+    const getNewlyAddedMap = (prevMap = {}, currMap = {}) => {
+        return Object.fromEntries(
+            Object.entries(currMap)
+                .filter(([key]) => !prevMap.hasOwnProperty(key))
+        );
+    };
 
-    const labelInfo = tabDetails?.activeTab === "individual" ? lastEntry?.[1] : 12;
-    const labelsArray = Array.from({ length: labelInfo });
+    let printMap = templabeledinfoMap;
+
+    if (mode === "update") {
+        printMap = tabDetails?.activeTab === "individual" ? templabeledinfoMap : getNewlyAddedMap(labelMap, templabeledinfoMap);
+    } else if (isDublicate && mode !== "edit") {
+        printMap = filteredMap;
+    }
+
+    const entries = Object.entries(printMap || {});
+    const sumValues = (map = {}) =>
+        Object.values(map)
+            .reduce((s, v) => s + (Number(v) || 0), 0);
+    const prevTotal = sumValues(labelMap);
+    const currTotal = sumValues(templabeledinfoMap);
+    const printQty = mode === "update"
+        ? Math.max(currTotal - prevTotal, 0)
+        : currTotal;
+    const startIndex = mode === "update" ? prevTotal + 1 : 1;
+    const labelsArray = Array.from({ length: printQty }, (_, i) => startIndex + i);
 
     return <React.Fragment>
         <div
@@ -29,9 +50,9 @@ export const PrintStickerLabels = ({
             }}
         >
             {tabDetails?.activeTab === "individual" &&
-                labelsArray?.map((details, index) => (
+                labelsArray?.map((key) => (
                     <div
-                        key={index}
+                        key={key}
                         style={{
                             width: "calc(50% - 5px)",
                             border: "1px solid #999",
@@ -42,10 +63,10 @@ export const PrintStickerLabels = ({
                         }}
                     >
                         <div >
-                            <h3>{stickers?.partNumber}-{index + 1}</h3>
+                            <h3>{stickers?.partNumber}-{key}</h3>
                         </div>
                         <div style={{ textAlign: "center" }}>
-                            <Barcode value={stickers?.partNumber ? `${stickers?.partNumber}-${index + 1}` : "BARCODE"}
+                            <Barcode value={stickers?.partNumber ? `${stickers?.partNumber}-${key}` : "BARCODE"}
                                 width={1}
                                 height={17}
                                 fontSize={10}

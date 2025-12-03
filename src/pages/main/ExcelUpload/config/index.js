@@ -10,6 +10,7 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
             const all = record?.crNumbers || [];
             const completed = record?.completedCrNumbers || [];
             const pending = record?.pendingCrNumbers || [];
+            const inprogress = record?.inProgressCrNumbers || [];
 
             return (
                 <div style={{ display: "flex", gap: "3px", flexWrap: "wrap" }}>
@@ -28,6 +29,10 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
                             borderColor = "#FA8C16";
                             bgColor = "#FFF7E6";
                             textColor = "#FA8C16";
+                        } else if (inprogress.includes(crNo)) {
+                            borderColor = "#1a4ac4ff";
+                            bgColor = "#d8e0f5ff";
+                            textColor = "#1a4ac4ff";
                         }
 
                         return (
@@ -73,4 +78,10 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
         dataIndex: "status",
         render: (status, details, index) => <img onClick={() => status === "PENDING" || status === "IN_PROGRESS" ? {} : handleDownloadFile(details)} src={printer} alt="" style={{ cursor: status === "PENDING" || status === "IN_PROGRESS" ? "not-allowed" : "pointer", filter: status === "PENDING" || status === "IN_PROGRESS" ? "grayscale(100%) brightness(60%)" : "" }} />
     }
+];
+
+export const colorStatus = [
+    { label: "Pending", color: "#FA8C16", bgColor: "#FFF7E6" },
+    { label: "Inprogress", color: "#1a4ac4ff", bgColor: "#d8e0f5ff" },
+    { label: "Completed", color: "#52C41A", bgColor: "#F6FFED" },
 ];

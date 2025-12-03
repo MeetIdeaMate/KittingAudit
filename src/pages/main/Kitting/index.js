@@ -665,27 +665,27 @@ export const Kitting = () => {
     });
   };
 
-  const handleChangeFieldValue = (value, key) => {
-    setSelectedPartDetails((prev) => ({
-      ...prev,
-      afterDetails: {
-        ...prev.afterDetails,
-        ...(prev.afterDetails?.isDublicate
-          ? {
-              tempduplicateInfoMap: {
-                ...prev.afterDetails?.tempduplicateInfoMap,
-                [key]: Number(value),
-              },
+    const handleChangeFieldValue = (value, key) => {
+        setSelectedPartDetails(prev => ({
+            ...prev,
+            afterDetails: {
+                ...prev.afterDetails,
+                ...(mode === "reprint"
+                    ? {
+                        tempduplicateInfoMap: {
+                            ...prev.afterDetails?.tempduplicateInfoMap,
+                            [key]: Number(value)
+                        }
+                    }
+                    : {
+                        templabeledinfoMap: {
+                            ...prev.afterDetails?.templabeledinfoMap,
+                            [key]: Number(value)
+                        }
+                    })
             }
-          : {
-              templabeledinfoMap: {
-                ...prev.afterDetails?.templabeledinfoMap,
-                [key]: Number(value),
-              },
-            }),
-      },
-    }));
-  };
+        }));
+    };
 
   const handleOpenAvlPart = () => {
     const updatedMissingInfo = [{ selectedCase: true, boxNo: 1, barcodes: [] }];
