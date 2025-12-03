@@ -18,6 +18,7 @@ export const BarcodeSepareateAndCompained = ({
 }) => {
 
     const existingKeys = Object.keys(selectedPartDetails?.labelMap ?? {})?.map(Number);
+    const total = Object.values(selectedPartDetails?.templabeledinfoMap || {})?.reduce((sum, val) => sum + (Number(val) || 0), 0);
 
     return <React.Fragment>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: 0, margin: 0, position: "sticky", top: 0, backgroundColor: "#fff", zIndex: 2 }}>
@@ -44,7 +45,7 @@ export const BarcodeSepareateAndCompained = ({
             </div>}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
             <UiTab tabs={tabsData} activeTabKey={tabsDataDetails?.tabKey} onChange={handleChangeTab} />
-            {!selectedPartDetails?.isDublicate && <p>Balance.Qty: {selectedPartDetails?.isDublicate ? selectedPartDetails?.quantity : selectedPartDetails?.balanceQty}</p>}
+            {mode !== "reprint" && <p>Balance.Qty: {(Number(selectedPartDetails?.quantity) - Number(total))}</p>}
         </div>
         {mode === "reprint" && Object.entries(( selectedPartDetails?.templabeledinfoMap) ?? {})?.map(([key, value], index) => (
                 <div key={key} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>

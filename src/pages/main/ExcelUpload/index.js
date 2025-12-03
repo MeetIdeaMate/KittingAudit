@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { UiButton, UiFileUploader, UiRangePicker, UiSearchBox, UiTable } from "../../../components";
+import { UiButton, UiCounterBatch, UiFileUploader, UiRangePicker, UiSearchBox, UiTable } from "../../../components";
 import './style.scss';
-import { ExcelUploadTaleColumn } from "./config";
+import { colorStatus, ExcelUploadTaleColumn } from "./config";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
@@ -113,7 +113,7 @@ export const ExcelUpload = () => {
 
     const handleDownloadFile = (details) => {
         setSelectedDetails(details);
-        handleDownload({url:`${KITTING}/download-file/${details?.fileName}`, name: details?.fileName});
+        handleDownload({ url: `${KITTING}/download-file/${details?.fileName}`, name: details?.fileName });
     };
 
     const handlePagination = (page, size) => {
@@ -139,11 +139,28 @@ export const ExcelUpload = () => {
     return (
         <>
             <div className="excel-header">
-                <h3>Excel Upload</h3>
+                <div className="excel-title-box">
+                    <h3>Excel Upload</h3>
+                    <UiCounterBatch primary>{barCodeKittingAllData?.totalElements ?? 0}</UiCounterBatch>
+                </div>
                 <div className="excel-header-controls">
                     <UiRangePicker value={dateFilter} onChange={(date) => handleChangeDate(date)} />
                     <UiSearchBox style={{ width: "300px" }} handleSearch={handleSearch} />
                 </div>
+            </div>
+            <div className="status-wrapper">
+                {colorStatus?.map((status, index) => (
+                    <div className="excel-title-box" key={index}>
+                        <div
+                            className="status-dot"
+                            style={{
+                                border: `1px solid ${status?.color}`,
+                                backgroundColor: status?.bgColor,
+                            }}
+                        />
+                        <p>{status?.label}</p>
+                    </div>
+                ))}
             </div>
 
             <div className="excel-container">
