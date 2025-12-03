@@ -63,7 +63,7 @@ export const mainPartCase = ({ handleRemoveSpecificPart }) => [
         render: (_,rec) => rec?.part,
     },
     {
-        title: "Bar Code ID",
+        title: "Qty",
         render: (barqty,rec) =>rec?.labelQty,
     },
     {

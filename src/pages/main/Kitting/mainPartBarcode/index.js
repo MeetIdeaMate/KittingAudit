@@ -23,7 +23,7 @@ export const MainPartBarcode = ({
 }) => {
   const [isMissingOpen, setIsMissingOpen] = useState(1);
 
-  const totalLabelQty =(barcodes)=> barcodes.reduce(
+  const totalLabelQty = (barcodes) => barcodes.reduce(
     (sum, item) => sum + (item.labelQty || 0),
     0
   );
@@ -31,13 +31,24 @@ export const MainPartBarcode = ({
   useEffect(() => {
     inputRef.current?.focus();
   }, [inputRef]);
-  console.log(missingParCode, "missingParCode");
+
+  const totalMainParts = (selectedPartDetails?.caseInfo || [])
+    ?.flatMap(ci => ci?.barcodes || [])
+    ?.reduce((sum, part) => sum + (Number(part?.labelQty) || 0), 0);
 
   return (
     <React.Fragment>
       <div>
-        <p style={{ padding: 0, margin: 0 }}>Part Number</p>
-        <h3>{selectedPartDetails?.parentPartNumber}</h3>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <div>
+            <p style={{ padding: 0, margin: 0 }}>Part Number</p>
+            <h3>{selectedPartDetails?.parentPartNumber}</h3>
+          </div>
+          <div>
+            <p style={{ padding: 0, margin: 0 }}>Bal.Qty</p>
+            <h3>{Number(selectedPartDetails?.quantity) - Number(totalMainParts)}</h3>
+          </div>
+        </div>
         <UiTextBox
           value={lastBarcode || ""}
           name={"lastBarcode"}
@@ -51,7 +62,7 @@ export const MainPartBarcode = ({
             style={{ backgroundColor: "transparent" }}
             key={missingParCode?.missingList?.length || 1}
             data={{
-              label: `Missing Bar Codes - ${missingParCode?.missingList?.length || 0 }`,
+              label: `Missing Bar Codes - ${missingParCode?.missingList?.length || 0}`,
               subLabel: "",
               id: 1,
             }}
