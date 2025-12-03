@@ -17,7 +17,7 @@ export const PrintStickerLabels = ({
     const getNewlyAddedMap = (prevMap = {}, currMap = {}) => {
         return Object.fromEntries(
             Object.entries(currMap)
-                .filter(([key]) => !prevMap.hasOwnProperty(key))
+                ?.filter(([key]) => !prevMap?.hasOwnProperty(key))
         );
     };
 
@@ -32,9 +32,9 @@ export const PrintStickerLabels = ({
     const entries = Object.entries(printMap || {});
     const sumValues = (map = {}) =>
         Object.values(map)
-            .reduce((s, v) => s + (Number(v) || 0), 0);
-    const prevTotal = sumValues(labelMap);
-    const currTotal = sumValues(templabeledinfoMap);
+            ?.reduce((s, v) => s + (Number(v) || 0), 0);
+    const prevTotal = sumValues(labelMap || {});
+    const currTotal = sumValues(templabeledinfoMap || {});
     const printQty = mode === "update"
         ? Math.max(currTotal - prevTotal, 0)
         : currTotal;

@@ -76,12 +76,14 @@ export const Kitting = () => {
   const [mainPartPdfDetails, setMainPartPdfDetails] = useState({});
   const [missingParCode, setMissingParCode] = useState({
     isPrint: false,
+    isVerifyCheck: false,
     missingList: [],
   });
 
   const getCrExcelById = (crNumber, fimNumber) =>
     api.get(
-      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""
+      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${
+        fimNumber ? `&fimNumber=${fimNumber}` : ""
       }`
     );
   const getAllFimNos = (crNumber) =>
@@ -185,12 +187,17 @@ export const Kitting = () => {
       enabled: false,
       refetchOnWindowFocus: false,
       onSuccess: (verifyPartNo) => {
-        console.log(verifyPartNo);
         if (verifyPartNo?.status === 200) {
           setMissingParCode({
             isPrint: true,
             missingList: verifyPartNo?.data?.result?.missingBarcodes || [],
           });
+          if (
+            verifyPartNo?.data?.result?.missingBarcodes?.length === 0 &&
+            missingParCode?.isVerifyCheck
+          ) {
+            handlePrintTheStickers();
+          }
         } else {
           showToast.error(
             "Error",
@@ -277,7 +284,7 @@ export const Kitting = () => {
     getMissingParts,
     {
       enabled: false,
-      onSuccess: (missingResponse) => { },
+      onSuccess: (missingResponse) => {},
       refetchOnWindowFocus: false,
     }
   );
@@ -475,24 +482,34 @@ export const Kitting = () => {
           const caseDetails = [
             { boxNo: "Case 1", barcodes: [], selectedCase: true },
           ];
-          console.log(selectedPartDetails, details, "details");
           setSelectedPartDetails((prev) => ({
             ...prev,
             afterDetails: {
               ...details,
               caseInfo:
                 details?.parentPartNumber ===
-                  prev?.afterDetails?.parentPartNumber
+                prev?.afterDetails?.parentPartNumber
                   ? prev?.afterDetails?.caseInfo
                   : caseDetails,
             },
+          }));
+          setMissingParCode((prev) => ({
+            ...prev,
+            missingList:
+              details?.parentPartNumber ===
+              selectedPartDetails?.afterDetails?.parentPartNumber
+                ? prev?.missingList
+                : [],
           }));
           setIsOpen((prev) => ({
             ...prev,
             isOpenKittingDrawer: true,
             isMainPart: details?.type === "PARENT",
           }));
-          setMissingParCode(prev => ({ ...prev, isPrint: details?.type !== "PARENT" }));
+          setMissingParCode((prev) => ({
+            ...prev,
+            isPrint: details?.type !== "PARENT",
+          }));
         }
       } else {
         setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true }));
@@ -665,24 +682,24 @@ export const Kitting = () => {
   };
 
   const handleChangeFieldValue = (value, key) => {
-    setSelectedPartDetails(prev => ({
+    setSelectedPartDetails((prev) => ({
       ...prev,
       afterDetails: {
         ...prev.afterDetails,
         ...(mode === "reprint"
           ? {
-            tempduplicateInfoMap: {
-              ...prev.afterDetails?.tempduplicateInfoMap,
-              [key]: Number(value)
+              tempduplicateInfoMap: {
+                ...prev.afterDetails?.tempduplicateInfoMap,
+                [key]: Number(value),
+              },
             }
-          }
           : {
-            templabeledinfoMap: {
-              ...prev.afterDetails?.templabeledinfoMap,
-              [key]: Number(value)
-            }
-          })
-      }
+              templabeledinfoMap: {
+                ...prev.afterDetails?.templabeledinfoMap,
+                [key]: Number(value),
+              },
+            }),
+      },
     }));
   };
 
@@ -724,7 +741,9 @@ export const Kitting = () => {
     });
     if (type === "PARENT") {
       const payload = caseInfo?.map((details, index) => {
-        const allBarcodes = details?.barcodes?.flatMap((part) => part?.barcodeNumbers || []);
+        const allBarcodes = details?.barcodes?.flatMap(
+          (part) => part?.barcodeNumbers || []
+        );
         return {
           boxNo: index + 1,
           barcodes: allBarcodes,
@@ -806,17 +825,21 @@ export const Kitting = () => {
     }));
   };
 
-  const handleVerify = () => {
-    console.log(selectedPartDetails, "selectedPartDetails");
-    const barId = selectedPartDetails?.afterDetails?.barCodeKittingInfoId;
-    const caseInfo =
-      selectedPartDetails?.afterDetails?.caseInfo
-        ?.map((code) => code?.barcodes?.map((code) => code?.barcodeNumbers))
-        ?.flat(Infinity) || [];
-    if (barId && caseInfo?.length > 0) {
-      queryClient.prefetchQuery(["GET_ERIFY_PARTNO", ""], () =>
-        verifyPartNo({ id: barId, payload: caseInfo })
-      );
+  const handleVerify = (isCheck) => {
+    if (selectedPartDetails?.afterDetails?.type === "PARENT") {
+      setMissingParCode((prev) => ({ ...prev, isVerifyCheck: !isCheck }));
+      const barId = selectedPartDetails?.afterDetails?.barCodeKittingInfoId;
+      const caseInfo =
+        selectedPartDetails?.afterDetails?.caseInfo
+          ?.map((code) => code?.barcodes?.map((code) => code?.barcodeNumbers))
+          ?.flat(Infinity) || [];
+      if (barId && caseInfo?.length > 0) {
+        queryClient.prefetchQuery(["GET_ERIFY_PARTNO", ""], () =>
+          verifyPartNo({ id: barId, payload: caseInfo })
+        );
+      }
+    } else {
+      handlePrintTheStickers();
     }
   };
 
@@ -870,43 +893,54 @@ export const Kitting = () => {
   const hanldePressEnter = (field) => {
     if (field.key === "Enter") {
       const value = field?.target?.value.trim();
+      setMissingParCode((prev) => ({
+        ...prev,
+        missingList: prev?.missingList?.filter((f) => f !== value),
+      }));
       if (!value) return;
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
-      const fintCode = selectedCrExcelDetails?.partDetails?.find(p => p?.partNumber === mainCode);
-      const labelQty = fintCode?.labelMap?.[splitCode?.[1]] || 0;
+      const fintCode = selectedCrExcelDetails?.partDetails?.find(
+        (p) => p?.partNumber === mainCode
+      );
+      const labelQty =
+        fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
 
-      const updatedCaseDetails = selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
-        if (!details?.selectedCase) return details;
-        const partName = checkGrpPrintType ? value : mainCode;
-        const existing = details?.barcodes || [];
-        const idx = existing.findIndex((b) => b.part === mainCode);
-        let updatedList = [...existing];
-        if (idx !== -1 && !checkGrpPrintType) {
-          let item = updatedList[idx];
-          const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
-          if (!barcodeAlreadyAdded) {
-            item = {
-              ...item,
-              labelQty: (item.labelQty || 0) + (labelQty || 0),
-              barcodeNumbers: [...item.barcodeNumbers, value],
+      const updatedCaseDetails =
+        selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
+          if (!details?.selectedCase) return details;
+          const partName = checkGrpPrintType ? value : mainCode;
+          const existing = details?.barcodes || [];
+          const idx = existing.findIndex((b) => b.part === mainCode);
+          let updatedList = [...existing];
+          if (idx !== -1 && !checkGrpPrintType) {
+            let item = updatedList[idx];
+            const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
+            if (!barcodeAlreadyAdded) {
+              item = {
+                ...item,
+                labelQty: (item.labelQty || 0) + (labelQty || 0),
+                barcodeNumbers: [...item.barcodeNumbers, value],
+              };
+              updatedList[idx] = item;
+            }
+          } else {
+            const newItem = {
+              part: partName,
+              labelQty: labelQty,
+              barcodeNumbers: [value],
             };
-            updatedList[idx] = item;
+            const isCheckPart = existing
+              ?.map((p) => p?.part)
+              ?.includes(newItem?.part);
+            updatedList = !isCheckPart ? [newItem, ...existing] : existing;
           }
-        } else {
-          const newItem = {
-            part: partName,
-            labelQty: labelQty,
-            barcodeNumbers: [value],
+          return {
+            ...details,
+            barcodes: updatedList,
           };
-          updatedList = [newItem, ...existing];
-        }
-        return {
-          ...details,
-          barcodes: updatedList,
-        };
-      });
+        });
 
       setSelectedPartDetails((prev) => ({
         ...prev,
@@ -1028,10 +1062,10 @@ export const Kitting = () => {
           return details?.type === "PARENT" && details?.isSelectd
             ? "parent-with-select-row"
             : details?.type === "PARENT"
-              ? "custom-row"
-              : details?.isSelectd
-                ? "selectd-row"
-                : "";
+            ? "custom-row"
+            : details?.isSelectd
+            ? "selectd-row"
+            : "";
         }}
       />
       <UiDrawer
@@ -1047,26 +1081,36 @@ export const Kitting = () => {
               alignItems: "center",
             }}
           >
-            <UiButton onClick={() => handleClose("main")}>Cancel</UiButton>
-            {isOpen?.isMainPart && (!missingParCode?.isPrint || missingParCode?.missingList?.length > 0) && (
-              <UiButton onClick={handleVerify}>Verify</UiButton>
+            <UiButton
+              onClick={() => {
+                handleClose("main");
+                setSelectedPartDetails((prev) => ({
+                  ...prev,
+                  afterDetails: { caseInfo: [] },
+                }));
+              }}
+            >
+              Cancel
+            </UiButton>
+            {isOpen?.isMainPart && (
+              <UiButton onClick={() => handleVerify(true)}>Verify</UiButton>
             )}
             {(isOpen?.isMainPart
               ? missingParCode?.isPrint &&
-              missingParCode?.missingList?.length === 0
+                missingParCode?.missingList?.length === 0
               : true) && (
-                <UiButton
-                  type="primary"
-                  disabled={
-                    !isOpen?.isButtonValidate ||
-                    isFetchMasterBarcode ||
-                    isFetchDubParts
-                  }
-                  onClick={() => handlePrintTheStickers()}
-                >
-                  Print
-                </UiButton>
-              )}
+              <UiButton
+                type="primary"
+                disabled={
+                  !isOpen?.isButtonValidate ||
+                  isFetchMasterBarcode ||
+                  isFetchDubParts
+                }
+                onClick={() => handlePrintTheStickers()}
+              >
+                Print
+              </UiButton>
+            )}
           </div>
         }
         mask={false}
