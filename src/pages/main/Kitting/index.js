@@ -81,8 +81,7 @@ export const Kitting = () => {
 
   const getCrExcelById = (crNumber, fimNumber) =>
     api.get(
-      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${
-        fimNumber ? `&fimNumber=${fimNumber}` : ""
+      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""
       }`
     );
   const getAllFimNos = (crNumber) =>
@@ -278,7 +277,7 @@ export const Kitting = () => {
     getMissingParts,
     {
       enabled: false,
-      onSuccess: (missingResponse) => {},
+      onSuccess: (missingResponse) => { },
       refetchOnWindowFocus: false,
     }
   );
@@ -483,7 +482,7 @@ export const Kitting = () => {
               ...details,
               caseInfo:
                 details?.parentPartNumber ===
-                prev?.afterDetails?.parentPartNumber
+                  prev?.afterDetails?.parentPartNumber
                   ? prev?.afterDetails?.caseInfo
                   : caseDetails,
             },
@@ -493,7 +492,7 @@ export const Kitting = () => {
             isOpenKittingDrawer: true,
             isMainPart: details?.type === "PARENT",
           }));
-            setMissingParCode(prev => ({ ...prev, isPrint: details?.type !== "PARENT" }));
+          setMissingParCode(prev => ({ ...prev, isPrint: details?.type !== "PARENT" }));
         }
       } else {
         setIsOpen((prev) => ({ ...prev, isOpenKittingDrawer: true }));
@@ -665,27 +664,27 @@ export const Kitting = () => {
     });
   };
 
-    const handleChangeFieldValue = (value, key) => {
-        setSelectedPartDetails(prev => ({
-            ...prev,
-            afterDetails: {
-                ...prev.afterDetails,
-                ...(mode === "reprint"
-                    ? {
-                        tempduplicateInfoMap: {
-                            ...prev.afterDetails?.tempduplicateInfoMap,
-                            [key]: Number(value)
-                        }
-                    }
-                    : {
-                        templabeledinfoMap: {
-                            ...prev.afterDetails?.templabeledinfoMap,
-                            [key]: Number(value)
-                        }
-                    })
+  const handleChangeFieldValue = (value, key) => {
+    setSelectedPartDetails(prev => ({
+      ...prev,
+      afterDetails: {
+        ...prev.afterDetails,
+        ...(mode === "reprint"
+          ? {
+            tempduplicateInfoMap: {
+              ...prev.afterDetails?.tempduplicateInfoMap,
+              [key]: Number(value)
             }
-        }));
-    };
+          }
+          : {
+            templabeledinfoMap: {
+              ...prev.afterDetails?.templabeledinfoMap,
+              [key]: Number(value)
+            }
+          })
+      }
+    }));
+  };
 
   const handleOpenAvlPart = () => {
     const updatedMissingInfo = [{ selectedCase: true, boxNo: 1, barcodes: [] }];
@@ -725,9 +724,10 @@ export const Kitting = () => {
     });
     if (type === "PARENT") {
       const payload = caseInfo?.map((details, index) => {
+        const allBarcodes = details?.barcodes?.flatMap((part) => part?.barcodeNumbers || []);
         return {
           boxNo: index + 1,
-          barcodes: details?.barcodes?.map((code) => ({ part: code })),
+          barcodes: allBarcodes,
         };
       });
       queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
@@ -867,17 +867,17 @@ export const Kitting = () => {
     setLastBarcode(field);
   };
 
- const hanldePressEnter = (field) => {
-  if (field.key === "Enter") {
-    const value = field?.target?.value.trim();
-    if (!value) return;
-    const mainCode = value.replace(/-\d+$/, "");
-    const splitCode = value.split("-");
-    const fintCode = selectedCrExcelDetails?.partDetails?.find(p => p?.partNumber === mainCode);
+  const hanldePressEnter = (field) => {
+    if (field.key === "Enter") {
+      const value = field?.target?.value.trim();
+      if (!value) return;
+      const mainCode = value.replace(/-\d+$/, "");
+      const splitCode = value.split("-");
+      const fintCode = selectedCrExcelDetails?.partDetails?.find(p => p?.partNumber === mainCode);
       const labelQty = fintCode?.labelMap?.[splitCode?.[1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
-      
-    const updatedCaseDetails =selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
+
+      const updatedCaseDetails = selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
         if (!details?.selectedCase) return details;
         const partName = checkGrpPrintType ? value : mainCode;
         const existing = details?.barcodes || [];
@@ -889,16 +889,16 @@ export const Kitting = () => {
           if (!barcodeAlreadyAdded) {
             item = {
               ...item,
-              labelQty: (item.labelQty || 0) + (labelQty||0),
+              labelQty: (item.labelQty || 0) + (labelQty || 0),
               barcodeNumbers: [...item.barcodeNumbers, value],
             };
             updatedList[idx] = item;
           }
         } else {
           const newItem = {
-            part:partName,
+            part: partName,
             labelQty: labelQty,
-            barcodeNumbers: [value], 
+            barcodeNumbers: [value],
           };
           updatedList = [newItem, ...existing];
         }
@@ -908,14 +908,14 @@ export const Kitting = () => {
         };
       });
 
-    setSelectedPartDetails((prev) => ({
-      ...prev,
-      afterDetails: { ...prev.afterDetails, caseInfo: updatedCaseDetails },
-    }));
-    setLastBarcode("");
-    inputRef.current?.focus();
-  }
-};
+      setSelectedPartDetails((prev) => ({
+        ...prev,
+        afterDetails: { ...prev.afterDetails, caseInfo: updatedCaseDetails },
+      }));
+      setLastBarcode("");
+      inputRef.current?.focus();
+    }
+  };
 
   const handleCloseModal = () => {
     setIsOpen((prev) => ({ ...prev, isOpenDublicateDrawer: false }));
@@ -1028,10 +1028,10 @@ export const Kitting = () => {
           return details?.type === "PARENT" && details?.isSelectd
             ? "parent-with-select-row"
             : details?.type === "PARENT"
-            ? "custom-row"
-            : details?.isSelectd
-            ? "selectd-row"
-            : "";
+              ? "custom-row"
+              : details?.isSelectd
+                ? "selectd-row"
+                : "";
         }}
       />
       <UiDrawer
@@ -1048,25 +1048,25 @@ export const Kitting = () => {
             }}
           >
             <UiButton onClick={() => handleClose("main")}>Cancel</UiButton>
-            {isOpen?.isMainPart && (!missingParCode?.isPrint || missingParCode?.missingList?.length > 0 ) && (
+            {isOpen?.isMainPart && (!missingParCode?.isPrint || missingParCode?.missingList?.length > 0) && (
               <UiButton onClick={handleVerify}>Verify</UiButton>
             )}
             {(isOpen?.isMainPart
               ? missingParCode?.isPrint &&
-                missingParCode?.missingList?.length === 0
+              missingParCode?.missingList?.length === 0
               : true) && (
-              <UiButton
-                type="primary"
-                disabled={
-                  !isOpen?.isButtonValidate ||
-                  isFetchMasterBarcode ||
-                  isFetchDubParts
-                }
-                onClick={() => handlePrintTheStickers()}
-              >
-                Print
-              </UiButton>
-            )}
+                <UiButton
+                  type="primary"
+                  disabled={
+                    !isOpen?.isButtonValidate ||
+                    isFetchMasterBarcode ||
+                    isFetchDubParts
+                  }
+                  onClick={() => handlePrintTheStickers()}
+                >
+                  Print
+                </UiButton>
+              )}
           </div>
         }
         mask={false}
