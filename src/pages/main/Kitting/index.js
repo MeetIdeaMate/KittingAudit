@@ -17,7 +17,7 @@ import { kittingPartColumn, tabsData } from "./config";
 import { BarcodeSepareateAndCompained } from "./barcodeSeparateCompined";
 import { exclamationCircle } from "../../../assets/images";
 import { PrintStickerLabels } from "./template";
-import { useReactToPrint } from "react-to-print";
+import ReactToPrint, { useReactToPrint } from "react-to-print";
 import {
   KITTING,
   KITTINGINFO,
@@ -27,6 +27,7 @@ import { showToast } from "../../../components/UiToastNotification";
 import { MainPartBarcode } from "./mainPartBarcode";
 import { GetAvlParts } from "./avlPartModal";
 import { MainBarcode } from "./template/mainBarcode";
+import { CrReport } from "./template/crReport";
 
 const PrintSticker = React.forwardRef((props, ref) => (
   <div ref={ref}>
@@ -43,10 +44,17 @@ const PrintMasterPdf = React.forwardRef((props, ref) => (
   </div>
 ));
 
+const PrintCrReportComponent = React.forwardRef((props, ref) => (
+  <div ref={ref}>
+    <CrReport crDetails={props?.crDetails} filterInfo={props?.filterInfo} />
+  </div>
+));
+
 export const Kitting = () => {
   const dispatch = useDispatch();
   const stickerRef = useRef();
   const masterStickerRef = useRef();
+  const componentRef = useRef();
   const queryClient = useQueryClient();
   const inputRef = useRef(null);
 
@@ -550,7 +558,7 @@ export const Kitting = () => {
   const handleChangeCrExcel = (id) => {
     setSelectedCrExcelDetails({});
     setOptions((prev) => ({ ...prev, fimOptions: [] }));
-    setFilterInfo((prev) => ({ ...prev, crNumber: id }));
+    setFilterInfo((prev) => ({ ...prev, crNumber: id, fimNumber: ""}));
     queryClient.prefetchQuery(["GET_ALL_FIM_NOS", ""], () => getAllFimNos(id));
   };
 
@@ -1040,6 +1048,7 @@ export const Kitting = () => {
           )}
           <UiSelect
             isStyle={true}
+            placeholder={"Select Contract Number"}
             value={filterInfo?.crNumber}
             style={{ width: "300px" }}
             options={options?.crOptions}
@@ -1047,13 +1056,27 @@ export const Kitting = () => {
           />
           <UiSelect
             isStyle={true}
+            placeholder={"Select FIM Number"}
+            style={{ width: "200px" }}
             value={filterInfo?.fimNumber}
             options={options?.fimOptions}
             onChange={handleChangeFimNumber}
           />
+          {filterInfo?.crNumber && <ReactToPrint
+            trigger={() => <UiButton type="primary">Download Report</UiButton>}
+            content={() => componentRef.current}
+            pageStyle={`
+              @page {
+                size: A4 landscape;
+                margin: 5mm;
+              }
+            `}
+          />}
         </div>
       </div>
-
+      <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
+        <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
+      </div>
       <UiTable
         columns={kittingPartColumn({ handleKittingPart })}
         dataSource={selectedCrExcelDetails?.partDetails ?? []}
@@ -1217,6 +1240,11 @@ export const Kitting = () => {
           ref={stickerRef}
           stickers={printingDetails}
           activeTab={activeTabDetails}
+        />
+        <PrintCrReportComponent
+          ref={componentRef}
+          crDetails={selectedCrExcelDetails}
+          filterInfo={filterInfo}
         />
       </div>
     </React.Fragment>

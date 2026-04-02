@@ -82,7 +82,7 @@ export const MainBarcode = ({ stickers }) => {
 
                 <div style={{ width: "49%", border: "1px solid #cccc" }}>
                     <div style={{ padding: "2px" }}>
-                        <h3>CR No: {stickers?.crNumber}</h3>
+                        <h3>Contract No: {stickers?.crNumber}</h3>
                         <Barcode value={stickers?.crNumber ? `${stickers?.crNumber}` : "BARCODE"}
                             width={1}
                             height={17}
