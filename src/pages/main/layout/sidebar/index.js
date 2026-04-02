@@ -10,7 +10,7 @@ import "./style.scss";
 // import { reftchNotification } from "pages/login/firebase/notification";
 import packageJson from '../../../../../package.json';
 import { headerReducer } from "../../../../reducers/header.reducer";
-import { sideMenuIcon, TechLambdasLogo, userProfile } from "../../../../assets/images";
+import { phone, questionCircle, sideMenuIcon, TechLambdasLogo, userProfile } from "../../../../assets/images";
 import { AccessPerforming } from "../../../../utils/appUtils/appAccessControl";
 
 const { Panel } = Collapse;
@@ -111,20 +111,21 @@ const SideBar = () => {
     return (
         <>
             <aside className="sidebar scrollbar">
-                <h3 style={{ fontSize: "9px", position: "absolute", top: "2px", left: "5px", transform: "rotate(-45deg)" }}>{`${packageJson?.version}`}</h3>
-                <div style={{display: "flex", padding: 0, margin:0, justifyContent: "space-between", alignItems: "center", width: "100%"}}>
-                    <img src={TechLambdasLogo} alt="" style={{width: "25%"}}/>
-                    <h3 style={{width: "75%", padding: 0, margin: 0, textAlign: "center"}}><span style={{color: "#FF7A00"}}>Tech</span>Lambdas</h3>
-                </div>
-                {isKb && (
-                    <div style={{ paddingBottom: "5px" }}>
-                        <div className="flex items-center space-x-2" style={{ backgroundColor: "#262653", borderRadius: "5px", display: "flex", justifyContent: "space-around", padding: "3px" }}>
-                            <img src={userProfile} alt="User profile" className="w-10 h-10 rounded-full" />
-                            <div style={{ textAlign: "center", fontSize: "10px" }}>
-                                <p className="text-xs">{sessionStorage.getItem("name")}</p>
-                                <p className="text-xs">{designation}</p>
-                            </div>
-                            {/* {(designation === "HOD" || designation === "Chief Operating Officer" || designation === "Proprietor") && (
+                <div style={{ height: "80vh", overflowY: "scroll", scrollbarWidth: "none" }}>
+                    <h3 style={{ fontSize: "9px", position: "absolute", top: "2px", left: "5px", transform: "rotate(-45deg)" }}>{`${packageJson?.version}`}</h3>
+                    <div style={{ display: "flex", padding: 0, margin: 0, justifyContent: "space-between", alignItems: "center", width: "100%" }}>
+                        <img src={TechLambdasLogo} alt="" style={{ width: "25%" }} />
+                        <h3 style={{ width: "75%", padding: 0, margin: 0, textAlign: "center" }}><span style={{ color: "#FF7A00" }}>Tech</span>Lambdas</h3>
+                    </div>
+                    {isKb && (
+                        <div style={{ paddingBottom: "5px" }}>
+                            <div className="flex items-center space-x-2" style={{ backgroundColor: "#262653", borderRadius: "5px", display: "flex", justifyContent: "space-around", padding: "3px" }}>
+                                <img src={userProfile} alt="User profile" className="w-10 h-10 rounded-full" />
+                                <div style={{ textAlign: "center", fontSize: "10px" }}>
+                                    <p className="text-xs">{sessionStorage.getItem("name")}</p>
+                                    <p className="text-xs">{designation}</p>
+                                </div>
+                                {/* {(designation === "HOD" || designation === "Chief Operating Officer" || designation === "Proprietor") && (
                                 <Tooltip title="Approval" placement="right" color={"orange"}>
                                     <div onClick={() => handleNavigateApprove()} style={{ cursor: "pointer", position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
                                         <img src={approveIcon} alt="Approve Icon" />
@@ -134,98 +135,109 @@ const SideBar = () => {
                                     </div>
                                 </Tooltip>
                             )} */}
+                            </div>
                         </div>
+                    )}
+                    <nav>
+                        <ul style={{ width: "100%", border: 'none', listStyleType: "none", padding: '2px 0', margin: 0 }}>
+                            {renderMenuList}
+                        </ul>
+                        {!subMenuArray.every(subMenu => subMenu.isHide) && (
+                            <Collapse
+                                activeKey={collapsed ? ["1"] : []}
+                                onChange={() => setCollapsed(!collapsed)}>
+                                <Panel header={collapsed ? <span style={{ color: "#FF7A00" }}>Master</span> : "Master"} key="1">
+                                    <ul>
+                                        {subMenuArray
+                                            ?.filter(subMenu => !subMenu.isHide)
+                                            .map((subMenu, idx) => {
+                                                const subMenuPath = subMenu?.name;
+                                                return (
+                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0" }} className="list">
+                                                        <Link
+                                                            style={{ width: "100%", paddingRight: "0", border: "0" }}
+                                                            className={classNames(
+                                                                "sidebar__list",
+                                                                {
+                                                                    "sidebar--active": currentMenu === subMenu?.name,
+                                                                },
+                                                                "SubMenu",
+                                                                "aslink"
+                                                            )}
+                                                            onClick={() => handleMenus(subMenu)}
+                                                            to={`/${subMenuPath}`}
+                                                        >
+
+                                                            <div style={{ display: 'flex', alignItems: 'center', width: "100%" }} className="menushowing">
+                                                                <figure style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
+                                                                    <img src={sideMenuIcon[`icn_${subMenu?.name}`]} alt="" />
+                                                                    <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
+                                                                        {subMenu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                                                                    </span>
+                                                                </figure>
+                                                            </div>
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
+                                    </ul>
+                                </Panel>
+                            </Collapse>
+                        )}
+                        {(!subMenuReportArray?.every((menu) => menu?.isHide)) && (
+                            <Collapse
+                                activeKey={collapsedReport ? ["2"] : []}
+                                onChange={() => setCollapsedReport(!collapsedReport)}>
+                                <Panel header={collapsedReport ? <span style={{ color: "#FF7A00" }}>Report</span> : "Report"} key="2">
+                                    <ul>
+                                        {subMenuReportArray
+                                            ?.filter(subMenu => !subMenu.isHide)
+                                            .map((subMenu, idx) => {
+                                                const subMenuPath = subMenu?.name;
+                                                return (
+                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0" }} className="list">
+                                                        <Link
+                                                            style={{ width: "100%", paddingRight: "0", border: "0" }}
+                                                            className={classNames(
+                                                                "sidebar__list",
+                                                                {
+                                                                    "sidebar--active": currentMenu === subMenu?.name,
+                                                                },
+                                                                "SubMenu",
+                                                                "aslink"
+                                                            )}
+                                                            onClick={() => handleMenus(subMenu)}
+                                                            to={`/${subMenuPath}`}
+                                                        >
+
+                                                            <div style={{ display: 'flex', alignItems: 'center', width: "100%" }} className="menushowing">
+                                                                <figure style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
+                                                                    <img src={sideMenuIcon[`icn_${subMenu?.name}`]} alt="" />
+                                                                    <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
+                                                                        {subMenu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                                                                    </span>
+                                                                </figure>
+                                                            </div>
+                                                        </Link>
+                                                    </li>
+                                                );
+                                            })}
+                                    </ul>
+                                </Panel>
+                            </Collapse>
+                        )}
+                    </nav>
+                </div>
+                <div style={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <img src={questionCircle} alt="" style={{ width: "20px" }} />
+                        <p style={{ padding: 0, margin: 0 }}><b>For Enquiry</b></p>
                     </div>
-                )}
-                <nav>
-                    <ul style={{ width: "100%", border: 'none', listStyleType: "none", padding: '2px 0', margin: 0 }}>
-                        {renderMenuList}
-                    </ul>
-                    {!subMenuArray.every(subMenu => subMenu.isHide) && (
-                        <Collapse
-                            activeKey={collapsed ? ["1"] : []}
-                            onChange={() => setCollapsed(!collapsed)}>
-                            <Panel header={collapsed ? <span style={{ color: "#FF7A00" }}>Master</span> : "Master"} key="1">
-                                <ul>
-                                    {subMenuArray
-                                        ?.filter(subMenu => !subMenu.isHide)
-                                        .map((subMenu, idx) => {
-                                            const subMenuPath = subMenu?.name;
-                                            return (
-                                                <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0" }} className="list">
-                                                    <Link
-                                                        style={{ width: "100%", paddingRight: "0", border: "0" }}
-                                                        className={classNames(
-                                                            "sidebar__list",
-                                                            {
-                                                                "sidebar--active": currentMenu === subMenu?.name,
-                                                            },
-                                                            "SubMenu",
-                                                            "aslink"
-                                                        )}
-                                                        onClick={() => handleMenus(subMenu)}
-                                                        to={`/${subMenuPath}`}
-                                                    >
-
-                                                        <div style={{ display: 'flex', alignItems: 'center', width: "100%" }} className="menushowing">
-                                                            <figure style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
-                                                                <img src={sideMenuIcon[`icn_${subMenu?.name}`]} alt="" />
-                                                                <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                                                                    {subMenu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                                                                </span>
-                                                            </figure>
-                                                        </div>
-                                                    </Link>
-                                                </li>
-                                            );
-                                        })}
-                                </ul>
-                            </Panel>
-                        </Collapse>
-                    )}
-                    {(!subMenuReportArray?.every((menu) => menu?.isHide)) && (
-                        <Collapse
-                            activeKey={collapsedReport ? ["2"] : []}
-                            onChange={() => setCollapsedReport(!collapsedReport)}>
-                            <Panel header={collapsedReport ? <span style={{ color: "#FF7A00" }}>Report</span> : "Report"} key="2">
-                                <ul>
-                                    {subMenuReportArray
-                                        ?.filter(subMenu => !subMenu.isHide)
-                                        .map((subMenu, idx) => {
-                                            const subMenuPath = subMenu?.name;
-                                            return (
-                                                <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0" }} className="list">
-                                                    <Link
-                                                        style={{ width: "100%", paddingRight: "0", border: "0" }}
-                                                        className={classNames(
-                                                            "sidebar__list",
-                                                            {
-                                                                "sidebar--active": currentMenu === subMenu?.name,
-                                                            },
-                                                            "SubMenu",
-                                                            "aslink"
-                                                        )}
-                                                        onClick={() => handleMenus(subMenu)}
-                                                        to={`/${subMenuPath}`}
-                                                    >
-
-                                                        <div style={{ display: 'flex', alignItems: 'center', width: "100%" }} className="menushowing">
-                                                            <figure style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
-                                                                <img src={sideMenuIcon[`icn_${subMenu?.name}`]} alt="" />
-                                                                <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                                                                    {subMenu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                                                                </span>
-                                                            </figure>
-                                                        </div>
-                                                    </Link>
-                                                </li>
-                                            );
-                                        })}
-                                </ul>
-                            </Panel>
-                        </Collapse>
-                    )}
-                </nav>
+                    <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                        <img src={phone} alt="Phone" style={{ width: "20px" }} />
+                        <p style={{ padding: 0, margin: 0 }}>+91 9791191380</p>
+                    </div>
+                </div>
             </aside>
         </>
     );

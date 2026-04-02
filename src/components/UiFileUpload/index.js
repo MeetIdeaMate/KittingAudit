@@ -85,7 +85,7 @@ export default function UiFileUploader({ onFileSelect }) {
                         background: "#fff"
                     }}
                 >
-                    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>
                         <span style={{ fontSize: "18px" }}>📄</span>
                         <span style={{ fontSize: "14px", color: "#1890FF" }}>{fileName}</span>
                     </div>

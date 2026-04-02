@@ -6,6 +6,13 @@
   background-color: #faddc9 !important;
 }
 
+.custom-row {
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+  background-color: #F3F3F3 !important;
+  border-top: 1px solid #ccc !important;
+}
+
 .ant-table-tbody>tr.selectd-row>td {
   background-color: #d7f7fc !important;
 }

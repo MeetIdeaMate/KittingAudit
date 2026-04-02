@@ -3,7 +3,7 @@ import { printer } from "../../../../assets/images";
 
 export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
     {
-        title: "CR Number",
+        title: "Contract Number",
         dataIndex: "crNumbers",
         render: (_, record) => {
 
@@ -64,7 +64,7 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
     {
         title: "Date",
         dataIndex: "date",
-        render: (date) => date ? <p style={{ whiteSpace: "" }}>{dayjs(date).format("DD-MM-YYYY")}</p> : "",
+        render: (date) => date ? <p style={{ whiteSpace: "nowrap" }}>{dayjs(date).format("DD-MM-YYYY")}</p> : "",
     },
     {
         title: "Status",

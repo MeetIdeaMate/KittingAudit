@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./style.scss";
-import { SignInBG, TechLambdasLogo } from "../../assets/images";
+import { phone, questionCircle, SignInBG, TechLambdasLogo } from "../../assets/images";
 import { lang_en_US as translation } from "../../config/locales";
 import { loginForm, resetForm } from "./config";
 import * as Yup from "yup";
@@ -138,10 +138,10 @@ export const Login = () => {
 
     return <React.Fragment>
         <div className="login">
-            <div className="login__block" style={{ backgroundColor: "#272538ff" }}>
+            <div className="login__block" style={{ backgroundColor: "rgb(10, 10, 11)", position: "relative" }}>
                 <figure className="login__inner">
                     <img src={SignInBG} alt="Login Background" />
-                    <figcaption>
+                    <figcaption style={{ height: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "20px" }}>
                         <img
                             className="logo"
                             src={TechLambdasLogo}
@@ -151,6 +151,16 @@ export const Login = () => {
                             {keywords?.text1} <span>{keywords?.text2}</span>
                         </p>
                         <p>{keywords?.text3}</p>
+                        <div style={{ position: "absolute", bottom: 10, left: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                <img src={questionCircle} alt="" style={{ width: "30px" }} />
+                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}><b>For Enquiry</b></p>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                <img src={phone} alt="Phone" style={{ width: "20px" }} />
+                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}>+91 9791191380</p>
+                            </div>
+                        </div>
                     </figcaption>
                 </figure>
             </div>
