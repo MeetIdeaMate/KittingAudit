@@ -1,5 +1,5 @@
 import TechLambdasLogo from "./Techlambdas-logo.svg";
-import SignInBG from "./signin-bg.svg";
+import SignInBG from "./SignInBG.svg";
 import Generateicon from "./generateidicon.svg";
 import logout from './logout.svg';
 import userProfile from "./user-profile.svg";
@@ -13,6 +13,8 @@ import exclamationCircle from "./ExclamationCircle.svg";
 import deleteIcon from "./icon-delete.svg";
 import barcodeIcon from "./barcode-icon.svg";
 import DownArrow from "./downArrow.svg";
+import phone from "./phone.svg";
+import questionCircle from "./questionCircle.svg";
 export {
     TechLambdasLogo,
     SignInBG,
@@ -27,6 +29,8 @@ export {
     deleteIcon,
     barcodeIcon,
     DownArrow,
+    phone,
+    questionCircle,
     // techlambdasRightCornerLogo,
 };
 

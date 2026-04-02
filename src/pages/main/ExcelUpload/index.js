@@ -145,7 +145,7 @@ export const ExcelUpload = () => {
                 </div>
                 <div className="excel-header-controls">
                     <UiRangePicker value={dateFilter} onChange={(date) => handleChangeDate(date)} />
-                    <UiSearchBox style={{ width: "300px" }} handleSearch={handleSearch} />
+                    <UiSearchBox placeholder={"Search Contract No/Excel Name"} style={{ width: "300px" }} handleSearch={handleSearch} />
                 </div>
             </div>
             <div className="status-wrapper">
