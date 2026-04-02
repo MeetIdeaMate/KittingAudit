@@ -20,6 +20,7 @@
 //     { MenuName: 'Report', subMenuReport: [{ menuName: "ProcessTimingReport" }, { menuName: 'SalesReport' }] },
 // ];
 export const KbMenus = () => [
+    { MenuName: 'Dashboard', subMenu: [] },
     { MenuName: 'ExcelUpload', subMenu: [] },
     { MenuName: 'Kitting', subMenu: [] },
     { MenuName: 'Download', subMenu: [] },

@@ -56,6 +56,7 @@ export const Login = () => {
                     showToast.success("success");
                     sessionStorage.setItem("_ac", data.token);
                     const accessData = [
+                        { menuName: "Dashboard", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         { menuName: "ExcelUpload", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         { menuName: "Kitting", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                     ];
