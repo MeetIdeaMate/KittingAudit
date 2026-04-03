@@ -1,52 +1,64 @@
-.title-color{
+.title-color {
     color: #787878;
     padding: 0;
     margin: 0;
 }
+
 .dashboard-card {
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid #ddd;
     padding: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s linear;
 }
-.dashboard-card-value{
+
+.dashboard-card-value {
     font-size: 16px;
     font-weight: bold;
     padding: 0;
     margin: 0;
 }
-.dashboard-card-month-title{
+
+.dashboard-card-month-title {
     font-size: 16px;
     padding: 0;
     margin: 0;
 }
-.dashboard-card-month-subtitle{
+
+.dashboard-card-month-subtitle {
     font-size: 14px;
     color: #999;
     padding: 0;
     margin: 0;
 }
-.dashboard-chart-container{
+
+.dashboard-chart-container {
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid #ddd;
     padding: 10px;
     margin: 10px 0px;
 }
-.dashboard-search-container{
+
+.dashboard-search-container {
     background-color: #fff;
     border-radius: 8px;
     border: 1px solid #ddd;
     padding: 10px;
     margin: 10px 0px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
 }
-.dashboard-crNumber-card{
+
+.dashboard-crNumber-card {
     font-size: 14px;
     font-weight: bold;
     padding: 0;
     margin: 0;
 }
-.dashboard-total-firm-card{
+
+.dashboard-total-firm-card {
     background-color: #F0FDF4;
     border-radius: 5px;
     padding: 5px;
@@ -56,7 +68,8 @@
     justify-content: center;
     align-items: center;
 }
-.dashboard-toal-qty-card{
+
+.dashboard-toal-qty-card {
     background-color: #EFF6FF;
     border-radius: 5px;
     padding: 5px;
@@ -66,7 +79,8 @@
     justify-content: center;
     align-items: center;
 }
-.dashboard-card-label{
+
+.dashboard-card-label {
     background-color: #FFF8EF;
     border-radius: 5px;
     padding: 5px;
@@ -76,11 +90,13 @@
     justify-content: center;
     align-items: center;
 }
-.image{
+
+.image {
     height: 20px;
     width: 20px;
 }
-.dashboard-upload-icon{
+
+.dashboard-upload-icon {
     background-color: #EFEFFF;
     border-radius: 5px;
     padding: 5px;
@@ -90,7 +106,8 @@
     justify-content: center;
     align-items: center;
 }
-.dashboard-totalCrnumber-icon{
+
+.dashboard-totalCrnumber-icon {
     background-color: #EFF6FF;
     border-radius: 5px;
     padding: 5px;
@@ -100,7 +117,8 @@
     justify-content: center;
     align-items: center;
 }
-.dashboard-complete-icon{
+
+.dashboard-complete-icon {
     background-color: #F0FDF4;
     border-radius: 5px;
     padding: 5px;
@@ -110,7 +128,8 @@
     justify-content: center;
     align-items: center;
 }
-.dashboard-pending-icon{
+
+.dashboard-pending-icon {
     background-color: #FEF2F2;
     border-radius: 5px;
     padding: 5px;
@@ -119,4 +138,77 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.dashboard-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+    transition: all 0.3s linear;
+    background-color: #f6e6d2;
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 58% 40%;
+    gap: 10px;
+}
+
+.dashboard-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.dashboard-summary-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.dashboard-chart-container {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.dashboard-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dashboard-table {
+    margin-top: 10px;
+}
+
+@media(max-width:1024px) {
+
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media(max-width:600px) {
+
+    .dashboard-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-summary-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-chart-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+
 }

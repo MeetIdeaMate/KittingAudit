@@ -154,7 +154,7 @@ export const Login = () => {
                         <div style={{ position: "absolute", bottom: 10, left: 0 }}>
                             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                 <img src={questionCircle} alt="" style={{ width: "30px" }} />
-                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}><b>For Enquiry</b></p>
+                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}><b>For Inquiry</b></p>
                             </div>
                             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                                 <img src={phone} alt="Phone" style={{ width: "20px" }} />
