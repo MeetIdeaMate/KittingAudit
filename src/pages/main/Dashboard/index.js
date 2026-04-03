@@ -113,6 +113,16 @@ const Dashboard = () => {
         <div className="dashboard-container">
             <div className="dashboard-header">
                 <h3>Dashboard</h3>
+                <div style={{width:"40%", display:"flex",gap:"20px"}}>
+                    <div className="flexible">
+                        <div className="pending-color-label"></div>
+                        <p>Pending</p>
+                    </div>
+                    <div className="flexible">
+                        <div className="completed-color-label"></div>
+                        <p>Completed</p>
+                    </div>
+                </div>
             </div>
             <div className="dashboard-layout">
                 <div className="dashboard-left">
@@ -222,11 +232,17 @@ const Dashboard = () => {
                     <div className="dashboard-table">
                         <div className="right-table-scroll">
                             <UiTable
-                            columns={DASHBOARD_TABLE_HEADERS()}
-                            dataSource={crNumberSummary?.fimNumberSummaryList}
-                            scroll={{ x: "max-content", y: 300 }}
-                            pagination={false}
-                        />
+                                columns={DASHBOARD_TABLE_HEADERS()}
+                                dataSource={crNumberSummary?.fimNumberSummaryList}
+                                scroll={{ x: "max-content", y: 300 }}
+                                pagination={false}
+                                rowClassName={(record) => {
+                                    if (record.totalQty === record.totalScannedQty) {
+                                        return "row-completed";
+                                    }
+                                    return "row-pending";
+                                }}
+                            />
                         </div>
                     </div>
                 </div>
