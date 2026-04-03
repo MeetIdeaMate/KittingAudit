@@ -31,6 +31,7 @@ export const CrReport = ({ crDetails, filterInfo }) => {
                             <th>Lable Count</th>
                             <th>Balance Qty</th>
                             <th>Scaned Label</th>
+                            <th>Box Qty</th>
                         </tr>
                     </thead>
 
@@ -58,6 +59,7 @@ export const CrReport = ({ crDetails, filterInfo }) => {
                                 <td>{row?.type === "PARENT" ? row?.kittedQty : row?.totalLabeledQty}</td>
                                 <td>{row?.balanceQty}</td>
                                 <td>{row?.scannedQty}</td>
+                                <td>{row?.packingLabelResponses?.length}</td>
                             </tr>
                         ))}
                     </tbody>
