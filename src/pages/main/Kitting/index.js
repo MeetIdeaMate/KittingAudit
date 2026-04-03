@@ -129,6 +129,7 @@ export const Kitting = () => {
       }));
       setPrintingDetails({});
       setMainPartPdfDetails({});
+      handleClose();
     },
     pageStyle: `
             @page {
@@ -767,7 +768,6 @@ export const Kitting = () => {
           const lastVal = payload?.split("-").pop();
           return labelMap?.hasOwnProperty(lastVal);
         });
-
         if (exists) {
           queryClient.prefetchQuery(["UPDATE_DUB_PARTS", ""], () =>
             updateDubParts(dublicatePayload, barCodeKittingInfoId)
