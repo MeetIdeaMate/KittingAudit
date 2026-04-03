@@ -220,11 +220,14 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="dashboard-table">
-                        <UiTable
+                        <div className="right-table-scroll">
+                            <UiTable
                             columns={DASHBOARD_TABLE_HEADERS()}
                             dataSource={crNumberSummary?.fimNumberSummaryList}
                             scroll={{ x: "max-content", y: 300 }}
+                            pagination={false}
                         />
+                        </div>
                     </div>
                 </div>
             </div>

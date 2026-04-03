@@ -183,6 +183,11 @@
     margin-top: 10px;
 }
 
+.right-table-scroll {
+  max-height: 320px;   
+  overflow-y: auto;
+}
+
 @media(max-width:1024px) {
 
     .dashboard-layout {
