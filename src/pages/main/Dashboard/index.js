@@ -76,7 +76,7 @@ const Dashboard = () => {
                 {
                     label: "Completed",
                     data: list?.map(details => details?.completedCrNumbers),
-                    backgroundColor: "#FF8C94",
+                    backgroundColor: "#A8E6CF",
                 },
                 {
                     label: "In Progress",
@@ -86,7 +86,7 @@ const Dashboard = () => {
                 {
                     label: "Pending",
                     data: list?.map(details => details?.pendingCrNumbers),
-                    backgroundColor: "#A8E6CF",
+                    backgroundColor: "#FF8C94",
                 },
             ],
         };
@@ -209,7 +209,7 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div style={{ marginTop: "10px" }}>
-                        <UiTable columns={DASHBOARD_TABLE_HEADERS()} dataSource={crNumberSummary?.fimNumberSummaryList} scroll={{ y: 300 }} />
+                        <UiTable columns={DASHBOARD_TABLE_HEADERS()} dataSource={crNumberSummary?.fimNumberSummaryList} pagination={false} />
                     </div>
                 </div>
             </div>
