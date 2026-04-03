@@ -111,7 +111,7 @@ const SideBar = () => {
     return (
         <>
             <aside className="sidebar scrollbar">
-                <div style={{ height: "80vh", overflowY: "scroll", scrollbarWidth: "none" }}>
+                <div style={{ height: "78vh", overflowY: "scroll", scrollbarWidth: "none" }}>
                     <h3 style={{ fontSize: "9px", position: "absolute", top: "2px", left: "5px", transform: "rotate(-45deg)" }}>{`${packageJson?.version}`}</h3>
                     <div style={{ display: "flex", padding: 0, margin: 0, justifyContent: "space-between", alignItems: "center", width: "100%" }}>
                         <img src={TechLambdasLogo} alt="" style={{ width: "25%" }} />
@@ -231,7 +231,7 @@ const SideBar = () => {
                 <div style={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <img src={questionCircle} alt="" style={{ width: "20px" }} />
-                        <p style={{ padding: 0, margin: 0 }}><b>For Enquiry</b></p>
+                        <p style={{ padding: 0, margin: 0 }}><b>For Inquiry</b></p>
                     </div>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <img src={phone} alt="Phone" style={{ width: "20px" }} />

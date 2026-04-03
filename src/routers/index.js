@@ -1,7 +1,7 @@
 import { ConfigProvider } from "antd";
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { ExcelUpload, Kitting, Login } from "../pages";
+import { Dashboard, ExcelUpload, Kitting, Login } from "../pages";
 import LayoutComponent from "../pages/main/layout";
 
 export const RouterNavigation = () => {
@@ -39,6 +39,7 @@ export const RouterNavigation = () => {
                     <Route path="/" element={<LayoutComponent />}>
                         <Route path="/ExcelUpload" element={<ExcelUpload />} />
                         <Route path="/Kitting" element={<Kitting />} />
+                        <Route path="/Dashboard" element={<Dashboard />} />
                     </Route>
                 </Routes>
             ) : (
