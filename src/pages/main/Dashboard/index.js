@@ -76,7 +76,7 @@ const Dashboard = () => {
                 {
                     label: "Completed",
                     data: list?.map(details => details?.completedCrNumbers),
-                    backgroundColor: "#FF8C94",
+                    backgroundColor: "#A8E6CF",
                 },
                 {
                     label: "In Progress",
@@ -86,7 +86,7 @@ const Dashboard = () => {
                 {
                     label: "Pending",
                     data: list?.map(details => details?.pendingCrNumbers),
-                    backgroundColor: "#A8E6CF",
+                    backgroundColor: "#FF8C94",
                 },
             ],
         };
@@ -113,6 +113,16 @@ const Dashboard = () => {
         <div className="dashboard-container">
             <div className="dashboard-header">
                 <h3>Dashboard</h3>
+                <div style={{width:"40%", display:"flex",gap:"20px"}}>
+                    <div className="flexible">
+                        <div className="pending-color-label"></div>
+                        <p>Pending</p>
+                    </div>
+                    <div className="flexible">
+                        <div className="completed-color-label"></div>
+                        <p>Completed</p>
+                    </div>
+                </div>
             </div>
             <div className="dashboard-layout">
                 <div className="dashboard-left">
@@ -220,11 +230,20 @@ const Dashboard = () => {
                         </div>
                     </div>
                     <div className="dashboard-table">
-                        <UiTable
-                            columns={DASHBOARD_TABLE_HEADERS()}
-                            dataSource={crNumberSummary?.fimNumberSummaryList}
-                            scroll={{ x: "max-content", y: 300 }}
-                        />
+                        <div className="right-table-scroll">
+                            <UiTable
+                                columns={DASHBOARD_TABLE_HEADERS()}
+                                dataSource={crNumberSummary?.fimNumberSummaryList}
+                                scroll={{ x: "max-content", y: 300 }}
+                                pagination={false}
+                                rowClassName={(record) => {
+                                    if (record.totalQty === record.totalScannedQty) {
+                                        return "row-completed";
+                                    }
+                                    return "row-pending";
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
