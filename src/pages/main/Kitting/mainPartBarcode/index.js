@@ -23,8 +23,8 @@ export const MainPartBarcode = ({
 }) => {
   const [isMissingOpen, setIsMissingOpen] = useState(1);
 
-  const totalLabelQty = (barcodes) => barcodes.reduce(
-    (sum, item) => sum + (item.labelQty || 0),
+  const totalLabelQty = (barcodes) => barcodes?.reduce(
+    (sum, item) => sum + (item?.labelQty || 0),
     0
   );
 

@@ -356,7 +356,7 @@ export const Kitting = () => {
           tempMap = { 1: printedTotal };
         }
       } else {
-        tempMap = { ...printedMap };
+        tempMap = details?.printingType === "GROUPED" ? { ...printedMap } : { 1: printedTotal };
       }
     } else if (activeMode === "update") {
       if (tabKey === "1") {
@@ -559,7 +559,7 @@ export const Kitting = () => {
   const handleChangeCrExcel = (id) => {
     setSelectedCrExcelDetails({});
     setOptions((prev) => ({ ...prev, fimOptions: [] }));
-    setFilterInfo((prev) => ({ ...prev, crNumber: id, fimNumber: ""}));
+    setFilterInfo((prev) => ({ ...prev, crNumber: id, fimNumber: "" }));
     queryClient.prefetchQuery(["GET_ALL_FIM_NOS", ""], () => getAllFimNos(id));
   };
 
@@ -1187,7 +1187,7 @@ export const Kitting = () => {
             >
               Edit
             </UiButton>
-            <UiButton
+            {!selectedPartDetails?.beforeDetails?.isDublicate && <UiButton
               onClick={() =>
                 handleDublicate(
                   selectedPartDetails?.beforeDetails?.isDublicate
@@ -1200,7 +1200,7 @@ export const Kitting = () => {
               {selectedPartDetails?.beforeDetails?.isDublicate
                 ? "Reprint"
                 : "Update"}
-            </UiButton>
+            </UiButton>}
           </div>
         }
         title={
