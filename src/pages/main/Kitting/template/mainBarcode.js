@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
 import React from "react";
 import Barcode from "react-barcode";
 
 export const MainBarcode = ({ stickers }) => {
 
-    const MAX_ROWS = 8;
-    const GROUPS = 2;
+    const MAX_ROWS = 12;
+    const GROUPS = 3;
+
     const createGridRows = (parts = []) => {
         const rows = [];
         for (let i = 0; i < MAX_ROWS; i++) {
@@ -18,132 +20,228 @@ export const MainBarcode = ({ stickers }) => {
         return rows;
     };
 
-    return <React.Fragment>
-        {stickers?.packingLabelResponses?.map((details, index) => {
-            const gridRows = createGridRows(details?.packingDetailsRes || []);
-
-            return <div style={{ width: "100%", display: "flex", justifyContent: "space-between", padding: "4px 0" }}>
-                <div style={{ width: "49%", border: "1px solid #ccc" }}>
-                    <div style={{ padding: "2px" }}>
-                        <div style={{
-                            fontSize: "22px",
-                            fontWeight: "700",
-                            padding: "6px",
-                            borderBottom: "1px solid #ccc"
-                        }}>
-                            {stickers?.parentPartNumber}
-                        </div>
-
-                        <div style={{
-                            textAlign: "center",
-                            padding: "10px 0",
-                            borderBottom: "1px solid #ccc"
-                        }}>
-                            <Barcode
-                                value={stickers?.parentPartNumber || "BARCODE"}
-                                width={1.4}
-                                height={40}
-                                fontSize={14}
-                                margin={0}
-                                format="CODE128"
-                                displayValue={false}
-                            />
-                        </div>
-                        <table style={{
-                            width: "100%",
-                            borderCollapse: "collapse",
-                            fontSize: "12px",
-                        }}>
-                            <thead>
-                                <tr>
-                                    <th style={th}>S.no</th>
-                                    <th style={th}>Part Name</th>
-                                    <th style={th}>Qty</th>
-                                    <th style={th}>Part Name</th>
-                                    <th style={th}>Qty</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {gridRows?.map((row, i) => (
-                                    <tr key={i}>
-                                        <td style={td}>{i + 1}</td>
-                                        {row?.map((item, idx) => (
-                                            <React.Fragment key={idx}>
-                                                <td style={td}>{item?.partNumber}</td>
-                                                <td style={td}>{item?.totalQty}</td>
-                                            </React.Fragment>
+    return (
+        <>
+            {stickers?.packingLabelResponses?.map((details, index) => {
+                const gridRows = createGridRows(details?.packingDetailsRes || []);
+                return (
+                    <div key={index} style={pageContainer}>
+                        <div style={mainLabel}>
+                            <div style={leftSection}>
+                                <div style={header}>
+                                    {stickers?.parentPartNumber}
+                                </div>
+                                <div style={barcodeContainer}>
+                                    <Barcode
+                                        value={stickers?.parentPartNumber || "BARCODE"}
+                                        width={1.4}
+                                        height={30}
+                                        margin={0}
+                                        displayValue={false}
+                                        format="CODE128"
+                                    />
+                                </div>
+                                <table style={table}>
+                                    <thead>
+                                        <tr>
+                                            <th style={th}>S.No</th>
+                                            <th style={th}>Part Numbers</th>
+                                            <th style={th}>QTY</th>
+                                            <th style={th}>Part Numbers</th>
+                                            <th style={th}>QTY</th>
+                                            <th style={th}>Part Numbers</th>
+                                            <th style={th}>QTY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {gridRows?.map((row, i) => (
+                                            <tr key={i}>
+                                                <td style={td}>{i + 1}</td>
+                                                {row.map((item, idx) => (
+                                                    <React.Fragment key={idx}>
+                                                        <td style={td}>{item?.partNumber}</td>
+                                                        <td style={td}>{item?.totalQty}</td>
+                                                    </React.Fragment>
+                                                ))}
+                                            </tr>
                                         ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                <div style={{ width: "49%", border: "1px solid #cccc" }}>
-                    <div style={{ padding: "2px" }}>
-                        <h3>Contract No: {stickers?.crNumber}</h3>
-                        <Barcode value={stickers?.crNumber ? `${stickers?.crNumber}` : "BARCODE"}
-                            width={1}
-                            height={17}
-                            fontSize={10}
-                            marginLeft={1}
-                            marginRight={1}
-                            textMargin={0}
-                            marginBottom={1}
-                            marginTop={1}
-                            format="CODE128"
-                            displayValue={false}
-                        />
-                        <h3>{stickers?.parentPartNumber}</h3>
-                        <Barcode value={stickers?.parentPartNumber ? `${stickers?.parentPartNumber}` : "BARCODE"}
-                            width={1}
-                            height={17}
-                            fontSize={10}
-                            marginLeft={1}
-                            marginRight={1}
-                            textMargin={0}
-                            marginBottom={1}
-                            marginTop={1}
-                            format="CODE128"
-                            displayValue={false}
-                        />
-                        <div style={{ display: "flex", justifyContent: "space-between", padding: "10px" }}>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div style={rightSection}>
+                                <div style={sectionStyle}>
+                                    <span style={badge}>OTIS-BW</span>
+                                </div>
+                                <div style={sectionStyle}>
+                                    <div style={text}>PACKED BY</div>
+                                    <div style={text}>{details?.packedBy ?? sessionStorage.getItem("name")}</div>
+                                </div>
+                                <div style={sectionStyle}>
+                                    <div style={text}>DATE</div>
+                                    <div style={text}>{details?.packedDate ? dayjs(details?.packedDate).format("DD-MM-YYYY") : ""}</div>
+                                </div>
+                                <div style={sectionStyle}>
+                                    <div style={text}>Product Color</div>
+                                </div>
+                                <div style={sectionStyle}>
+                                    <div style={text}>Case No.</div>
+                                    <div style={text}>{index + 1}</div>
+                                </div>
+                                <div style={sectionStyle}>
+                                    <div style={text}>{stickers?.packingLabelResponses?.length}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={secondLabel}>
                             <div>
-                                <h3>Qty: {details?.totalQty}</h3>
-                                <Barcode value={details?.totalQty ? `${details?.totalQty}` : "BARCODE"}
+                                <h3>Contract No: {stickers?.crNumber}</h3>
+                                <Barcode
+                                    value={stickers?.crNumber || "BARCODE"}
                                     width={1}
-                                    height={17}
-                                    fontSize={10}
-                                    marginLeft={1}
-                                    marginRight={1}
-                                    textMargin={0}
-                                    marginBottom={1}
-                                    marginTop={1}
-                                    format="CODE128"
+                                    height={20}
                                     displayValue={false}
+                                    format="CODE128"
                                 />
                             </div>
                             <div>
-                                <h3 style={{ padding: "5px", border: "1px solid #999", borderRadius: "5px" }}>Case.No<br />{index + 1}/{stickers?.packingLabelResponses?.length}</h3>
+                                <h3>Item : {stickers?.parentPartNumber}</h3>
+                                <Barcode
+                                    value={stickers?.parentPartNumber || "BARCODE"}
+                                    width={1}
+                                    height={20}
+                                    displayValue={false}
+                                    format="CODE128"
+                                />
+                            </div>
+                            <div style={footerRow}>
+                                <div>
+                                    <h3 sty>Qty: {details?.totalQty}</h3>
+                                    <Barcode
+                                        value={details?.totalQty || "BARCODE"}
+                                        width={1}
+                                        height={17}
+                                        displayValue={false}
+                                        format="CODE128"
+                                    />
+                                </div>
+                                <div style={caseBox}>
+                                    Case No
+                                    <br />
+                                    {index + 1} / {stickers?.packingLabelResponses?.length}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        })}
-    </React.Fragment>
+                );
+            })}
+        </>
+    );
+};
+
+const pageContainer = {
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+};
+
+const mainLabel = {
+    width: "150mm",
+    height: "100mm",
+    border: "1px solid #ccc",
+    display: "flex",
+    borderRadius: "5px",
+    pageBreakAfter: "always"
+};
+
+const leftSection = {
+    width: "85%",
+    padding: "2px"
+};
+
+const rightSection = {
+    width: "15%",
+    borderLeft: "1px solid #ccc",
+    display: "flex",
+    flexDirection: "column"
+};
+
+const header = {
+    fontSize: "16px",
+    fontWeight: "700",
+    padding: "3px",
+    borderBottom: "1px solid #ccc"
+};
+
+const barcodeContainer = {
+    textAlign: "center",
+    padding: "5px 0",
+    borderBottom: "1px solid #ccc"
+};
+
+const table = {
+    width: "100%",
+    borderCollapse: "collapse",
+    fontSize: "12px"
 };
 
 const th = {
     border: "1px solid #ccc",
-    padding: "4px",
     textAlign: "center",
     fontWeight: "600"
 };
 
 const td = {
     border: "1px solid #ccc",
-    padding: "4px",
     textAlign: "center",
+    lineHeight: "19px"
+};
+
+const sectionStyle = {
+    flex: 1,
+    borderBottom: "1px solid #ccc",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+};
+
+const text = {
+    fontSize: "11px",
+    margin: 0
+};
+
+const badge = {
+    backgroundColor: "#000",
+    color: "#fff",
+    padding: "2px 6px",
+    fontSize: "11px"
+};
+
+const secondLabel = {
+    width: "150mm",
+    height: "100mm",
+    border: "1px solid #ccc",
+    borderRadius: "5px",
+    // marginTop: "10px",
+    padding: "10px",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between"
+};
+
+const footerRow = {
+    display: "flex",
+    justifyContent: "space-between"
+};
+
+const caseBox = {
+    border: "2px solid #000",
+    borderRadius: "5px",
+    padding: "5px 10px",
+    textAlign: "center",
+    fontWeight: "600",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
 };
