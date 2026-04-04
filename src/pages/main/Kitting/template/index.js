@@ -67,106 +67,144 @@ export const PrintStickerLabels = ({
         <React.Fragment>
             <div style={{ margin: "auto" }}>
                 {tabDetails?.activeTab === "individual" &&
-                    rows?.map((row, rowIndex) => (
-                        <div
-                            key={rowIndex}
-                            style={{
-                                display: "flex",
-                                gap: "10px",
-                                justifyContent: "center",
-                                margin: "0 auto",
-                                pageBreakAfter: "always",
-                            }}
-                        >
-                            {row?.map((key) => (
-                                <div
-                                    key={key}
-                                    style={{
-                                        border: "1px solid #999",
-                                        padding: "5px",
-                                        boxSizing: "border-box",
-                                        borderRadius: "5px",
-                                        width: "50mm",
-                                        height: "25mm"
-                                    }}
-                                >
-                                    <div style={{ textAlign: "center" }}>
-                                        <Barcode
-                                            value={`${stickers?.partNumber}-${key}`}
-                                            width={1}
-                                            height={15}
-                                            fontSize={10}
-                                            margin={0}
-                                            format="CODE128"
+                    rows?.map((row, rowIndex) => {
+                        let updatedRow = [...row];
+                        if (row?.length === 1) {
+                            updatedRow.push("empty");
+                        }
+                        return (
+                            <div
+                                key={rowIndex}
+                                style={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    justifyContent: "center",
+                                    margin: "0 auto",
+                                    pageBreakAfter: "always",
+                                }}
+                            >
+                                {updatedRow?.map((key, index) =>
+                                    key === "empty" ? (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                width: "50mm",
+                                                height: "25mm",
+                                            }}
                                         />
-                                    </div>
-                                    <div>
-                                        <h3 style={{ margin: 0 }}>
-                                            {stickers?.partNumber}-{key}
-                                        </h3>
-                                        <h6 style={{ margin: 0 }}>
-                                            OTIS VENDOR:
-                                        </h6>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                                    ) : (
+                                        <div
+                                            key={key}
+                                            style={{
+                                                border: "1px solid #999",
+                                                padding: "5px",
+                                                boxSizing: "border-box",
+                                                borderRadius: "5px",
+                                                width: "50mm",
+                                                height: "25mm",
+                                            }}
+                                        >
+                                            <div style={{ textAlign: "center" }}>
+                                                <Barcode
+                                                    value={`${stickers?.partNumber}-${key}`}
+                                                    width={1}
+                                                    height={15}
+                                                    fontSize={10}
+                                                    margin={0}
+                                                    format="CODE128"
+                                                />
+                                            </div>
+
+                                            <div>
+                                                <h3 style={{ margin: 0 }}>
+                                                    {stickers?.partNumber}-{key}
+                                                </h3>
+                                                <h6 style={{ margin: 0 }}>
+                                                    OTIS VENDOR:
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    )
+                                )}
+                            </div>
+                        );
+                    })}
                 {tabDetails?.activeTab === "grouped" &&
-                    rows?.map((row, rowIndex) => (
-                        <div
-                            key={rowIndex}
-                            style={{
-                                display: "flex",
-                                gap: "10px",
-                                justifyContent: "center",
-                                margin: "0 auto",
-                                pageBreakAfter: "always",
-                            }}
-                        >
-                            {row.map(([key, value], index) => (
-                                <div
-                                    key={index}
-                                    style={{
-                                        border: "1px solid #999",
-                                        padding: "5px",
-                                        boxSizing: "border-box",
-                                        borderRadius: "5px",
-                                        width: "50mm",
-                                        height: "25mm"
-                                    }}
-                                >
-                                    <div style={{ textAlign: "center" }}>
-                                        <Barcode
-                                            value={`${stickers?.partNumber}-${key}`}
-                                            width={1}
-                                            height={15}
-                                            fontSize={10}
-                                            margin={0}
-                                            format="CODE128"
-                                        />
-                                    </div>
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center"
-                                        }}
-                                    >
-                                        <h3 style={{ margin: 0 }}>
-                                            {stickers?.partNumber}
-                                        </h3>
-                                        <h3 style={{ margin: 0 }}>
-                                            {value}
-                                        </h3>
-                                    </div>
-                                    <h6 style={{ margin: 0 }}>
-                                        OTIS VENDOR:
-                                    </h6>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
+                    rows?.map((row, rowIndex) => {
+                        let updatedRow = [...row];
+                        if (row?.length === 1) {
+                            updatedRow.push("empty");
+                        }
+                        return (
+                            <div
+                                key={rowIndex}
+                                style={{
+                                    display: "flex",
+                                    gap: "10px",
+                                    justifyContent: "center",
+                                    margin: "0 auto",
+                                    pageBreakAfter: "always",
+                                }}
+                            >
+                                {updatedRow?.map((item, index) => {
+                                    if (item === "empty") {
+                                        return (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    width: "50mm",
+                                                    height: "25mm",
+                                                }}
+                                            />
+                                        );
+                                    }
+
+                                    const [key, value] = item;
+                                    return (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                border: "1px solid #999",
+                                                padding: "5px",
+                                                boxSizing: "border-box",
+                                                borderRadius: "5px",
+                                                width: "50mm",
+                                                height: "25mm",
+                                            }}
+                                        >
+                                            <div style={{ textAlign: "center" }}>
+                                                <Barcode
+                                                    value={`${stickers?.partNumber}-${key}`}
+                                                    width={1}
+                                                    height={15}
+                                                    fontSize={10}
+                                                    margin={0}
+                                                    format="CODE128"
+                                                />
+                                            </div>
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    justifyContent: "space-between",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <h3 style={{ margin: 0 }}>
+                                                    {stickers?.partNumber}
+                                                </h3>
+                                                <h3 style={{ margin: 0 }}>
+                                                    {value}
+                                                </h3>
+                                            </div>
+                                            <h6 style={{ margin: 0 }}>
+                                                OTIS VENDOR:
+                                            </h6>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
             </div>
         </React.Fragment>
     );
