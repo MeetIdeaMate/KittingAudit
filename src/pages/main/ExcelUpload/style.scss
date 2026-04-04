@@ -47,7 +47,6 @@
 .excel-right {
   width: 70%;
   height: 100%;
-  overflow-y: auto;
 }
 
 .status-wrapper {
@@ -76,6 +75,10 @@
 .excel-header-controls,
 .status-wrapper {
   transition: all 0.2s ease;
+}
+
+.ant-table-expanded-row > td {
+  padding: 0 !important;
 }
 
 @media (max-width: 1024px) {
