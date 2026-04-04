@@ -133,7 +133,7 @@ export const Kitting = () => {
     },
     pageStyle: `
             @page {
-                size: A4 isOpen?.isOpenMasterPrinter ? landscape : portraite ;
+                size: auto portraite ;
                 margin: auto;
             }
             @media print {
