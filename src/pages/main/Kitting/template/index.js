@@ -65,26 +65,26 @@ export const PrintStickerLabels = ({
 
     return (
         <React.Fragment>
-            <div style={{ margin: "auto" }}>
-                {tabDetails?.activeTab === "individual" &&
-                    rows?.map((row, rowIndex) => {
-                        let updatedRow = [...row];
-                        if (row?.length === 1) {
-                            updatedRow.push("empty");
-                        }
-                        return (
-                            <div
-                                key={rowIndex}
-                                style={{
-                                    display: "flex",
-                                    gap: "10px",
-                                    justifyContent: "center",
-                                    margin: "0 auto",
-                                    pageBreakAfter: "always",
-                                }}
-                            >
-                                {updatedRow?.map((key, index) =>
-                                    key === "empty" ? (
+            <div style={{ margin: "auto", width: "100mm" }}>
+                {rows?.map((row, rowIndex) => {
+                    let updatedRow = [...row];
+                    if (row?.length === 1) {
+                        updatedRow.push("empty");
+                    }
+                    return (
+                        <div
+                            key={rowIndex}
+                            style={{
+                                display: "flex",
+                                gap: "1px",
+                                justifyContent: "space-between",
+                                marginBottom: "2mm",
+                                pageBreakAfter: "always",
+                            }}
+                        >
+                            {updatedRow?.map((item, index) => {
+                                if (item === "empty") {
+                                    return (
                                         <div
                                             key={index}
                                             style={{
@@ -92,7 +92,11 @@ export const PrintStickerLabels = ({
                                                 height: "25mm",
                                             }}
                                         />
-                                    ) : (
+                                    );
+                                }
+                                if (tabDetails?.activeTab === "individual") {
+                                    const key = item;
+                                    return (
                                         <div
                                             key={key}
                                             style={{
@@ -114,7 +118,6 @@ export const PrintStickerLabels = ({
                                                     format="CODE128"
                                                 />
                                             </div>
-
                                             <div>
                                                 <h3 style={{ margin: 0 }}>
                                                     {stickers?.partNumber}-{key}
@@ -124,41 +127,9 @@ export const PrintStickerLabels = ({
                                                 </h6>
                                             </div>
                                         </div>
-                                    )
-                                )}
-                            </div>
-                        );
-                    })}
-                {tabDetails?.activeTab === "grouped" &&
-                    rows?.map((row, rowIndex) => {
-                        let updatedRow = [...row];
-                        if (row?.length === 1) {
-                            updatedRow.push("empty");
-                        }
-                        return (
-                            <div
-                                key={rowIndex}
-                                style={{
-                                    display: "flex",
-                                    gap: "10px",
-                                    justifyContent: "center",
-                                    margin: "0 auto",
-                                    pageBreakAfter: "always",
-                                }}
-                            >
-                                {updatedRow?.map((item, index) => {
-                                    if (item === "empty") {
-                                        return (
-                                            <div
-                                                key={index}
-                                                style={{
-                                                    width: "50mm",
-                                                    height: "25mm",
-                                                }}
-                                            />
-                                        );
-                                    }
-
+                                    );
+                                }
+                                if (tabDetails?.activeTab === "grouped") {
                                     const [key, value] = item;
                                     return (
                                         <div
@@ -201,10 +172,12 @@ export const PrintStickerLabels = ({
                                             </h6>
                                         </div>
                                     );
-                                })}
-                            </div>
-                        );
-                    })}
+                                }
+                                return null;
+                            })}
+                        </div>
+                    );
+                })}
             </div>
         </React.Fragment>
     );
