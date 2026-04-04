@@ -126,6 +126,85 @@ export const ExcelUpload = () => {
         queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload));
     };
 
+    const expandedTable = (details) => {
+        const completed = details?.completedCrNumbers || [];
+        const pending = details?.pendingCrNumbers || [];
+        const inprogress = details?.inProgressCrNumbers || [];
+        return (
+            <div style={{ width: "100%", padding: "10px" }}>
+                {
+                    pending?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+                        <p className="padding-remove">{pending?.length > 0 ? `Pending  (${pending?.length}) :` : ""}</p>
+                        {
+                            pending?.map((pendingCrNo) => {
+                                return (
+                                    <span style={{
+                                        padding: "4px 10px",
+                                        borderRadius: "2px",
+                                        border: `1px solid #FA8C16`,
+                                        backgroundColor: "#FFF7E6",
+                                        color: "#FA8C16",
+                                        fontSize: "13px",
+                                        fontWeight: 500,
+                                        whiteSpace: "wrap",
+                                    }}
+                                    >{pendingCrNo}</span>
+                                )
+                            })
+                        }
+                    </div>
+                }
+                {
+                    inprogress?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", paddingTop: "10px" }}>
+                        <p className="padding-remove">{inprogress?.length > 0 ? `In Progress  (${inprogress?.length}) :` : ""}</p>
+                        {
+                            inprogress?.map((inProgressCrNo) => {
+                                return (
+                                    <span
+                                        style={{
+                                            padding: "4px 10px",
+                                            borderRadius: "2px",
+                                            border: `1px solid #1a4ac4ff`,
+                                            backgroundColor: "#d8e0f5ff",
+                                            color: "#1a4ac4ff",
+                                            fontSize: "13px",
+                                            fontWeight: 500,
+                                            whiteSpace: "wrap",
+                                        }}
+                                    >
+                                        {inProgressCrNo}
+                                    </span>
+                                )
+                            })
+                        }
+                    </div>
+                }
+                {
+                    completed?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", paddingTop: "10px" }}>
+                        <p className="padding-remove">{completed?.length > 0 ? `Completed  (${completed?.length}) :` : ""}</p>
+                        {
+                            completed?.map((completedCrNo) => {
+                                return (
+                                    <span style={{
+                                        padding: "4px 10px",
+                                        borderRadius: "2px",
+                                        border: `1px solid #52C41A`,
+                                        backgroundColor: "#F6FFED",
+                                        color: "#52C41A",
+                                        fontSize: "13px",
+                                        fontWeight: 500,
+                                        whiteSpace: "wrap",
+                                    }}
+                                    >{completedCrNo}</span>
+                                )
+                            })
+                        }
+                    </div>
+                }
+            </div>
+        )
+    }
+
     useEffect(() => {
         let isValid = crExcelDetails?.excel?.name;
         setIsValidate(Boolean(isValid));
@@ -190,6 +269,11 @@ export const ExcelUpload = () => {
                             total: barCodeKittingAllData?.totalElements,
                             onChange: (page, size) => handlePagination(page, size),
                         }}
+                        expandable={{
+                            expandedRowRender: expandedTable,
+                            defaultExpandedRowKeys: ["0"]
+                        }}
+                        rowKey={(item) => item?.id}
                     />
                 </div>
             </div>
