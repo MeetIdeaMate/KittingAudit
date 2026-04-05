@@ -82,7 +82,6 @@ export const PrintStickerLabels = ({
                         style={{
                             display: "flex",
                             justifyContent: "space-between",
-                            marginBottom: "2mm",
                             breakInside: "avoid",
                             pageBreakAfter: "always",
                             breakAfter: "always",
