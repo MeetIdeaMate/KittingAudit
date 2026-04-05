@@ -3,7 +3,7 @@ import { UiButton, UiCounterBatch, UiModal, UiSearchBox, UiTable } from "../../.
 import CreateUser from "./createUser";
 import { USER_COLUMN_HEADER } from "./Config";
 import * as api from "../../../actions";
-import { USER } from "../../../apiservices/endpoints";
+import { CONFIG, USER } from "../../../apiservices/endpoints";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
@@ -30,15 +30,49 @@ export const User = () => {
     const [mainRecord, setMainRecord] = useState({});
     const [pageSize, setPageSize] = useState({ page: 0, size: 25, });
     const [searchTerm, setSearchTerm] = useState("");
+    const [designationOptions, setDesignationOptions] = useState([]);
+    const [roleOptions, setRoleOptions] = useState([]);
+    const [isButtonEnabled, setButtonEnabled] = useState(false);
 
     const addUser = (payload) => api.post(`${USER}`, payload);
     const getUser = (pages, searchTerm, size) => api.get(`${USER}/page?page=${pages}&size=${size}${searchTerm ? `&name=${searchTerm}` : ""}`);
+    const getAllDesignation = () => api.get(`${CONFIG}/Designation`);
+    const getAllRole = () => api.get(`${CONFIG}/Role`);
 
-    const { isFetching: isFetchingUser, refetch: refetchUsers } = useQuery(["FETCH_ALL_USER", pageSize?.page, searchTerm, pageSize?.size], ()=>getUser(pageSize?.page, searchTerm, pageSize?.size), {
+    const { isFetching: isFetchingUser, refetch: refetchUsers } = useQuery(["FETCH_ALL_USER", pageSize?.page, searchTerm, pageSize?.size], () => getUser(pageSize?.page, searchTerm, pageSize?.size), {
         enabled: true,
         refetchOnWindowFocus: false,
         onSuccess: (allUserResponse) => {
-            setAllUserDetails(allUserResponse?.content);
+            if (allUserResponse?.statusCode === 200) {
+                setAllUserDetails(allUserResponse?.result?.usersWithPage?.content);
+            }
+            else {
+                showToast.error("Error", `${allUserResponse?.error?.message}`);
+            }
+        }
+    });
+
+    useQuery(["FETCH_DESIGNATION", ""], getAllDesignation, {
+        enabled: true,
+        refetchOnWindowFocus: false,
+        onSuccess: (designationResponse) => {
+            const designationOptions = designationResponse?.configuration?.map((designation) => ({
+                key: designation,
+                value: designation,
+            }));
+            setDesignationOptions(designationOptions);
+        }
+    });
+
+    useQuery(["FETCH_ROLE", ""], getAllRole, {
+        enabled: true,
+        refetchOnWindowFocus: false,
+        onSuccess: (roleResponse) => {
+            const roleOptions = roleResponse?.configuration?.map((role) => ({
+                key: role,
+                value: role,
+            }));
+            setRoleOptions(roleOptions);
         }
     });
 
@@ -46,7 +80,15 @@ export const User = () => {
         enabled: false,
         refetchOnWindowFocus: false,
         onSuccess: (userResponse) => {
-
+            if (userResponse?.data?.statusCode === 201) {
+                showToast.success("Success", "User Created Successfully!!!");
+                setIsOpenCreateUser(false);
+                setUserDetails({});
+                refetchUsers();
+            }
+            else {
+                showToast.error("Error", `${userResponse?.message}`);
+            }
         }
     });
 
@@ -76,6 +118,7 @@ export const User = () => {
 
     const handleClose = () => {
         setIsOpenCreateUser(false);
+        setUserDetails({});
     };
 
     const handleChange = (fieldValue, fieldName) => {
@@ -87,7 +130,7 @@ export const User = () => {
     };
 
     const handleSubmit = () => {
-        queryClient.prefetchQuery(["ADD_USER", ""], addUser(userDetails));
+        queryClient.prefetchQuery(["ADD_USER", ""], () => addUser(userDetails));
     };
 
     const handleModalOpen = (userDetails) => {
@@ -130,6 +173,11 @@ export const User = () => {
     };
 
     useEffect(() => {
+        let enable = Boolean(userDetails?.name && userDetails?.designation && userDetails?.role && userDetails?.userName && userDetails?.passWord);
+        setButtonEnabled(enable);
+    }, [userDetails]);
+
+    useEffect(() => {
         const isLoading = isFetchingAddUser || isFetchingUser;
         dispatch(loaderReducer(isLoading));
     }, [dispatch, isFetchingAddUser, isFetchingUser]);
@@ -158,13 +206,13 @@ export const User = () => {
                 columns={USER_COLUMN_HEADER(handleModalStatusOpen, handleModalOpen)}
                 dataSource={allUserDetails}
                 pagination={{
-                        pageSize: pageSize?.size,
-                        current: pageSize?.page + 1,
-                        pageSizeOptions: [25, 50, 75, 100],
-                        showSizeChanger:true,
-                        // total: getUsersResponse?.totalElements,
-                        onChange: (page, size) => handlePagination(page, size),
-                    }}
+                    pageSize: pageSize?.size,
+                    current: pageSize?.page + 1,
+                    pageSizeOptions: [25, 50, 75, 100],
+                    showSizeChanger: true,
+                    // total: getUsersResponse?.totalElements,
+                    onChange: (page, size) => handlePagination(page, size),
+                }}
             />
             {
                 isOpenCreateUser && <CreateUser
@@ -172,6 +220,9 @@ export const User = () => {
                     handleClose={handleClose}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
+                    designationOptions={designationOptions}
+                    roleOptions={roleOptions}
+                    isButtonEnabled={isButtonEnabled}
                 />
             }
             <UiModal open={isModalOpen} onCancel={() => setModalOpen(false)}

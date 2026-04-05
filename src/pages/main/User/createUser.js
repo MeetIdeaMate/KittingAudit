@@ -1,33 +1,45 @@
-import { UiButton, UiDrawer, UiTextBox } from "../../../components";
+import { UiButton, UiDrawer, UiSelect, UiTextBox } from "../../../components";
 
 const CreateUser = ({
     isOpenCreateUser,
     handleClose,
     handleChange,
-    handleSubmit
+    handleSubmit,
+    designationOptions,
+    roleOptions,
+    isButtonEnabled
 }) => {
     return (
         <div>
-            <UiDrawer 
-            title="Create User"
-            open={isOpenCreateUser} onClose={handleClose} footer={
-                <div style={{display:"flex",justifyContent:"right",gap:"10px"}}>
-                    <UiButton onClick={handleClose}>Cancel</UiButton>
-                    <UiButton type="primary" onClick={handleSubmit}>Save</UiButton>
-                </div>
-            }>
+            <UiDrawer
+                title="Create User"
+                open={isOpenCreateUser} onClose={handleClose} footer={
+                    <div style={{ display: "flex", justifyContent: "right", gap: "10px" }}>
+                        <UiButton onClick={handleClose}>Cancel</UiButton>
+                        <UiButton type="primary" disabled={!isButtonEnabled} onClick={handleSubmit}>Save</UiButton>
+                    </div>
+                }>
                 <div>
-                    <label>Name </label>
-                    <UiTextBox placeholder="Name" name="name" onChange={(event)=>handleChange(event.target.value,"name")}/>
-                     <label>Designation </label>
-                    <UiTextBox placeholder="Designation" name="designation" onChange={(event)=>handleChange(event.target.value,"designation")}/>
-                    <label>Password </label>
-                    <UiTextBox placeholder="Password" name="password" onChange={(event)=>handleChange(event.target.value,"password")}/>
-                    <label>Username </label>
-                    <UiTextBox placeholder="Username" name="username" onChange={(event)=>handleChange(event.target.value,"username")}/>
-                    <label>Role </label>
-                    <UiTextBox placeholder="Role" name="role" onChange={(event)=>handleChange(event.target.value,"role")}/>
-                   
+                    <label>Name <span style={{ color: "red" }}>*</span></label>
+                    <UiTextBox placeholder="Name" name="name" onChange={(event) => handleChange(event?.target?.value, "name")} />
+                    <label>Designation <span style={{ color: "red" }}>*</span></label>
+                    <UiSelect
+                        placeholder="Designation"
+                        name="designation"
+                        options={designationOptions}
+                        onChange={(value) => handleChange(value, "designation")}
+                    />
+                    <label>Role <span style={{ color: "red" }}>*</span></label>
+                    <UiSelect
+                        placeholder="Role"
+                        name="role"
+                        options={roleOptions}
+                        onChange={(value) => handleChange(value, "role")}
+                    />
+                    <label>Username <span style={{ color: "red" }}>*</span></label>
+                    <UiTextBox placeholder="Username" name="username" onChange={(event) => handleChange(event?.target?.value, "userName")} />
+                    <label>Password <span style={{ color: "red" }}>*</span></label>
+                    <UiTextBox placeholder="Password" name="password" onChange={(event) => handleChange(event?.target?.value, "passWord")} />
                 </div>
             </UiDrawer>
         </div>
