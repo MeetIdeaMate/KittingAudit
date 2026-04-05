@@ -39,11 +39,13 @@ export const User = () => {
     const getAllDesignation = () => api.get(`${CONFIG}/Designation`);
     const getAllRole = () => api.get(`${CONFIG}/Role`);
 
-    const { isFetching: isFetchingUser, refetch: refetchUsers } = useQuery(["FETCH_ALL_USER", pageSize?.page, searchTerm, pageSize?.size], () => getUser(pageSize?.page, searchTerm, pageSize?.size), {
+    const { data:allUsers, isFetching: isFetchingUser, refetch: refetchUsers } = useQuery(["FETCH_ALL_USER", pageSize?.page, searchTerm, pageSize?.size], () => getUser(pageSize?.page, searchTerm, pageSize?.size), {
         enabled: true,
         refetchOnWindowFocus: false,
         onSuccess: (allUserResponse) => {
             if (allUserResponse?.statusCode === 200) {
+                console.log("allUserResponse",allUserResponse);
+                
                 setAllUserDetails(allUserResponse?.result?.usersWithPage?.content);
             }
             else {
@@ -210,7 +212,7 @@ export const User = () => {
                     current: pageSize?.page + 1,
                     pageSizeOptions: [25, 50, 75, 100],
                     showSizeChanger: true,
-                    // total: getUsersResponse?.totalElements,
+                    total: allUsers?.result?.usersWithPage?.totalElements,
                     onChange: (page, size) => handlePagination(page, size),
                 }}
             />
