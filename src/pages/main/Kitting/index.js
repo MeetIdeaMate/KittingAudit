@@ -39,7 +39,7 @@ const PrintSticker = React.forwardRef((props, ref) => (
 ));
 
 const PrintMasterPdf = React.forwardRef((props, ref) => (
-  <div ref={ref}>
+  <div ref={ref} className="rotate-print">
     <MainBarcode stickers={props.stickers} />
   </div>
 ));
@@ -133,11 +133,28 @@ export const Kitting = () => {
     },
     pageStyle: `
     @page {
-      size: auto portrait;
+      size: ${isOpen?.isOpenMasterPrinter
+        ? "150mm 100mm"
+        : "100mm 25mm"
+      };
       margin: 0;
     }
-      body {
-        margin: 0;
+    body{
+      margin:0;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    ${isOpen?.isOpenMasterPrinter
+        ? `
+        .rotate-print{
+          // transform: rotate(90deg);
+          // transform-origin: center;
+          // width:100vh;
+          // height:100vw;
+        }
+      `
+        : ""
       }
   `,
   });
