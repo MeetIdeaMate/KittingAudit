@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Dashboard, ExcelUpload, Kitting, Login } from "../pages";
 import LayoutComponent from "../pages/main/layout";
+import { User } from "../pages/main/User";
 
 export const RouterNavigation = () => {
 
@@ -40,6 +41,7 @@ export const RouterNavigation = () => {
                         <Route path="/ExcelUpload" element={<ExcelUpload />} />
                         <Route path="/Kitting" element={<Kitting />} />
                         <Route path="/Dashboard" element={<Dashboard />} />
+                        <Route path="/User" element={<User/>}/>
                     </Route>
                 </Routes>
             ) : (
