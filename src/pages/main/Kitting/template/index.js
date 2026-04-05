@@ -1,11 +1,16 @@
-import React from "react";
 import Barcode from "react-barcode";
 
 export const PrintStickerLabels = ({
     stickers,
     tabDetails,
 }) => {
-    const { templabeledinfoMap, dublicateBarcode, isDublicate, labelMap, mode } = stickers;
+    const {
+        templabeledinfoMap,
+        dublicateBarcode,
+        isDublicate,
+        labelMap,
+        mode,
+    } = stickers;
 
     const filteredEntries = (dublicateBarcode || [])
         ?.map(code => code?.barcodeId?.split("-").pop())
@@ -24,9 +29,10 @@ export const PrintStickerLabels = ({
     let printMap = templabeledinfoMap;
 
     if (mode === "update") {
-        printMap = tabDetails?.activeTab === "individual"
-            ? templabeledinfoMap
-            : getNewlyAddedMap(labelMap, templabeledinfoMap);
+        printMap =
+            tabDetails?.activeTab === "individual"
+                ? templabeledinfoMap
+                : getNewlyAddedMap(labelMap, templabeledinfoMap);
     }
     else if (isDublicate && mode !== "edit") {
         printMap = filteredMap;
@@ -64,121 +70,123 @@ export const PrintStickerLabels = ({
             : chunkArray(entries, 2);
 
     return (
-        <React.Fragment>
-            <div style={{ margin: "auto", width: "100mm" }}>
-                {rows?.map((row, rowIndex) => {
-                    let updatedRow = [...row];
-                    if (row?.length === 1) {
-                        updatedRow.push("empty");
-                    }
-                    return (
-                        <div
-                            key={rowIndex}
-                            style={{
-                                display: "flex",
-                                gap: "1px",
-                                justifyContent: "space-between",
-                                marginBottom: "2mm",
-                                pageBreakAfter: "always",
-                            }}
-                        >
-                            {updatedRow?.map((item, index) => {
-                                if (item === "empty") {
-                                    return (
-                                        <div
-                                            key={index}
-                                            style={{
-                                                width: "50mm",
-                                                height: "25mm",
-                                            }}
-                                        />
-                                    );
-                                }
-                                if (tabDetails?.activeTab === "individual") {
-                                    const key = item;
-                                    return (
-                                        <div
-                                            key={key}
-                                            style={{
-                                                border: "1px solid #999",
-                                                padding: "5px",
-                                                boxSizing: "border-box",
-                                                borderRadius: "5px",
-                                                width: "50mm",
-                                                height: "25mm",
-                                            }}
-                                        >
-                                            <div style={{ textAlign: "center" }}>
-                                                <Barcode
-                                                    value={`${stickers?.partNumber}-${key}`}
-                                                    width={1}
-                                                    height={15}
-                                                    fontSize={10}
-                                                    margin={0}
-                                                    format="CODE128"
-                                                />
-                                            </div>
-                                            <div>
-                                                <h3 style={{ margin: 0 }}>
-                                                    {stickers?.partNumber}-{key}
-                                                </h3>
-                                                <h6 style={{ margin: 0 }}>
-                                                    OTIS VENDOR:
-                                                </h6>
-                                            </div>
+        <div style={{ margin: "auto", width: "100mm" }}>
+            {rows?.map((row, rowIndex) => {
+                let updatedRow = [...row];
+                if (row?.length === 1) {
+                    updatedRow.push("empty");
+                }
+                return (
+                    <div
+                        key={rowIndex}
+                        style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            marginBottom: "2mm",
+                            breakInside: "avoid",
+                            pageBreakAfter: "always",
+                            breakAfter: "always",
+                        }}
+                    >
+                        {updatedRow?.map((item, index) => {
+                            if (item === "empty") {
+                                return (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            width: "50mm",
+                                            height: "25mm",
+                                        }}
+                                    />
+                                );
+                            }
+                            if (tabDetails?.activeTab === "individual") {
+                                const key = item;
+                                return (
+                                    <div
+                                        key={key}
+                                        style={{
+                                            border: "1px solid #999",
+                                            padding: "5px",
+                                            boxSizing: "border-box",
+                                            borderRadius: "5px",
+                                            width: "50mm",
+                                            height: "25mm",
+                                        }}
+                                    >
+                                        <div style={{ textAlign: "center" }}>
+                                            <Barcode
+                                                value={`${stickers?.partNumber}-${key}`}
+                                                width={1}
+                                                height={15}
+                                                fontSize={10}
+                                                margin={0}
+                                                format="CODE128"
+                                            />
                                         </div>
-                                    );
-                                }
-                                if (tabDetails?.activeTab === "grouped") {
-                                    const [key, value] = item;
-                                    return (
-                                        <div
-                                            key={index}
-                                            style={{
-                                                border: "1px solid #999",
-                                                padding: "5px",
-                                                boxSizing: "border-box",
-                                                borderRadius: "5px",
-                                                width: "50mm",
-                                                height: "25mm",
-                                            }}
-                                        >
-                                            <div style={{ textAlign: "center" }}>
-                                                <Barcode
-                                                    value={`${stickers?.partNumber}-${key}`}
-                                                    width={1}
-                                                    height={15}
-                                                    fontSize={10}
-                                                    margin={0}
-                                                    format="CODE128"
-                                                />
-                                            </div>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    justifyContent: "space-between",
-                                                    alignItems: "center",
-                                                }}
-                                            >
-                                                <h3 style={{ margin: 0 }}>
-                                                    {stickers?.partNumber}
-                                                </h3>
-                                                <h3 style={{ margin: 0 }}>
-                                                    {value}
-                                                </h3>
-                                            </div>
+                                        <div>
+                                            <h3 style={{ margin: 0 }}>
+                                                {stickers?.partNumber}-{key}
+                                            </h3>
                                             <h6 style={{ margin: 0 }}>
                                                 OTIS VENDOR:
                                             </h6>
                                         </div>
-                                    );
-                                }
-                                return null;
-                            })}
-                        </div>
-                    );
-                })}
-            </div>
-        </React.Fragment>
+                                    </div>
+                                );
+                            }
+                            if (tabDetails?.activeTab === "grouped") {
+                                const [key, value] = item;
+
+                                return (
+                                    <div
+                                        key={index}
+                                        style={{
+                                            border: "1px solid #999",
+                                            padding: "5px",
+                                            boxSizing: "border-box",
+                                            borderRadius: "5px",
+                                            width: "50mm",
+                                            height: "25mm",
+                                        }}
+                                    >
+                                        <div style={{ textAlign: "center" }}>
+                                            <Barcode
+                                                value={`${stickers?.partNumber}-${key}`}
+                                                width={1}
+                                                height={15}
+                                                fontSize={10}
+                                                margin={0}
+                                                format="CODE128"
+                                            />
+                                        </div>
+
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                justifyContent: "space-between",
+                                                alignItems: "center",
+                                            }}
+                                        >
+                                            <h3 style={{ margin: 0 }}>
+                                                {stickers?.partNumber}
+                                            </h3>
+                                            <h3 style={{ margin: 0 }}>
+                                                {value}
+                                            </h3>
+                                        </div>
+
+                                        <h6 style={{ margin: 0 }}>
+                                            OTIS VENDOR:
+                                        </h6>
+                                    </div>
+                                );
+                            }
+                            return null;
+                        })}
+                    </div>
+                );
+            })}
+        </div>
     );
 };
