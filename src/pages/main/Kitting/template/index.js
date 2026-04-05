@@ -303,7 +303,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                     >
                                         <div style={{ textAlign: "center" }}>
                                             <Barcode
-                                                value={`${stickers?.partNumber}-${key}`}
+                                                value={`${stickers?.barCode}-${key}`}
                                                 width={1}
                                                 height={15}
                                                 fontSize={10}
@@ -339,7 +339,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                     >
                                         <div style={{ textAlign: "center" }}>
                                             <Barcode
-                                                value={`${stickers?.partNumber}-${key}`}
+                                                value={`${stickers?.barCode}-${key}`}
                                                 width={1}
                                                 height={15}
                                                 fontSize={10}
