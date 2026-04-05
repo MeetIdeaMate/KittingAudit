@@ -94,7 +94,7 @@ export const PrintStickerLabels = ({
                                         key={index}
                                         style={{
                                             width: "50mm",
-                                            height: "25mm",
+                                            height: "23mm",
                                         }}
                                     />
                                 );
@@ -110,7 +110,7 @@ export const PrintStickerLabels = ({
                                             boxSizing: "border-box",
                                             borderRadius: "5px",
                                             width: "50mm",
-                                            height: "25mm",
+                                            height: "23mm",
                                         }}
                                     >
                                         <div style={{ textAlign: "center" }}>
@@ -146,7 +146,7 @@ export const PrintStickerLabels = ({
                                             boxSizing: "border-box",
                                             borderRadius: "5px",
                                             width: "50mm",
-                                            height: "25mm",
+                                            height: "23mm",
                                         }}
                                     >
                                         <div style={{ textAlign: "center" }}>
