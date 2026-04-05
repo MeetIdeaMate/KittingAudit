@@ -3,59 +3,9 @@ import { printer } from "../../../../assets/images";
 
 export const ExcelUploadTaleColumn = ({ handleDownloadFile }) => [
     {
-        title: "Contract Number",
-        dataIndex: "crNumbers",
-        render: (_, record) => {
-
-            const all = record?.crNumbers || [];
-            const completed = record?.completedCrNumbers || [];
-            const pending = record?.pendingCrNumbers || [];
-            const inprogress = record?.inProgressCrNumbers || [];
-
-            return (
-                <div style={{ display: "flex", gap: "3px", flexWrap: "wrap" }}>
-                    {all?.map((crNo, index) => {
-
-                        let borderColor = "#d9d9d9";
-                        let bgColor = "#fafafa";
-                        let textColor = "#000";
-
-                        if (completed.includes(crNo)) {
-                            borderColor = "#52C41A";
-                            bgColor = "#F6FFED";
-                            textColor = "#52C41A";
-                        }
-                        else if (pending.includes(crNo)) {
-                            borderColor = "#FA8C16";
-                            bgColor = "#FFF7E6";
-                            textColor = "#FA8C16";
-                        } else if (inprogress.includes(crNo)) {
-                            borderColor = "#1a4ac4ff";
-                            bgColor = "#d8e0f5ff";
-                            textColor = "#1a4ac4ff";
-                        }
-
-                        return (
-                            <span
-                                key={index}
-                                style={{
-                                    padding: "4px 10px",
-                                    borderRadius: "2px",
-                                    border: `1px solid ${borderColor}`,
-                                    backgroundColor: bgColor,
-                                    color: textColor,
-                                    fontSize: "13px",
-                                    fontWeight: 500,
-                                    whiteSpace: "nowrap",
-                                }}
-                            >
-                                {crNo}
-                            </span>
-                        );
-                    })}
-                </div>
-            );
-        }
+        title: "S.No",
+        dataIndex: "sno",
+        render: (_, __, index) => index + 1,
     },
     {
         title: "Excel Name",

@@ -132,28 +132,14 @@ export const Kitting = () => {
       handleClose();
     },
     pageStyle: `
-            @page {
-                size: A4 isOpen?.isOpenMasterPrinter ? landscape : portraite ;
-                margin: auto;
-            }
-            @media print {
-              body {
-                margin: auto;
-              }
-                 ${
-        isOpen?.isOpenMasterPrinter
-          ? `
-        #master-print-label {
-          transform: rotate(90deg);
-          transform-origin: center;
-          width: 100vh;
-          height: 100vw;
-        }
-      `
-          : ""
+    @page {
+      size: auto portrait;
+      margin: 0;
+    }
+      body {
+        margin: 0;
       }
-            }
-        `,
+  `,
   });
 
   const { isFetching: isFetchAllCrExcel } = useQuery(
