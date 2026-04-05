@@ -19,7 +19,7 @@ export const Login = () => {
 
     const keywords = translation.signin;
     const dispatch = useDispatch();
-    const [loginData, setLoginData] = useState([]);
+    const [loginData, setLoginData] = useState({});
     const [showResetForm, setShowResetForm] = useState(false);
 
     const onFinish = async (values) => {
@@ -43,7 +43,7 @@ export const Login = () => {
     const { mutate: signIn } = useMutation(getSignIn, {
         onSuccess: (loginData) => {
             if (loginData?.status === 200) {
-                const data = loginData.data;
+                const data = loginData.data?.result?.loginResponse;
                 // const { companyName, departmentId, designation, role, userId } = data;
                 // //  const isAdhie = companyName === "ADHIEGEAR";
                 // // const isKb = companyName === "KBASSOCIATE";
@@ -62,7 +62,7 @@ export const Login = () => {
                     ];
                     sessionStorage.setItem("access", JSON.stringify(accessData));
 
-                    dispatch(loginReducer(loginData?.data));
+                    dispatch(loginReducer(data));
                     dispatch(loaderReducer(false));
 
                     // reftchNotification(loginData?.data?.userId, {});
