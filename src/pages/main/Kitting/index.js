@@ -136,14 +136,15 @@ export const Kitting = () => {
     @page {
       size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
         ? "auto landscape"
-        : "100mm 24mm portrait"
-      };
+        : "100mm 25mm"
+      } !important;
       margin: 0;
     }
-    body{
-      margin:0;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
+     html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     ${isOpen?.isOpenMasterPrinter
