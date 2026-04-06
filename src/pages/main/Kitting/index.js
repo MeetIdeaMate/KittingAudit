@@ -137,7 +137,7 @@ export const Kitting = () => {
     @page {
       size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
         ? "100mm 150mm"  
-        : "100mm 25mm"
+      : "100mm 25mm portrait"
       } !important;
       margin: 0;
     }

@@ -407,9 +407,9 @@
 
 import Barcode from "react-barcode";
 
-const LABEL_WIDTH = "50mm";
-const LABEL_HEIGHT = "25mm";
-const ROW_WIDTH = "100mm";
+const LABEL_WIDTH = "49.5mm";
+const LABEL_HEIGHT = "24mm";
+const ROW_WIDTH = "99mm";
 
 export const PrintStickerLabels = ({ stickers, tabDetails }) => {
 
@@ -505,7 +505,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                 height: LABEL_HEIGHT,
                 border: "1px solid #999",
                 borderRadius: "3px",
-                padding: "3px",
+                padding: "2px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
@@ -518,7 +518,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                 <Barcode
                     value={barcodeValue}
                     width={1}
-                    height={18}
+                    height={16}
                     fontSize={7}
                     margin={0}
                     format="CODE128"
@@ -556,7 +556,8 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
         <>
             <div
                 style={{
-                    width: "100%",
+                    width: "99mm",
+                    margin: "0 auto", 
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
