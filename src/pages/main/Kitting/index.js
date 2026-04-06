@@ -250,6 +250,7 @@ export const Kitting = () => {
           setPrintingDetails({
             ...selectedPartDetails?.afterDetails,
             mode: mode,
+            barCode: updatedPartDetailsResponse?.data?.result?.partDetails?.barCode,
           });
           handleClose("main");
           showToast.success(
@@ -930,8 +931,12 @@ export const Kitting = () => {
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
       const fintCode = selectedCrExcelDetails?.partDetails?.find(
-        (p) => p?.partNumber === mainCode
+        (p) => p?.barCode === mainCode
       );
+      if (!fintCode) {
+        setLastBarcode("");
+        return;
+      }
       const labelQty =
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
@@ -940,9 +945,9 @@ export const Kitting = () => {
       const updatedCaseDetails =
         selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
           if (!details?.selectedCase) return details;
-          const partName = checkGrpPrintType ? value : mainCode;
+          const partName = checkGrpPrintType ? `${fintCode?.partNumber}-${splitCode?.[1]}` : fintCode?.partNumber;
           const existing = details?.barcodes || [];
-          const idx = existing.findIndex((b) => b.part === mainCode);
+          const idx = existing.findIndex((b) => b.part === partName);
           let updatedList = [...existing];
           const isPartExistsGlobally = allExistingParts?.includes(partName);
           if (idx !== -1 && !checkGrpPrintType) {

@@ -44,8 +44,6 @@ export const User = () => {
         refetchOnWindowFocus: false,
         onSuccess: (allUserResponse) => {
             if (allUserResponse?.statusCode === 200) {
-                console.log("allUserResponse",allUserResponse);
-                
                 setAllUserDetails(allUserResponse?.result?.usersWithPage?.content);
             }
             else {
@@ -187,8 +185,8 @@ export const User = () => {
     return (
         <div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <div>
-                    <h3>All Users</h3> <UiCounterBatch primary ></UiCounterBatch>
+                <div className="flexible-start">
+                    <h3>All Users</h3> <UiCounterBatch primary >{allUsers?.result?.usersWithPage?.totalElements ?? 0}</UiCounterBatch>
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                     <UiSearchBox

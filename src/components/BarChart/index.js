@@ -29,8 +29,6 @@ const BarChart = ({
     options = {},
     barThickness = 14,
 }) => {
-    console.log("datasets", datasets);
-
     const safeLabels = Array.isArray(labels) ? labels : [];
     const safeDatasets = Array.isArray(datasets) ? datasets : [];
 
