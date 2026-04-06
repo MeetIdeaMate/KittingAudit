@@ -299,6 +299,10 @@ export const MainBarcode = ({ stickers }) => {
                                             format="CODE128"
                                         />
                                     </div>
+                                    <div style={{ width: "100%", display: "flex" }}>
+                                        <h6 style={{ width: "50%", padding: 0, margin: 0, }}>GROSS WEIGHT</h6>
+                                        <h6 style={{ width: "50%", padding: 0, margin: 0 }}>{stickers?.description}</h6>
+                                    </div>
                                     <table style={table}>
                                         <thead>
                                             <tr>
@@ -333,14 +337,14 @@ export const MainBarcode = ({ stickers }) => {
                                     <div style={sectionStyle}>
                                         <div style={text}>PACKED BY</div>
                                         <div style={text}>
-                                            {details?.packedBy ?? sessionStorage.getItem("name")}
+                                            {stickers?.packedBy ?? sessionStorage.getItem("name")}
                                         </div>
                                     </div>
                                     <div style={sectionStyle}>
                                         <div style={text}>DATE</div>
                                         <div style={text}>
-                                            {details?.packedDate
-                                                ? dayjs(details?.packedDate).format("DD-MM-YYYY")
+                                            {stickers?.packedDate
+                                                ? dayjs(stickers?.packedDate).format("DD-MM-YYYY")
                                                 : ""}
                                         </div>
                                     </div>
@@ -369,6 +373,7 @@ export const MainBarcode = ({ stickers }) => {
                                         value={stickers?.crNumber || "BARCODE"}
                                         width={1}
                                         height={20}
+                                        fontSize={16}
                                         displayValue={false}
                                         format="CODE128"
                                     />
@@ -379,20 +384,22 @@ export const MainBarcode = ({ stickers }) => {
                                         value={stickers?.parentPartNumber || "BARCODE"}
                                         width={1}
                                         height={20}
+                                        fontSize={16}
                                         displayValue={false}
                                         format="CODE128"
                                     />
                                 </div>
                                 <div style={footerRow}>
                                     <div>
-                                        <h3 style={{ padding: 0, margin: 0 }}>Qty: {details?.totalQty}</h3>
-                                        <Barcode
+                                        <h3 style={{ padding: 0, margin: 0 }}>Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1</h3>
+                                        <>{(index + 1) === 1 && <Barcode
                                             value={details?.totalQty || "BARCODE"}
                                             width={1}
                                             height={17}
+                                            fontSize={16}
                                             displayValue={false}
                                             format="CODE128"
-                                        />
+                                        />}</>
                                     </div>
                                     <div style={caseBox}>
                                         Case No
@@ -482,7 +489,8 @@ const table = {
 const th = {
     border: "1px solid #000",
     textAlign: "center",
-    fontWeight: "600"
+    fontWeight: "600",
+    lineHeight: "10px"
 };
 
 const td = {
