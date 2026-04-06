@@ -135,7 +135,7 @@ export const Kitting = () => {
     pageStyle: `
     @page {
       size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
-        ? "auto landscape"
+        ? "100mm 150mm"  
         : "100mm 25mm"
       } !important;
       margin: 0;
