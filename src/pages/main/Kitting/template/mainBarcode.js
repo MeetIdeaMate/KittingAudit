@@ -267,7 +267,6 @@ export const MainBarcode = ({ stickers }) => {
         }
         return rows;
     };
-
     return (
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
@@ -284,11 +283,18 @@ export const MainBarcode = ({ stickers }) => {
                             >
                                 <div style={leftSection}>
                                     <div style={header}>
-                                        {stickers?.parentPartNumber}
+                                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                                            <div>
+                                                 {stickers?.parentPartNumber}
+                                            </div>
+                                             <div>
+                                        <p style={{fontSize:"12px",padding:0,margin:0}}>{details?.barCode}</p>
+                                    </div>
+                                        </div>
                                     </div>
                                     <div style={barcodeContainer}>
                                         <Barcode
-                                            value={stickers?.parentPartNumber || "BARCODE"}
+                                            value={details?.barCode || "BARCODE"}
                                             width={1.4}
                                             height={30}
                                             margin={0}

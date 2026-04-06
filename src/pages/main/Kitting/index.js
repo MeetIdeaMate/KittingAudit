@@ -133,31 +133,22 @@ export const Kitting = () => {
       handleClose();
     },
     pageStyle: `
+   
     @page {
-      size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
-        ? "auto landscape"
-        : "100mm 25mm"
-      } !important;
-      margin: 0;
-    }
+    size: ${isOpen?.isOpenMasterPrinter ? "150mm 100mm" : "100mm 25mm"} !important;
+    margin: 0;
+  }
      html, body {
         margin: 0 !important;
         padding: 0 !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+       width: ${isOpen?.isOpenMasterPrinter ? "100mm" : "100mm"};
+    height: ${isOpen?.isOpenMasterPrinter ? "150mm" : "25mm"};
     }
-
-    ${isOpen?.isOpenMasterPrinter
-        ? `
-        .rotate-print{
-          // transform: rotate(90deg);
-          // transform-origin: center;
-          // width:100vh;
-          // height:100vw;
-        }
-      `
-        : ""
-      }
+   * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
   `,
   });
 
@@ -918,6 +909,11 @@ export const Kitting = () => {
   const hanldePressEnter = (field) => {
     if (field.key === "Enter") {
       const value = field?.target?.value.trim();
+      if (!value.includes("-")){
+        setLastBarcode("");
+        showToast.warning("Warning","Give valid BarCode");
+        return;
+      };
       setMissingParCode((prev) => ({
         ...prev,
         missingList: prev?.missingList?.filter((f) => f !== value),
@@ -969,7 +965,6 @@ export const Kitting = () => {
             barcodes: updatedList,
           };
         });
-
       setSelectedPartDetails((prev) => ({
         ...prev,
         afterDetails: { ...prev.afterDetails, caseInfo: updatedCaseDetails },
