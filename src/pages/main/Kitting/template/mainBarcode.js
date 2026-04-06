@@ -453,9 +453,10 @@ const leftSection = {
 
 const rightSection = {
     width: "15%", // Side info area
-    height: "100mm",
+    height: "100%",
     display: "flex",
     flexDirection: "column",
+    boxSizing: "border-box"
 };
 
 const header = {
@@ -491,12 +492,9 @@ const td = {
 };
 
 const sectionStyle = {
-    flex: 1,
     borderBottom: "1px solid #000",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center"
+    textAlign: "center",
+    height: "12mm",
 };
 
 const text = {
