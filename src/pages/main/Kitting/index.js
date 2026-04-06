@@ -932,7 +932,6 @@ export const Kitting = () => {
     //   );
       const fintCode=selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
         (parts)=>parts?.barCode===mainCode);
-        console.log("fintCode",fintCode);
         
       if (!fintCode) {
         setLastBarcode("");
