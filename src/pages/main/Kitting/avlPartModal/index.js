@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { UiTextBox } from "../../../../components";
 import { Skeleton } from "antd";
-import { printer } from "../../../../assets/images";
 
 export const GetAvlParts = ({
     selectedPartDetails,
@@ -65,7 +64,7 @@ export const GetAvlParts = ({
                     <hr></hr>
                     {
                         missingParCode?.missingList?.map((part, indx, arr) => {
-                            return <p key={indx} style={{ paddingLeft: "5px ", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: indx !== arr?.length - 1 ? "1px solid #ccc" : "none" }}><span>{part}</span> <img src={printer} style={{cursor: "pointer"}} alt="Printer" /></p>
+                            return <p key={indx} style={{ paddingLeft: "5px ", display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: indx !== arr?.length - 1 ? "1px solid #ccc" : "none" }}><span>{part}</span></p>
                         })
                     }
                 </div>

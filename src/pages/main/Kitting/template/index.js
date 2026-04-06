@@ -463,6 +463,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     const startIndex = mode === "update" ? prevTotal + 1 : 1;
 
     let labelsArray = [];
+    let customEntries=[];
 
     if (printingType === "INDIVIDUAL" && missingList?.length) {
         const selectedKeys = missingList?.map(item => item?.split("-")?.pop());
@@ -472,6 +473,11 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                 labelsArray.push(Number(key));
             }
         });
+    }
+    else if(printingType==="GROUPED" && missingList?.length){
+         const selectedKeys = missingList
+            ?.map(item => item?.split("-")?.pop());
+         customEntries = selectedKeys?.map(key => [key, labelMap?.[key]]);
     } else {
         labelsArray = Array.from({ length: printQty }, (_, i) => startIndex + i);
     }
@@ -485,11 +491,13 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     };
 
     const rows =
-        tabDetails?.activeTab === "individual"
-            ? chunkArray(labelsArray, 2)
-            : chunkArray(entries, 2);
+    tabDetails?.activeTab === "individual"
+        ? chunkArray(labelsArray, 2)
+        : chunkArray(
+            customEntries?.length ? customEntries : entries,
+            2
+        );
 
-    // ✅ Single label component — exactly 50mm x 25mm
     const LabelContent = ({ barcodeValue, title, subtitle, extraRight }) => (
         <div
             style={{
@@ -546,6 +554,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
             </span>
         </div>
     );
+
 
     return (
         <>
