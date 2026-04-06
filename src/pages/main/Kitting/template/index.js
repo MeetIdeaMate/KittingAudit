@@ -561,7 +561,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    margin: "0",
+                    // margin: "0",
                     padding: 0,
                 }}
             >
@@ -583,7 +583,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                 alignItems: "center",
                                 gap: 0,
                                 breakInside: "avoid",
-                                pageBreakAfter: rowIndex === rows?.length - 1 ? "auto" : "always", // ✅ each row = one page
+                                pageBreakAfter: "auto",
                                 pageBreakInside: "avoid",
                                 overflow: "hidden",
                                 boxSizing: "border-box",
