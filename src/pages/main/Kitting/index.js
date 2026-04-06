@@ -141,17 +141,13 @@ export const Kitting = () => {
       } !important;
       margin: 0;
     }
-      @media print {
-  body {
-    height: isOpen?.isOpenMasterPrinter ? "150mm" : "25mm";
-  }
-}
-     html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-       width: ${isOpen?.isOpenMasterPrinter ? "100mm" : "100mm"};
-    height: ${isOpen?.isOpenMasterPrinter ? "150mm" : "25mm"};
-    }
+    
+    //  html, body {
+    //     margin: 0 !important;
+    //     padding: 0 !important;
+    //    width: ${isOpen?.isOpenMasterPrinter ? "100mm" : "100mm"};
+    // height: ${isOpen?.isOpenMasterPrinter ? "150mm" : "25mm"};
+    // }
    * {
     box-sizing: border-box;
     -webkit-print-color-adjust: exact !important;

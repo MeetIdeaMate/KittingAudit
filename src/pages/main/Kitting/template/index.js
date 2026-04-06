@@ -409,7 +409,8 @@ import Barcode from "react-barcode";
 
 const LABEL_WIDTH = "49.5mm";
 const LABEL_HEIGHT = "24mm";
-const ROW_WIDTH = "99mm";
+const ROW_WIDTH = "100mm";
+const ROW_HEIGHT = "25mm";
 
 export const PrintStickerLabels = ({ stickers, tabDetails }) => {
 
@@ -576,17 +577,15 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                             key={rowIndex}
                             style={{
                                 width: ROW_WIDTH,
-                                height: LABEL_HEIGHT,
+                                height: ROW_HEIGHT,
                                 display: "flex",
                                 flexDirection: "row",
-                                justifyContent: "flex-start",
                                 alignItems: "center",
                                 gap: 0,
+                                breakAfter: "page",
+                                pageBreakAfter: rowIndex !== rows.length - 1 ? "always" : "auto",
                                 breakInside: "avoid",
-                                pageBreakAfter: "auto",
-                                pageBreakInside: "avoid",
-                                overflow: "hidden",
-                                boxSizing: "border-box",
+                                boxSizing: "border-box"
                             }}
                         >
                             {updatedRow?.map((item, index) => {
