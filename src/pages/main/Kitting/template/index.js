@@ -317,7 +317,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                             
                                             border: "1px solid #999",
                                             borderRadius: "5px",
-                                            width: "505",
+                                            width: "50%",
                                             height: "100%",
                                             padding: "4px",
                                             display: "flex",
