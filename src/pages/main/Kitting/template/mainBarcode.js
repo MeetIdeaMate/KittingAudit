@@ -271,7 +271,6 @@ export const MainBarcode = ({ stickers }) => {
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
                 const gridRows = createGridRows(details?.packingDetailsRes || []);
-                const isLast = index === stickers?.packingLabelResponses?.length - 1;
                 return (
                     <React.Fragment key={index}>
                         <div style={pageStyle}
@@ -281,13 +280,13 @@ export const MainBarcode = ({ stickers }) => {
                             >
                                 <div style={leftSection}>
                                     <div style={header}>
-                                        <div style={{display:"flex",justifyContent:"space-between"}}>
+                                        <div style={{ display: "flex", justifyContent: "space-between" }}>
                                             <div>
-                                                 {stickers?.parentPartNumber}
+                                                {stickers?.parentPartNumber}
                                             </div>
-                                             <div>
-                                        <p style={{fontSize:"12px",padding:0,margin:0}}>{details?.barCode}</p>
-                                    </div>
+                                            <div>
+                                                <p style={{ fontSize: "12px", padding: 0, margin: 0 }}>{details?.barCode}</p>
+                                            </div>
                                         </div>
                                     </div>
                                     <div style={barcodeContainer}>
@@ -410,28 +409,8 @@ export const MainBarcode = ({ stickers }) => {
     );
 };
 
-const mainLabel = {
-    width: "150mm",
-    height: "100mm",
-    border: "1px solid #000",
-    display: "flex",
-    flexDirection: "row",
-    borderRadius: "5px",
-    boxSizing: "border-box",
-    overflow: "hidden",
-};
-
 const secondLabel = {
-    // width: "150mm",
-    // height: "100mm",
-    // border: "1px solid #000",
-    // borderRadius: "5px",
-    // // display: "flex",
-    // flexDirection: "column",
-    // justifyContent: "space-evenly",
-    // boxSizing: "border-box",
-    // overflow: "hidden",
-    flexDirection: "column", // Summary label-la items onnu keela onnu varanum
+    flexDirection: "column",
     justifyContent: "space-around",
     padding: "10mm"
 };
@@ -458,21 +437,23 @@ const rotateContainer = {
     display: "flex",
     flexDirection: "row", // Left section and Right section side-by-side
     boxSizing: "border-box",
-    border: "1px solid black",
+    // border: "1px solid black",
+    border: "none",
 };
 
 const leftSection = {
-    width: "115mm", // Table area-kku athiga space
-    height: "100%",
+    width: "85%", // Table area-kku athiga space
+    height: "100mm",
     borderRight: "1px solid black",
+    borderTop: "1px solid black",
     padding: "2mm",
     display: "flex",
     flexDirection: "column",
 };
 
 const rightSection = {
-    width: "30mm", // Side info area
-    height: "100%",
+    width: "15%", // Side info area
+    height: "100mm",
     display: "flex",
     flexDirection: "column",
 };
@@ -493,7 +474,8 @@ const barcodeContainer = {
 const table = {
     width: "100%",
     borderCollapse: "collapse",
-    fontSize: "12px"
+    fontSize: "10px",
+    border: "1px solid #000"
 };
 
 const th = {
@@ -525,7 +507,7 @@ const text = {
 const badge = {
     backgroundColor: "#000",
     color: "#fff",
-    padding: "2px 6px",
+    padding: "4px 8px",
     fontSize: "11px"
 };
 

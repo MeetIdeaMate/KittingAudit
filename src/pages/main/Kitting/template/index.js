@@ -463,7 +463,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     const startIndex = mode === "update" ? prevTotal + 1 : 1;
 
     let labelsArray = [];
-    let customEntries=[];
+    let customEntries = [];
 
     if (printingType === "INDIVIDUAL" && missingList?.length) {
         const selectedKeys = missingList?.map(item => item?.split("-")?.pop());
@@ -474,10 +474,10 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
             }
         });
     }
-    else if(printingType==="GROUPED" && missingList?.length){
-         const selectedKeys = missingList
+    else if (printingType === "GROUPED" && missingList?.length) {
+        const selectedKeys = missingList
             ?.map(item => item?.split("-")?.pop());
-         customEntries = selectedKeys?.map(key => [key, labelMap?.[key]]);
+        customEntries = selectedKeys?.map(key => [key, labelMap?.[key]]);
     } else {
         labelsArray = Array.from({ length: printQty }, (_, i) => startIndex + i);
     }
@@ -491,25 +491,21 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     };
 
     const rows =
-    tabDetails?.activeTab === "individual"
-        ? chunkArray(labelsArray, 2)
-        : chunkArray(
-            customEntries?.length ? customEntries : entries,
-            2
-        );
+        tabDetails?.activeTab === "individual"
+            ? chunkArray(labelsArray, 2)
+            : chunkArray(
+                customEntries?.length ? customEntries : entries,
+                2
+            );
 
     const LabelContent = ({ barcodeValue, title, subtitle, extraRight }) => (
         <div
             style={{
                 width: LABEL_WIDTH,
                 height: LABEL_HEIGHT,
-                minWidth: LABEL_WIDTH,
-                minHeight: LABEL_HEIGHT,
-                maxWidth: LABEL_WIDTH,
-                maxHeight: LABEL_HEIGHT,
                 border: "1px solid #999",
                 borderRadius: "3px",
-                padding: "2px 3px",
+                padding: "3px",
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
@@ -558,27 +554,13 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
 
     return (
         <>
-            {/* ✅ Inject print styles directly — no printer settings needed */}
-            <style>{`
-                @media print {
-                    @page {
-                        size: 100mm 25mm;
-                        margin: 0;
-                    }
-                    body {
-                        margin: 0 !important;
-                        padding: 0 !important;
-                        -webkit-print-color-adjust: exact !important;
-                        print-color-adjust: exact !important;
-                    }
-                }
-            `}</style>
-
-            {/* ✅ Wrapper: fixed 100mm wide */}
             <div
                 style={{
-                    width: ROW_WIDTH,
-                    margin: "0 auto",
+                    width: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    margin: "0",
                     padding: 0,
                 }}
             >
@@ -600,7 +582,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                 alignItems: "center",
                                 gap: 0,
                                 breakInside: "avoid",
-                                pageBreakAfter: "always", // ✅ each row = one page
+                                pageBreakAfter: rowIndex === rows?.length - 1 ? "auto" : "always", // ✅ each row = one page
                                 pageBreakInside: "avoid",
                                 overflow: "hidden",
                                 boxSizing: "border-box",
@@ -615,7 +597,6 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                             style={{
                                                 width: LABEL_WIDTH,
                                                 height: LABEL_HEIGHT,
-                                                minWidth: LABEL_WIDTH,
                                             }}
                                         />
                                     );
