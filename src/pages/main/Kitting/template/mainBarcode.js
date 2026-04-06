@@ -274,12 +274,10 @@ export const MainBarcode = ({ stickers }) => {
                 const isLast = index === stickers?.packingLabelResponses?.length - 1;
                 return (
                     <React.Fragment key={index}>
-                        <div style={{ pageBreakAfter: "always", margin: "auto" }}>
+                        <div style={pageStyle}
+                        >
                             <div
-                                style={{
-                                    ...mainLabel,
-                                    pageBreakAfter: "always",
-                                }}
+                                style={rotateContainer}
                             >
                                 <div style={leftSection}>
                                     <div style={header}>
@@ -362,47 +360,46 @@ export const MainBarcode = ({ stickers }) => {
                                 </div>
                             </div>
                         </div>
-                        <div
-                            style={{
-                                ...secondLabel,
-                                pageBreakAfter: !isLast ? "always" : "auto"
-                            }}
-                        >
-                            <div style={{ padding: "0 10px" }}>
-                                <h3 style={{ padding: 0, margin: 0 }}>Contract No: {stickers?.crNumber}</h3>
-                                <Barcode
-                                    value={stickers?.crNumber || "BARCODE"}
-                                    width={1}
-                                    height={20}
-                                    displayValue={false}
-                                    format="CODE128"
-                                />
-                            </div>
-                            <div style={{ padding: "0 10px" }}>
-                                <h3 style={{ padding: 0, margin: 0 }}>Item : {stickers?.parentPartNumber}</h3>
-                                <Barcode
-                                    value={stickers?.parentPartNumber || "BARCODE"}
-                                    width={1}
-                                    height={20}
-                                    displayValue={false}
-                                    format="CODE128"
-                                />
-                            </div>
-                            <div style={footerRow}>
-                                <div>
-                                    <h3 style={{ padding: 0, margin: 0 }}>Qty: {details?.totalQty}</h3>
+                        <div style={pageStyle}>
+                            <div
+                                style={{ ...rotateContainer, ...secondLabel }}
+                            >
+                                <div style={{ padding: "0 10px" }}>
+                                    <h3 style={{ padding: 0, margin: 0 }}>Contract No: {stickers?.crNumber}</h3>
                                     <Barcode
-                                        value={details?.totalQty || "BARCODE"}
+                                        value={stickers?.crNumber || "BARCODE"}
                                         width={1}
-                                        height={17}
+                                        height={20}
                                         displayValue={false}
                                         format="CODE128"
                                     />
                                 </div>
-                                <div style={caseBox}>
-                                    Case No
-                                    <br />
-                                    {index + 1} / {stickers?.packingLabelResponses?.length}
+                                <div style={{ padding: "0 10px" }}>
+                                    <h3 style={{ padding: 0, margin: 0 }}>Item : {stickers?.parentPartNumber}</h3>
+                                    <Barcode
+                                        value={stickers?.parentPartNumber || "BARCODE"}
+                                        width={1}
+                                        height={20}
+                                        displayValue={false}
+                                        format="CODE128"
+                                    />
+                                </div>
+                                <div style={footerRow}>
+                                    <div>
+                                        <h3 style={{ padding: 0, margin: 0 }}>Qty: {details?.totalQty}</h3>
+                                        <Barcode
+                                            value={details?.totalQty || "BARCODE"}
+                                            width={1}
+                                            height={17}
+                                            displayValue={false}
+                                            format="CODE128"
+                                        />
+                                    </div>
+                                    <div style={caseBox}>
+                                        Case No
+                                        <br />
+                                        {index + 1} / {stickers?.packingLabelResponses?.length}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -418,31 +415,66 @@ const mainLabel = {
     height: "100mm",
     border: "1px solid #000",
     display: "flex",
+    flexDirection: "row",
     borderRadius: "5px",
-    margin: "auto",
+    boxSizing: "border-box",
+    overflow: "hidden",
 };
 
 const secondLabel = {
-    width: "150mm",
-    height: "100mm",
-    border: "1px solid #000",
-    borderRadius: "5px",
+    // width: "150mm",
+    // height: "100mm",
+    // border: "1px solid #000",
+    // borderRadius: "5px",
+    // // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "space-evenly",
+    // boxSizing: "border-box",
+    // overflow: "hidden",
+    flexDirection: "column", // Summary label-la items onnu keela onnu varanum
+    justifyContent: "space-around",
+    padding: "10mm"
+};
+
+const pageStyle = {
+    width: "100mm",   // Portrait width
+    height: "150mm",  // Portrait height
+    pageBreakAfter: "always",
     display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-evenly",
-    margin: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    boxSizing: "border-box",
+    position: "relative",
+};
+
+const rotateContainer = {
+    width: "150mm",  // Content width
+    height: "100mm", // Content height
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%) rotate(90deg)",
+    display: "flex",
+    flexDirection: "row", // Left section and Right section side-by-side
+    boxSizing: "border-box",
+    border: "1px solid black",
 };
 
 const leftSection = {
-    width: "85%",
-    padding: "2px"
+    width: "115mm", // Table area-kku athiga space
+    height: "100%",
+    borderRight: "1px solid black",
+    padding: "2mm",
+    display: "flex",
+    flexDirection: "column",
 };
 
 const rightSection = {
-    width: "15%",
-    borderLeft: "1px solid #000",
+    width: "30mm", // Side info area
+    height: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
 };
 
 const header = {
@@ -473,7 +505,7 @@ const th = {
 const td = {
     border: "1px solid #000",
     textAlign: "center",
-    lineHeight: "19px"
+    lineHeight: "10px"
 };
 
 const sectionStyle = {

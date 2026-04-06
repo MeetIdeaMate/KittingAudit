@@ -135,9 +135,12 @@ export const Kitting = () => {
     pageStyle: `
    
     @page {
-    size: ${isOpen?.isOpenMasterPrinter ? "150mm 100mm" : "100mm 25mm"} !important;
-    margin: 0;
-  }
+      size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
+        ? "100mm 150mm"  
+        : "100mm 25mm"
+      } !important;
+      margin: 0;
+    }
      html, body {
         margin: 0 !important;
         padding: 0 !important;
