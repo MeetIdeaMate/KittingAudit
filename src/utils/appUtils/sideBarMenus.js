@@ -24,6 +24,7 @@ export const KbMenus = () => [
     { MenuName: 'ExcelUpload', subMenu: [] },
     { MenuName: 'Kitting', subMenu: [] },
     { MenuName: 'Download', subMenu: [] },
+    { MenuName: 'User', subMenu: [] },
     {
         MenuName: 'Master', subMenu: [
             { menuName: 'Product' },
@@ -33,7 +34,6 @@ export const KbMenus = () => [
             { menuName: 'SpecificationMaster' },
             { menuName: 'ConfigMaster' },
             { menuName: 'Employee' },
-            { menuName: 'User' },
             { menuName: 'Questionnaire' },
             { menuName: 'JobWorker' },
         ]

@@ -247,10 +247,11 @@ export const Kitting = () => {
         if (updatedPartDetailsResponse?.status === 200) {
           fetchCrExcelUpdated();
           setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
-        setPrintingDetails({
-  ...selectedPartDetails?.afterDetails,
-  barCode: updatedPartDetailsResponse?.data?.result?.partDetails?.barCode,
-});
+          setPrintingDetails({
+            ...selectedPartDetails?.afterDetails,
+            mode: mode,
+            barCode: updatedPartDetailsResponse?.data?.result?.partDetails?.barCode,
+          });
           handleClose("main");
           showToast.success(
             "Success ,",
@@ -929,10 +930,10 @@ export const Kitting = () => {
       if (!value) return;
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
-     const fintCode = selectedCrExcelDetails?.partDetails?.find(
+      const fintCode = selectedCrExcelDetails?.partDetails?.find(
         (p) => p?.barCode === mainCode
       );
-      if(!fintCode){
+      if (!fintCode) {
         setLastBarcode("");
         return;
       }
