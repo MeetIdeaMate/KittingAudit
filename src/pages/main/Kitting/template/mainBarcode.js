@@ -423,7 +423,8 @@ const secondLabel = {
     borderRadius: "5px",
     display: "flex",
     flexDirection: "column",
-    justifyContent: "space-evenly"
+    justifyContent: "space-evenly",
+    margin: "auto",
 };
 
 const leftSection = {
