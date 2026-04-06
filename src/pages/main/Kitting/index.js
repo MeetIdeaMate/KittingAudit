@@ -136,14 +136,15 @@ export const Kitting = () => {
     @page {
       size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
         ? "auto landscape"
-        : "100mm 24mm portrait"
-      };
+        : "100mm 25mm"
+      } !important;
       margin: 0;
     }
-    body{
-      margin:0;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
+     html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
     }
 
     ${isOpen?.isOpenMasterPrinter
@@ -226,7 +227,8 @@ export const Kitting = () => {
             missingParCode?.isVerifyCheck
           ) {
             handlePrintTheStickers();
-          } else {
+          } 
+          else if(mode!=="reprint") {
             showToast.warning('Warning', 'Please update the missing Parts');
           }
         } else {
@@ -317,8 +319,6 @@ export const Kitting = () => {
     {
       enabled: false,
       onSuccess: (dubPartResponse) => {
-        console.log(dubPartResponse, "dubPartResponse");
-
         if (dubPartResponse?.status === 200) {
           showToast.success("Success", dubPartResponse?.data?.result?.success);
           handleClose("main");
@@ -326,7 +326,7 @@ export const Kitting = () => {
           setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
           setPrintingDetails(selectedPartDetails?.afterDetails);
         } else {
-          showToast.error("Error", dubPartResponse?.response?.data?.error);
+          showToast.error("Error", dubPartResponse?.response?.data?.error||dubPartResponse?.message);
         }
       },
       refetchOnWindowFocus: false,
@@ -757,8 +757,6 @@ export const Kitting = () => {
       dublicateBarcode,
       isDublicate
     } = selectedPartDetails?.afterDetails;
-    console.log(mode, "mode", isDublicate, selectedPartDetails?.afterDetails);
-
     const payload =
       activeTabDetails?.tabKey === "1"
         ? expandToSequence(templabeledinfoMap)
@@ -786,7 +784,6 @@ export const Kitting = () => {
           return labelMap?.hasOwnProperty(lastVal);
         });
         if (missingParCode?.missingList?.length > 0) {
-          console.log(missingParCode?.missingList, "miss");
           queryClient.prefetchQuery(["UPDATE_DUB_PARTS", ""], () =>
             updateDubParts(missingParCode?.missingList, barCodeKittingInfoId, partId)
           );

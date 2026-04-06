@@ -189,7 +189,227 @@
 //         </div>
 //     );
 // };
+// import Barcode from "react-barcode";
+
+// export const PrintStickerLabels = ({ stickers, tabDetails }) => {
+
+//     const {
+//         templabeledinfoMap,
+//         dublicateBarcode,
+//         isDublicate,
+//         labelMap,
+//         mode,
+//         printingType,
+//         missingList,
+//     } = stickers;
+
+//     const filteredEntries = (dublicateBarcode || [])
+//         ?.map(code => code?.barcodeId?.split("-").pop())
+//         ?.filter(key => templabeledinfoMap?.hasOwnProperty(key))
+//         ?.map(key => [key, templabeledinfoMap[key]]);
+
+//     const filteredMap = Object.fromEntries(filteredEntries);
+
+//     const getNewlyAddedMap = (prevMap = {}, currMap = {}) => {
+//         return Object.fromEntries(
+//             Object.entries(currMap)
+//                 ?.filter(([key]) => !prevMap?.hasOwnProperty(key))
+//         );
+//     };
+
+//     let printMap = templabeledinfoMap;
+
+//     if (mode === "update") {
+//         printMap =
+//             tabDetails?.activeTab === "individual"
+//                 ? templabeledinfoMap
+//                 : getNewlyAddedMap(labelMap, templabeledinfoMap);
+//     }
+//     else if (isDublicate && mode !== "edit") {
+//         printMap = filteredMap;
+//     }
+
+//     const entries = Object.entries(printMap || {});
+//     const sumValues = (map = {}) => Object.values(map)?.reduce((s, v) => s + (Number(v) || 0), 0);
+
+//     const prevTotal = sumValues(labelMap || {});
+//     const currTotal = sumValues(templabeledinfoMap || {});
+
+//     const printQty =
+//         mode === "update"
+//             ? Math.max(currTotal - prevTotal, 0)
+//             : currTotal;
+
+//     const startIndex = mode === "update" ? prevTotal + 1 : 1;
+
+//     let labelsArray = [];
+
+//     if (printingType === "INDIVIDUAL" && missingList?.length) {
+//         const selectedKeys = missingList
+//             ?.map(item => item?.split("-")?.pop());
+//         selectedKeys?.forEach(key => {
+//             const qty = labelMap?.[key] || 0;
+
+//             for (let i = 0; i < qty; i++) {
+//                 labelsArray.push(Number(key));
+//             }
+//         });
+
+//     }
+//     else {
+//         labelsArray = Array.from(
+//             { length: printQty },
+//             (_, i) => startIndex + i
+//         );
+//     }
+
+//     const chunkArray = (arr, size) => {
+//         const result = [];
+//         for (let i = 0; i < arr.length; i += size) {
+//             result.push(arr.slice(i, i + size));
+//         }
+//         return result;
+//     };
+
+//     const rows =
+//         tabDetails?.activeTab === "individual"
+//             ? chunkArray(labelsArray, 2)
+//             : chunkArray(entries, 2);
+
+//     return (
+//         <div style={{ margin: "auto", width: "102mm" }}>
+//             {rows?.map((row, rowIndex) => {
+//                 let updatedRow = [...row];
+//                 if (row?.length === 1) {
+//                     updatedRow.push("empty");
+//                 }
+//                 return (
+//                     <div
+//                         key={rowIndex}
+//                         style={{
+//                             width: "100%",
+//                             height: "100%",
+//                             display: "flex",
+//                             justifyContent: "space-between",
+//                             breakInside: "avoid",
+//                             pageBreakAfter: rowIndex !== rows.length - 1 ? "always" : "auto",
+//                             gap: "1mm",
+//                         }}
+//                     >
+//                         {updatedRow?.map((item, index) => {
+//                             if (item === "empty") {
+//                                 return (
+//                                     <div
+//                                         key={index}
+//                                         style={{
+//                                             width: "50%",
+//                                             height: "100%"
+//                                         }}
+//                                     />
+//                                 );
+//                             }
+//                             if (tabDetails?.activeTab === "individual") {
+//                                 const key = item;
+//                                 return (
+//                                     <div
+//                                         key={key}
+//                                         style={{
+
+//                                             border: "1px solid #999",
+//                                             borderRadius: "5px",
+//                                             width: "50%",
+//                                             height: "100%",
+//                                             padding: "4px",
+//                                             display: "flex",
+//                                             flexDirection: "column",
+//                                             justifyContent: "center",
+//                                             overflow: "hidden"
+//                                         }}
+//                                     >
+//                                         <div style={{ textAlign: "center" }}>
+//                                             <Barcode
+//                                                 value={`${stickers?.barCode}-${key}`}
+//                                                 width={1}
+//                                                 height={15}
+//                                                 fontSize={10}
+//                                                 margin={0}
+//                                                 format="CODE128"
+//                                             />
+//                                         </div>
+//                                         <div>
+//                                             <h4 style={{ margin: 0 }}>
+//                                                 {stickers?.partNumber}-{key}
+//                                             </h4>
+//                                             <h6 style={{ margin: 0, fontSize: "10px" }}>
+//                                                 OTIS VENDOR:
+//                                             </h6>
+//                                         </div>
+//                                     </div>
+//                                 );
+//                             }
+//                             if (tabDetails?.activeTab === "grouped") {
+//                                 const [key, value] = item;
+
+//                                 return (
+//                                     <div
+//                                         key={index}
+//                                         style={{
+//                                             border: "1px solid #999",
+//                                             padding: "4px",
+//                                             borderRadius: "5px",
+//                                             width: "50%",
+//                                             height: "100%",
+//                                             display: "flex",
+//                                             flexDirection: "column",
+//                                             justifyContent: "center",
+//                                             overflow: "hidden"
+//                                         }}
+//                                     >
+//                                         <div style={{ textAlign: "center" }}>
+//                                             <Barcode
+//                                                 value={`${stickers?.barCode}-${key}`}
+//                                                 width={1}
+//                                                 height={15}
+//                                                 fontSize={10}
+//                                                 margin={0}
+//                                                 format="CODE128"
+//                                             />
+//                                         </div>
+
+//                                         <div
+//                                             style={{
+//                                                 display: "flex",
+//                                                 justifyContent: "space-between",
+//                                             }}
+//                                         >
+//                                             <h4 style={{ margin: 0 }}>
+//                                                 {stickers?.partNumber}
+//                                             </h4>
+//                                             <h4 style={{ margin: 0 }}>
+//                                                 {value}
+//                                             </h4>
+//                                         </div>
+
+//                                         <h6 style={{ margin: 0, fontSize: "10px" }}>
+//                                             OTIS VENDOR:
+//                                         </h6>
+//                                     </div>
+//                                 );
+//                             }
+//                             return null;
+//                         })}
+//                     </div>
+//                 );
+//             })}
+//         </div>
+//     );
+// };
+
 import Barcode from "react-barcode";
+
+const LABEL_WIDTH = "50mm";
+const LABEL_HEIGHT = "25mm";
+const ROW_WIDTH = "100mm";
 
 export const PrintStickerLabels = ({ stickers, tabDetails }) => {
 
@@ -224,13 +444,13 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
             tabDetails?.activeTab === "individual"
                 ? templabeledinfoMap
                 : getNewlyAddedMap(labelMap, templabeledinfoMap);
-    }
-    else if (isDublicate && mode !== "edit") {
+    } else if (isDublicate && mode !== "edit") {
         printMap = filteredMap;
     }
 
     const entries = Object.entries(printMap || {});
-    const sumValues = (map = {}) => Object.values(map)?.reduce((s, v) => s + (Number(v) || 0), 0);
+    const sumValues = (map = {}) =>
+        Object.values(map)?.reduce((s, v) => s + (Number(v) || 0), 0);
 
     const prevTotal = sumValues(labelMap || {});
     const currTotal = sumValues(templabeledinfoMap || {});
@@ -243,24 +463,23 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     const startIndex = mode === "update" ? prevTotal + 1 : 1;
 
     let labelsArray = [];
+    let customEntries=[];
 
     if (printingType === "INDIVIDUAL" && missingList?.length) {
-        const selectedKeys = missingList
-            ?.map(item => item?.split("-")?.pop());
+        const selectedKeys = missingList?.map(item => item?.split("-")?.pop());
         selectedKeys?.forEach(key => {
             const qty = labelMap?.[key] || 0;
-
             for (let i = 0; i < qty; i++) {
                 labelsArray.push(Number(key));
             }
         });
-
     }
-    else {
-        labelsArray = Array.from(
-            { length: printQty },
-            (_, i) => startIndex + i
-        );
+    else if(printingType==="GROUPED" && missingList?.length){
+         const selectedKeys = missingList
+            ?.map(item => item?.split("-")?.pop());
+         customEntries = selectedKeys?.map(key => [key, labelMap?.[key]]);
+    } else {
+        labelsArray = Array.from({ length: printQty }, (_, i) => startIndex + i);
     }
 
     const chunkArray = (arr, size) => {
@@ -272,135 +491,169 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
     };
 
     const rows =
-        tabDetails?.activeTab === "individual"
-            ? chunkArray(labelsArray, 2)
-            : chunkArray(entries, 2);
+    tabDetails?.activeTab === "individual"
+        ? chunkArray(labelsArray, 2)
+        : chunkArray(
+            customEntries?.length ? customEntries : entries,
+            2
+        );
+
+    const LabelContent = ({ barcodeValue, title, subtitle, extraRight }) => (
+        <div
+            style={{
+                width: LABEL_WIDTH,
+                height: LABEL_HEIGHT,
+                minWidth: LABEL_WIDTH,
+                minHeight: LABEL_HEIGHT,
+                maxWidth: LABEL_WIDTH,
+                maxHeight: LABEL_HEIGHT,
+                border: "1px solid #999",
+                borderRadius: "3px",
+                padding: "2px 3px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                overflow: "hidden",
+                boxSizing: "border-box",
+            }}
+        >
+            {/* Barcode */}
+            <div style={{ textAlign: "center", lineHeight: 1 }}>
+                <Barcode
+                    value={barcodeValue}
+                    width={1}
+                    height={18}
+                    fontSize={7}
+                    margin={0}
+                    format="CODE128"
+                    displayValue={true}
+                />
+            </div>
+
+            {/* Label text */}
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: extraRight ? "space-between" : "flex-start",
+                    alignItems: "center",
+                    marginTop: "1px",
+                }}
+            >
+                <span style={{ fontSize: "9px", fontWeight: "bold", margin: 0 }}>
+                    {title}
+                </span>
+                {extraRight && (
+                    <span style={{ fontSize: "9px", fontWeight: "bold", margin: 0 }}>
+                        {extraRight}
+                    </span>
+                )}
+            </div>
+
+            <span style={{ fontSize: "8px", margin: 0, color: "#333" }}>
+                {subtitle}
+            </span>
+        </div>
+    );
+
 
     return (
-        <div style={{ margin: "auto", width: "102mm" }}>
-            {rows?.map((row, rowIndex) => {
-                let updatedRow = [...row];
-                if (row?.length === 1) {
-                    updatedRow.push("empty");
+        <>
+            {/* ✅ Inject print styles directly — no printer settings needed */}
+            <style>{`
+                @media print {
+                    @page {
+                        size: 100mm 25mm;
+                        margin: 0;
+                    }
+                    body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        -webkit-print-color-adjust: exact !important;
+                        print-color-adjust: exact !important;
+                    }
                 }
-                return (
-                    <div
-                        key={rowIndex}
-                        style={{
-                            width: "100%",
-                            height: "24mm",
-                            display: "flex",
-                            justifyContent: "space-between",
-                            breakInside: "avoid",
-                            pageBreakAfter: rowIndex !== rows.length - 1 ? "always" : "auto",
-                            gap: "1mm",
-                        }}
-                    >
-                        {updatedRow?.map((item, index) => {
-                            if (item === "empty") {
-                                return (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            width: "50%",
-                                            height: "100%"
-                                        }}
-                                    />
-                                );
-                            }
-                            if (tabDetails?.activeTab === "individual") {
-                                const key = item;
-                                return (
-                                    <div
-                                        key={key}
-                                        style={{
-                                            
-                                            border: "1px solid #999",
-                                            borderRadius: "5px",
-                                            width: "50%",
-                                            height: "100%",
-                                            padding: "4px",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            overflow: "hidden"
-                                        }}
-                                    >
-                                        <div style={{ textAlign: "center" }}>
-                                            <Barcode
-                                                value={`${stickers?.barCode}-${key}`}
-                                                width={1}
-                                                height={15}
-                                                fontSize={10}
-                                                margin={0}
-                                                format="CODE128"
-                                            />
-                                        </div>
-                                        <div>
-                                            <h4 style={{ margin: 0 }}>
-                                                {stickers?.partNumber}-{key}
-                                            </h4>
-                                            <h6 style={{ margin: 0, fontSize: "10px" }}>
-                                                OTIS VENDOR:
-                                            </h6>
-                                        </div>
-                                    </div>
-                                );
-                            }
-                            if (tabDetails?.activeTab === "grouped") {
-                                const [key, value] = item;
+            `}</style>
 
-                                return (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            border: "1px solid #999",
-                                            padding: "4px",
-                                            borderRadius: "5px",
-                                            width: "50%",
-                                            height: "100%",
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            justifyContent: "center",
-                                            overflow: "hidden"
-                                        }}
-                                    >
-                                        <div style={{ textAlign: "center" }}>
-                                            <Barcode
-                                                value={`${stickers?.barCode}-${key}`}
-                                                width={1}
-                                                height={15}
-                                                fontSize={10}
-                                                margin={0}
-                                                format="CODE128"
-                                            />
-                                        </div>
+            {/* ✅ Wrapper: fixed 100mm wide */}
+            <div
+                style={{
+                    width: ROW_WIDTH,
+                    margin: "0 auto",
+                    padding: 0,
+                }}
+            >
+                {rows?.map((row, rowIndex) => {
+                    let updatedRow = [...row];
+                    if (row?.length === 1) {
+                        updatedRow.push("empty");
+                    }
 
+                    return (
+                        <div
+                            key={rowIndex}
+                            style={{
+                                width: ROW_WIDTH,
+                                height: LABEL_HEIGHT,
+                                display: "flex",
+                                flexDirection: "row",
+                                justifyContent: "flex-start",
+                                alignItems: "center",
+                                gap: 0,
+                                breakInside: "avoid",
+                                pageBreakAfter: "always", // ✅ each row = one page
+                                pageBreakInside: "avoid",
+                                overflow: "hidden",
+                                boxSizing: "border-box",
+                            }}
+                        >
+                            {updatedRow?.map((item, index) => {
+                                // Empty placeholder
+                                if (item === "empty") {
+                                    return (
                                         <div
+                                            key={index}
                                             style={{
-                                                display: "flex",
-                                                justifyContent: "space-between",
+                                                width: LABEL_WIDTH,
+                                                height: LABEL_HEIGHT,
+                                                minWidth: LABEL_WIDTH,
                                             }}
-                                        >
-                                            <h4 style={{ margin: 0 }}>
-                                                {stickers?.partNumber}
-                                            </h4>
-                                            <h4 style={{ margin: 0 }}>
-                                                {value}
-                                            </h4>
-                                        </div>
+                                        />
+                                    );
+                                }
 
-                                        <h6 style={{ margin: 0, fontSize: "10px" }}>
-                                            OTIS VENDOR:
-                                        </h6>
-                                    </div>
-                                );
-                            }
-                            return null;
-                        })}
-                    </div>
-                );
-            })}
-        </div>
+                                // Individual tab
+                                if (tabDetails?.activeTab === "individual") {
+                                    const key = item;
+                                    return (
+                                        <LabelContent
+                                            key={key}
+                                            barcodeValue={`${stickers?.barCode}-${key}`}
+                                            title={`${stickers?.partNumber}-${key}`}
+                                            subtitle="OTIS VENDOR:"
+                                        />
+                                    );
+                                }
+
+                                // Grouped tab
+                                if (tabDetails?.activeTab === "grouped") {
+                                    const [key, value] = item;
+                                    return (
+                                        <LabelContent
+                                            key={index}
+                                            barcodeValue={`${stickers?.barCode}-${key}`}
+                                            title={stickers?.partNumber}
+                                            extraRight={value}
+                                            subtitle="OTIS VENDOR:"
+                                        />
+                                    );
+                                }
+
+                                return null;
+                            })}
+                        </div>
+                    );
+                })}
+            </div>
+        </>
     );
 };
