@@ -153,7 +153,7 @@ const SideBar = () => {
                                             .map((subMenu, idx) => {
                                                 const subMenuPath = subMenu?.name;
                                                 return (
-                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0" }} className="list">
+                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0",listStyleType:"none" }} className="list">
                                                         <Link
                                                             style={{ width: "100%", paddingRight: "0", border: "0" }}
                                                             className={classNames(

@@ -24,6 +24,9 @@ import totalUploadedIcon from "./totalUploadIcon.svg";
 import totalCrNumberIcon from "./totalCrNumberIcon.svg";
 import toitalCompleteIcon from "./totalCompletedIcon.svg";
 import totalPendingIcon from "./totalPendingIcon.svg";
+import icn_User from "./icn_User.svg";
+import reset from "./reset.svg";
+import statuChange from "./statuschange.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
     TechLambdasLogo,
@@ -49,6 +52,8 @@ export {
     totalCrNumberIcon,
     toitalCompleteIcon,
     totalPendingIcon,
+    reset,
+    statuChange
     // techlambdasRightCornerLogo,
 };
 
@@ -56,5 +61,6 @@ export const sideMenuIcon = {
    logout,
    icn_Kitting,
    icn_ExcelUpload,
-   icn_Dashboard
+   icn_Dashboard,
+   icn_User
 };
