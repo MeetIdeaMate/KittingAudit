@@ -217,17 +217,18 @@ export const Kitting = () => {
       refetchOnWindowFocus: false,
       onSuccess: (verifyPartNo) => {
         if (verifyPartNo?.status === 200) {
-          setMissingParCode({
-            isPrint: true,
-            missingList: verifyPartNo?.data?.result?.missingBarcodes || [],
-          });
+      setMissingParCode((prev) => ({
+        ...prev,
+        isPrint: true,
+        missingList: verifyPartNo?.data?.result?.missingBarcodes ||[],
+      }));
           if (
             verifyPartNo?.data?.result?.missingBarcodes?.length === 0 &&
             missingParCode?.isVerifyCheck
           ) {
             handlePrintTheStickers();
           } 
-          else if(mode!=="reprint") {
+          else if(mode!=="reprint" && verifyPartNo?.data?.result?.missingBarcodes?.length>0) {
             showToast.warning('Warning', 'Please update the missing Parts');
           }
         } else {
@@ -768,14 +769,15 @@ export const Kitting = () => {
         const allBarcodes = details?.barcodes?.flatMap(
           (part) => part?.barcodeNumbers || []
         );
+         if (allBarcodes?.length === 0) return null;
         return {
           boxNo: index + 1,
           barcodes: allBarcodes,
         };
-      });
-      queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
-        createBarcodeMaster(payload, barCodeKittingInfoId)
-      );
+      })?.filter(Boolean);
+    //   queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
+    //     createBarcodeMaster(payload, barCodeKittingInfoId)
+    //   );
     } else {
       if (mode === "reprint" || (isDublicate && mode !== "edit")) {
         const exists = dublicatePayload.some((payload) => {
@@ -929,9 +931,13 @@ export const Kitting = () => {
       if (!value) return;
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
-      const fintCode = selectedCrExcelDetails?.partDetails?.find(
-        (p) => p?.barCode === mainCode
-      );
+    //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
+    //     (p) => p?.barCode === mainCode
+    //   );
+      const fintCode=selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
+        (parts)=>parts?.barCode===mainCode);
+        console.log("fintCode",fintCode);
+        
       if (!fintCode) {
         setLastBarcode("");
         return;

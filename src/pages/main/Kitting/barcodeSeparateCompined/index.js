@@ -23,7 +23,7 @@ export const BarcodeSepareateAndCompained = ({
     return <React.Fragment>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: 0, margin: 0, position: "sticky", top: 0, backgroundColor: "#fff", zIndex: 2 }}>
             <span>
-                <p>Part Numer</p>
+                <p>Part Number</p>
                 <h3>{selectedPartDetails?.partNumber}</h3>
             </span>
             <span>
