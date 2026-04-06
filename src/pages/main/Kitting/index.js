@@ -102,19 +102,14 @@ export const Kitting = () => {
     );
   const createBarcodeMaster = (payload, kittingId) =>
     api.patch(`${KITTINGINFO}/updateScannedMap/${kittingId}`, payload);
-  const getMissingParts = (avlPart, kittingId, partId) =>
-    api.get(
-      `${KITTINGINFO}/missingBarcodes/${kittingId}?partId=${partId}`,
-      avlPart
-    );
-  const updateDubParts = (payload, kittingId) =>
+  const updateDubParts = (payload, kittingId, partId) =>
     api.patch(
-      `${KITTINGINFO}/updateDuplicateQtyByBarCode/${kittingId}`,
+      `${KITTINGINFO}/updateDuplicateQtyByBarCode/${kittingId}?partId=${partId}`,
       payload
     );
   const getBarcodeByKittingId = (id) => api.get(`${KITTINGINFO}/${id}`);
-  const verifyPartNo = ({ id, payload }) =>
-    api.post(`${MISSING_PART_NO}/${id}`, payload);
+  const verifyPartNo = ({ id, payload, partId = "" }) =>
+    api.post(`${MISSING_PART_NO}/${id}${partId ? `?partId=${partId}` : ""}`, payload);
 
   const handlePrint = useReactToPrint({
     content: () =>
@@ -126,16 +121,22 @@ export const Kitting = () => {
         ...prev,
         isOpenPrinter: false,
         isOpenMasterPrinter: false,
+        isOpenAvlPartModal: false,
       }));
+      setMissingParCode({
+        isPrint: false,
+        isVerifyCheck: false,
+        missingList: [],
+      });
       setPrintingDetails({});
       setMainPartPdfDetails({});
       handleClose();
     },
     pageStyle: `
     @page {
-      size: ${isOpen?.isOpenMasterPrinter
-        ? "150mm 100mm"
-        : "100mm 25mm"
+      size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
+        ? "auto landscape"
+        : "100mm 24mm portrait"
       };
       margin: 0;
     }
@@ -310,22 +311,14 @@ export const Kitting = () => {
     }
   );
 
-  const { isFetching: isFetchingMissingPart } = useQuery(
-    ["GET_MISSING_PART", ""],
-    getMissingParts,
-    {
-      enabled: false,
-      onSuccess: (missingResponse) => { },
-      refetchOnWindowFocus: false,
-    }
-  );
-
   const { isFetching: isFetchDubParts } = useQuery(
     ["UPDATE_DUB_PARTS", ""],
     updateDubParts,
     {
       enabled: false,
       onSuccess: (dubPartResponse) => {
+        console.log(dubPartResponse, "dubPartResponse");
+
         if (dubPartResponse?.status === 200) {
           showToast.success("Success", dubPartResponse?.data?.result?.success);
           handleClose("main");
@@ -762,7 +755,10 @@ export const Kitting = () => {
       type,
       caseInfo,
       dublicateBarcode,
+      isDublicate
     } = selectedPartDetails?.afterDetails;
+    console.log(mode, "mode", isDublicate, selectedPartDetails?.afterDetails);
+
     const payload =
       activeTabDetails?.tabKey === "1"
         ? expandToSequence(templabeledinfoMap)
@@ -784,14 +780,19 @@ export const Kitting = () => {
         createBarcodeMaster(payload, barCodeKittingInfoId)
       );
     } else {
-      if (mode === "reprint") {
+      if (mode === "reprint" || (isDublicate && mode !== "edit")) {
         const exists = dublicatePayload.some((payload) => {
           const lastVal = payload?.split("-").pop();
           return labelMap?.hasOwnProperty(lastVal);
         });
-        if (exists) {
+        if (missingParCode?.missingList?.length > 0) {
+          console.log(missingParCode?.missingList, "miss");
           queryClient.prefetchQuery(["UPDATE_DUB_PARTS", ""], () =>
-            updateDubParts(dublicatePayload, barCodeKittingInfoId)
+            updateDubParts(missingParCode?.missingList, barCodeKittingInfoId, partId)
+          );
+        } else if (exists) {
+          queryClient.prefetchQuery(["UPDATE_DUB_PARTS", ""], () =>
+            updateDubParts(dublicatePayload, barCodeKittingInfoId, partId)
           );
         } else {
           showToast.warning("Warning", "Not match the parts");
@@ -810,12 +811,9 @@ export const Kitting = () => {
   };
 
   const handleGetMissingPart = () => {
-    const { caseInfo, barCodeKittingInfoId, partId } =
-      selectedPartDetails?.afterDetails;
-    const payload = caseInfo?.[0]?.barcodes?.map((code) => code?.part);
-    queryClient.prefetchQuery(["GET_MISSING_PART", ""], () =>
-      getMissingParts(payload, barCodeKittingInfoId, partId)
-    );
+    const { caseInfo, barCodeKittingInfoId, partId } = selectedPartDetails?.afterDetails;
+    const payload = caseInfo?.[0]?.barcodes?.map((code) => code?.barcodeNumbers?.[0]) ?? [];
+    queryClient.prefetchQuery(["GET_ERIFY_PARTNO", ""], () => verifyPartNo({ id: barCodeKittingInfoId, payload, partId }));
   };
 
   const handleClose = (status) => {
@@ -1212,7 +1210,7 @@ export const Kitting = () => {
             >
               Edit
             </UiButton>
-            {!selectedPartDetails?.beforeDetails?.isDublicate && <UiButton
+            <UiButton
               onClick={() =>
                 handleDublicate(
                   selectedPartDetails?.beforeDetails?.isDublicate
@@ -1225,7 +1223,7 @@ export const Kitting = () => {
               {selectedPartDetails?.beforeDetails?.isDublicate
                 ? "Reprint"
                 : "Update"}
-            </UiButton>}
+            </UiButton>
           </div>
         }
         title={
@@ -1241,20 +1239,42 @@ export const Kitting = () => {
       />
       <UiModal
         open={isOpen?.isOpenAvlPartModal}
-        handleClose={() =>
-          setIsOpen((prev) => ({ ...prev, isOpenAvlPartModal: false }))
+        handleClose={() => {
+          setIsOpen((prev) => ({ ...prev, isOpenAvlPartModal: false }));
+          setMissingParCode((prev) => ({ ...prev, missingList: [], isPrint: false }));
+        }
         }
         footer={
-          <UiButton type="primary" onClick={() => handleGetMissingPart()}>
-            Done
-          </UiButton>
+          <div className="flexible-end">
+            <UiButton
+              onClick={() => {
+                setIsOpen((prev) => ({ ...prev, isOpenAvlPartModal: false }));
+                setMissingParCode((prev) => ({ ...prev, missingList: [], isPrint: false }));
+              }
+              }
+            >
+              Cancel
+            </UiButton>
+            <UiButton type="primary" onClick={() => handleGetMissingPart()}>
+              Verify
+            </UiButton>
+            {missingParCode?.missingList?.length > 0 && <UiButton onClick={() => {
+              setMode("reprint");
+              handlePrintTheStickers();
+            }} type="primary">
+              Print dublicate
+            </UiButton>}
+          </div>
         }
         children={
           <GetAvlParts
             selectedPartDetails={selectedPartDetails?.afterDetails}
             handleChangeAvlBarcode={handleChangeBarcodeId}
             hanldePressEnter={hanldePressEnter}
-            isLoading={isFetchingMissingPart}
+            isLoading={isFetchVerifyPartNo}
+            missingParCode={missingParCode}
+            lastBarcode={lastBarcode}
+            inputRef={inputRef}
           />
         }
         width={600}
@@ -1263,7 +1283,7 @@ export const Kitting = () => {
         <PrintMasterPdf ref={masterStickerRef} stickers={mainPartPdfDetails} />
         <PrintSticker
           ref={stickerRef}
-          stickers={printingDetails}
+          stickers={{ ...printingDetails, missingList: missingParCode?.missingList ?? [] }}
           activeTab={activeTabDetails}
         />
         <PrintCrReportComponent

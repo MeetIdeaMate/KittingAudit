@@ -199,6 +199,8 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
         isDublicate,
         labelMap,
         mode,
+        printingType,
+        missingList,
     } = stickers;
 
     const filteredEntries = (dublicateBarcode || [])
@@ -240,10 +242,26 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
 
     const startIndex = mode === "update" ? prevTotal + 1 : 1;
 
-    const labelsArray = Array.from(
-        { length: printQty },
-        (_, i) => startIndex + i
-    );
+    let labelsArray = [];
+
+    if (printingType === "INDIVIDUAL" && missingList?.length) {
+        const selectedKeys = missingList
+            ?.map(item => item?.split("-")?.pop());
+        selectedKeys?.forEach(key => {
+            const qty = labelMap?.[key] || 0;
+
+            for (let i = 0; i < qty; i++) {
+                labelsArray.push(Number(key));
+            }
+        });
+
+    }
+    else {
+        labelsArray = Array.from(
+            { length: printQty },
+            (_, i) => startIndex + i
+        );
+    }
 
     const chunkArray = (arr, size) => {
         const result = [];
@@ -269,10 +287,13 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                     <div
                         key={rowIndex}
                         style={{
+                            width: "100%",
+                            height: "24mm",
                             display: "flex",
                             justifyContent: "space-between",
                             breakInside: "avoid",
-                            pageBreakAfter: rowIndex !== rows.length - 1 ? "always" : "auto"
+                            pageBreakAfter: rowIndex !== rows.length - 1 ? "always" : "auto",
+                            gap: "1mm",
                         }}
                     >
                         {updatedRow?.map((item, index) => {
@@ -281,8 +302,8 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                     <div
                                         key={index}
                                         style={{
-                                            width: "50mm",
-                                            height: "23mm"
+                                            width: "50%",
+                                            height: "100%"
                                         }}
                                     />
                                 );
@@ -293,12 +314,16 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                     <div
                                         key={key}
                                         style={{
+                                            
                                             border: "1px solid #999",
-                                            padding: "5px",
-                                            boxSizing: "border-box",
                                             borderRadius: "5px",
-                                            width: "50mm",
-                                            height: "23mm"
+                                            width: "505",
+                                            height: "100%",
+                                            padding: "4px",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                            overflow: "hidden"
                                         }}
                                     >
                                         <div style={{ textAlign: "center" }}>
@@ -312,10 +337,10 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                             />
                                         </div>
                                         <div>
-                                            <h3 style={{ margin: 0 }}>
+                                            <h4 style={{ margin: 0 }}>
                                                 {stickers?.partNumber}-{key}
-                                            </h3>
-                                            <h6 style={{ margin: 0 }}>
+                                            </h4>
+                                            <h6 style={{ margin: 0, fontSize: "10px" }}>
                                                 OTIS VENDOR:
                                             </h6>
                                         </div>
@@ -330,11 +355,14 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                         key={index}
                                         style={{
                                             border: "1px solid #999",
-                                            padding: "5px",
-                                            boxSizing: "border-box",
+                                            padding: "4px",
                                             borderRadius: "5px",
-                                            width: "50mm",
-                                            height: "23mm"
+                                            width: "50%",
+                                            height: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            justifyContent: "center",
+                                            overflow: "hidden"
                                         }}
                                     >
                                         <div style={{ textAlign: "center" }}>
@@ -352,18 +380,17 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                             style={{
                                                 display: "flex",
                                                 justifyContent: "space-between",
-                                                alignItems: "center"
                                             }}
                                         >
-                                            <h3 style={{ margin: 0 }}>
+                                            <h4 style={{ margin: 0 }}>
                                                 {stickers?.partNumber}
-                                            </h3>
-                                            <h3 style={{ margin: 0 }}>
+                                            </h4>
+                                            <h4 style={{ margin: 0 }}>
                                                 {value}
-                                            </h3>
+                                            </h4>
                                         </div>
 
-                                        <h6 style={{ margin: 0 }}>
+                                        <h6 style={{ margin: 0, fontSize: "10px" }}>
                                             OTIS VENDOR:
                                         </h6>
                                     </div>
