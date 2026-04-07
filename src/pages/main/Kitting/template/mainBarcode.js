@@ -473,7 +473,7 @@ const rotateContainer = {
     left: "50%",
     marginTop: "-48mm",   
     marginLeft: "-73mm",  
-    transform: "rotate(90deg)",
+    transform: "rotate(90deg) scale(0.95)",
     transformOrigin: "center center",
     display: "flex",
     flexDirection: "row",
@@ -492,24 +492,24 @@ const rotateContainer = {
 //     transform: "translate(-50%, -50%) rotate(90deg)",
 //     transformOrigin: "center center",
 //     display: "flex",
-//     flexDirection: "column",    // ✅ column for second label
+//     flexDirection: "column",    
 //     justifyContent: "space-evenly",
 //     boxSizing: "border-box",
 //     border: "1px solid black",
-//     // overflow: "hidden",         // ✅ KEY FIX
+//     // overflow: "hidden",         
 //     padding: "3mm",
 //     // backgroundColor: "green"
 // };
 
 const secondRotateContainer = {
-    width: "146mm",
-    height: "96mm",
+    width: "145mm",
+    height: "95mm",
     position: "absolute",
     top: "50%",
     left: "50%",
     marginTop: "-48mm",       
     marginLeft: "-73mm",     
-    transform: "rotate(90deg)",
+    transform: " rotate(90deg) scale(0.95)",
     transformOrigin: "center center",
     display: "flex",
     flexDirection: "column",
