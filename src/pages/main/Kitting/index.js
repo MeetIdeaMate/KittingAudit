@@ -938,6 +938,10 @@ export const Kitting = () => {
       }
       const labelQty =
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
+        if(labelQty===0){
+            setLastBarcode("");
+            return;
+        }
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
       const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.barcodeNumbers?.map((barCode)=>barCode)) || [];
       const updatedCaseDetails =
