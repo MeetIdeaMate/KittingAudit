@@ -135,7 +135,7 @@ export const Kitting = () => {
     pageStyle: `
    
     @page {
-      size: "100mm 150mm" !important;
+      size: 4in 6in !important;
       margin: 0;
     }
     
@@ -157,7 +157,7 @@ export const Kitting = () => {
     pageStyle: `
    
     @page {
-      size: 4in 1in !important;
+      size: 4in 1in portrait !important;
       margin: 0;
     }
     
