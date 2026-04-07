@@ -509,7 +509,7 @@ const secondRotateContainer = {
     left: "52%",
     marginTop: "-48mm",       
     marginLeft: "-73mm",     
-    transform: "rotate(90deg)",
+    transform: "rotate(90deg) scale(0.98)",
     transformOrigin: "center center",
     display: "flex",
     flexDirection: "column",
