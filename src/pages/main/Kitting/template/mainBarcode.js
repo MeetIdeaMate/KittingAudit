@@ -275,7 +275,6 @@ export const MainBarcode = ({ stickers }) => {
                 return (
                     <React.Fragment key={index}>
 
-                        {/* ✅ Page 1 — Main Label */}
                         <div style={pageStyle}>
                             <div style={rotateContainer}>
                                 <div style={leftSection}>
@@ -364,7 +363,6 @@ export const MainBarcode = ({ stickers }) => {
                             </div>
                         </div>
 
-                        {/* ✅ Page 2 — Second Label */}
                         <div style={pageStyle}>
                             <div style={secondRotateContainer}>
                                 <div style={{ padding: "0 8px" }}>
@@ -422,7 +420,6 @@ export const MainBarcode = ({ stickers }) => {
     );
 };
 
-// ✅ Page wrapper — overflow hidden MUST
 const pageStyle = {
     width: "100mm",
     height: "150mm",
@@ -431,12 +428,11 @@ const pageStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",         // ✅ KEY FIX
+    overflow: "hidden",         
     boxSizing: "border-box",
     position: "relative",
 };
 
-// ✅ Page 1 rotate container
 // const rotateContainer = {
 //     width: "150mm",
 //     height: "100mm",
@@ -450,14 +446,14 @@ const pageStyle = {
 //     boxSizing: "border-box",
 //     border: "1px solid black",
 //     overflow: "hidden",    
-//     backgroundColor: "red"     // ✅ KEY FIX
+//     backgroundColor: "red"     
 // };
 
 // const rotateContainer = {
-//     width: "150mm",           // ✅ page width-க்கு equal
-//     height: "100mm",          // ✅ square
+//     width: "150mm",           
+//     height: "100mm",          
 //     position: "absolute",
-//     top: "25mm",              // ✅ (150-100)/2
+//     top: "25mm",              
 //     left: "0",
 //     transform: "rotate(90deg)",
 //     transformOrigin: "center center",
@@ -465,18 +461,18 @@ const pageStyle = {
 //     flexDirection: "row",
 //     boxSizing: "border-box",
 //     border: "1px solid black",
-//     backgroundColor: "yellow"       // ✅
+//     backgroundColor: "yellow"       
 //     // overflow: "hidden",
 // };
 
 const rotateContainer = {
-    width: "150mm",
-    height: "100mm",
+    width: "148mm",
+    height: "98mm",
     position: "absolute",
     top: "50%",
     left: "50%",
-    marginTop: "-50mm",   // ✅ height/2 = 100/2 = 50mm... no — content width/2
-    marginLeft: "-75mm",  // ✅ width/2 = 150/2 = 75mm
+    marginTop: "-48mm",   
+    marginLeft: "-73mm",  
     transform: "rotate(90deg)",
     transformOrigin: "center center",
     display: "flex",
@@ -506,13 +502,13 @@ const rotateContainer = {
 // };
 
 const secondRotateContainer = {
-    width: "150mm",
-    height: "100mm",
+    width: "145mm",
+    height: "95mm",
     position: "absolute",
     top: "50%",
     left: "50%",
-    marginTop: "-50mm",      // ✅ same
-    marginLeft: "-75mm",     // ✅ same
+    marginTop: "-48mm",       
+    marginLeft: "-73mm",     
     transform: "rotate(90deg)",
     transformOrigin: "center center",
     display: "flex",
@@ -532,7 +528,7 @@ const leftSection = {
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
-    overflow: "hidden",         // ✅
+    overflow: "hidden",         
 };
 
 const rightSection = {
