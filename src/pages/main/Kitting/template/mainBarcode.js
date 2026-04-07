@@ -466,8 +466,8 @@ const pageStyle = {
 // };
 
 const rotateContainer = {
-    width: "148mm",
-    height: "98mm",
+    width: "145mm",
+    height: "95mm",
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -502,8 +502,8 @@ const rotateContainer = {
 // };
 
 const secondRotateContainer = {
-    width: "145mm",
-    height: "95mm",
+    width: "146mm",
+    height: "96mm",
     position: "absolute",
     top: "50%",
     left: "50%",
