@@ -422,7 +422,7 @@ export const MainBarcode = ({ stickers }) => {
 
 const pageStyle = {
     width: "100mm",
-    height: "150mm",
+    height: "149mm",
     pageBreakAfter: "always",
     breakAfter: "page",
     display: "flex",
@@ -509,7 +509,7 @@ const secondRotateContainer = {
     left: "50%",
     marginTop: "-48mm",       
     marginLeft: "-73mm",     
-    transform: " rotate(90deg)",
+    transform: "rotate(90deg)",
     transformOrigin: "center center",
     display: "flex",
     flexDirection: "column",
