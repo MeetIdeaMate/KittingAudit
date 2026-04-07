@@ -771,9 +771,9 @@ export const Kitting = () => {
           barcodes: allBarcodes,
         };
       })?.filter(Boolean);
-    //   queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
-    //     createBarcodeMaster(payload, barCodeKittingInfoId)
-    //   );
+      queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
+        createBarcodeMaster(payload, barCodeKittingInfoId)
+      );
     } else {
       if (mode === "reprint" || (isDublicate && mode !== "edit")) {
         const exists = dublicatePayload.some((payload) => {
@@ -932,7 +932,6 @@ export const Kitting = () => {
     //   );
       const fintCode=selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
         (parts)=>parts?.barCode===mainCode);
-        
       if (!fintCode) {
         setLastBarcode("");
         return;
@@ -940,8 +939,7 @@ export const Kitting = () => {
       const labelQty =
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
-
-      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.part) || [];
+      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.barcodeNumbers?.map((barCode)=>barCode)) || [];
       const updatedCaseDetails =
         selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
           if (!details?.selectedCase) return details;
@@ -949,7 +947,8 @@ export const Kitting = () => {
           const existing = details?.barcodes || [];
           const idx = existing.findIndex((b) => b.part === partName);
           let updatedList = [...existing];
-          const isPartExistsGlobally = allExistingParts?.includes(partName);
+          const flat = allExistingParts.flat();
+          const isPartExistsGlobally = flat?.includes(value);
           if (idx !== -1 && !checkGrpPrintType) {
             let item = updatedList[idx];
             const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
