@@ -111,7 +111,7 @@ export const Kitting = () => {
   const verifyPartNo = ({ id, payload, partId = "" }) =>
     api.post(`${MISSING_PART_NO}/${id}${partId ? `?partId=${partId}` : ""}`, payload);
 
-  const handlePrint = useReactToPrint({
+  const handlePrintPacking = useReactToPrint({
     content: () =>
       isOpen?.isOpenMasterPrinter
         ? masterStickerRef?.current
@@ -135,10 +135,7 @@ export const Kitting = () => {
     pageStyle: `
    
     @page {
-      size: ${isOpen?.isOpenMasterPrinter && missingParCode?.missingList?.length === 0
-        ? "100mm 150mm"  
-      : "100mm 25mm portrait"
-      } !important;
+      size: "100mm 150mm" !important;
       margin: 0;
     }
     
@@ -154,6 +151,46 @@ export const Kitting = () => {
     print-color-adjust: exact !important;
 }
   `,
+  });
+
+  const handlePrint = useReactToPrint({
+    pageStyle: `
+   
+    @page {
+      size: 4in 1in !important;
+      margin: 0;
+    }
+    
+    //  html, body {
+    //     margin: 0 !important;
+    //     padding: 0 !important;
+    //    width: ${isOpen?.isOpenMasterPrinter ? "100mm" : "100mm"};
+    // height: ${isOpen?.isOpenMasterPrinter ? "150mm" : "25mm"};
+    // }
+   * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+}
+  `,
+    content: () => stickerRef?.current,
+    onAfterPrint: () => {
+      setIsOpen((prev) => ({
+        ...prev,
+        isOpenPrinter: false,
+        isOpenMasterPrinter: false,
+        isOpenAvlPartModal: false,
+      }));
+      setMissingParCode({
+        isPrint: false,
+        isVerifyCheck: false,
+        missingList: [],
+      });
+      setPrintingDetails({});
+      setMainPartPdfDetails({});
+      handleClose();
+    },
+   
   });
 
   const { isFetching: isFetchAllCrExcel } = useQuery(
@@ -1019,10 +1056,12 @@ export const Kitting = () => {
   }, [activeTabDetails, selectedPartDetails?.afterDetails, mode]);
 
   useEffect(() => {
-    if (isOpen?.isOpenPrinter || isOpen?.isOpenMasterPrinter) {
+    if (isOpen?.isOpenPrinter) {
       handlePrint();
+    } else if (isOpen?.isOpenMasterPrinter) {
+      handlePrintPacking();
     }
-  }, [isOpen?.isOpenPrinter, handlePrint, isOpen?.isOpenMasterPrinter]);
+  }, [isOpen?.isOpenPrinter, handlePrint, handlePrintPacking, isOpen?.isOpenMasterPrinter]);
 
   useEffect(() => {
     let isLoading =

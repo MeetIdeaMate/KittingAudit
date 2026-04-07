@@ -282,9 +282,9 @@ export const MainBarcode = ({ stickers }) => {
                                 <div style={leftSection}>
                                     <div style={header}>
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <div>{stickers?.parentPartNumber}</div>
+                                            <div><h2 style={{padding:0,margin:0}}>{stickers?.parentPartNumber}</h2></div>
                                             <div>
-                                                <p style={{ fontSize: "12px", padding: 0, margin: 0 }}>
+                                                <p style={{ fontSize: "16px", padding: 0, margin: 0 }}>
                                                     {details?.barCode}
                                                 </p>
                                             </div>
@@ -573,7 +573,7 @@ const th = {
 const td = {
     border: "1px solid #000",
     textAlign: "center",
-    lineHeight: "17px",
+    lineHeight: "16px",
 };
 
 const sectionStyle = {
