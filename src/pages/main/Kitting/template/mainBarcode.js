@@ -272,12 +272,10 @@ export const MainBarcode = ({ stickers }) => {
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
                 const gridRows = createGridRows(details?.packingDetailsRes || []);
-                const isLast = index === stickers.packingLabelResponses.length - 1;
                 return (
                     <React.Fragment key={index}>
 
-                        <div style={{...pageStyle,pageBreakAfter: isLast ? "auto" : "always",
-                breakAfter: isLast ? "auto" : "page"}}>
+                        <div style={pageStyle}>
                             <div style={rotateContainer}>
                                 <div style={leftSection}>
                                     <div style={header}>
@@ -365,8 +363,7 @@ export const MainBarcode = ({ stickers }) => {
                             </div>
                         </div>
 
-                        <div style={{...pageStyle,pageBreakAfter: isLast ? "auto" : "always",
-                breakAfter: isLast ? "auto" : "page"}}>
+                        <div style={pageStyle}>
                             <div style={secondRotateContainer}>
                                 <div style={{ padding: "0 8px" }}>
                                     <h3 style={{ padding: 0, margin: 0}}>
@@ -425,7 +422,7 @@ export const MainBarcode = ({ stickers }) => {
 
 const pageStyle = {
     width: "100mm",
-    height: "149mm",
+    height: "150mm",
     pageBreakAfter: "always",
     breakAfter: "page",
     display: "flex",
