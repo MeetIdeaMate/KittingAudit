@@ -267,25 +267,25 @@ export const MainBarcode = ({ stickers }) => {
         }
         return rows;
     };
+
     return (
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
                 const gridRows = createGridRows(details?.packingDetailsRes || []);
                 return (
                     <React.Fragment key={index}>
-                        <div style={pageStyle}
-                        >
-                            <div
-                                style={rotateContainer}
-                            >
+
+                        {/* ✅ Page 1 — Main Label */}
+                        <div style={pageStyle}>
+                            <div style={rotateContainer}>
                                 <div style={leftSection}>
                                     <div style={header}>
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
+                                            <div>{stickers?.parentPartNumber}</div>
                                             <div>
-                                                {stickers?.parentPartNumber}
-                                            </div>
-                                            <div>
-                                                <p style={{ fontSize: "12px", padding: 0, margin: 0 }}>{details?.barCode}</p>
+                                                <p style={{ fontSize: "12px", padding: 0, margin: 0 }}>
+                                                    {details?.barCode}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -300,7 +300,7 @@ export const MainBarcode = ({ stickers }) => {
                                         />
                                     </div>
                                     <div style={{ width: "100%", display: "flex" }}>
-                                        <h6 style={{ width: "50%", padding: 0, margin: 0, }}>GROSS WEIGHT</h6>
+                                        <h6 style={{ width: "50%", padding: 0, margin: 0 }}>GROSS WEIGHT</h6>
                                         <h6 style={{ width: "50%", padding: 0, margin: 0 }}>{stickers?.description}</h6>
                                     </div>
                                     <table style={table}>
@@ -363,43 +363,48 @@ export const MainBarcode = ({ stickers }) => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* ✅ Page 2 — Second Label */}
                         <div style={pageStyle}>
-                            <div
-                                style={{ ...rotateContainer, ...secondLabel }}
-                            >
-                                <div style={{ padding: "0 10px" }}>
-                                    <h3 style={{ padding: 0, margin: 0 }}>Contract No: {stickers?.crNumber}</h3>
+                            <div style={secondRotateContainer}>
+                                <div style={{ padding: "0 8px" }}>
+                                    <h3 style={{ padding: 0, margin: 0}}>
+                                        Contract No: {stickers?.crNumber}
+                                    </h3>
                                     <Barcode
                                         value={stickers?.crNumber || "BARCODE"}
                                         width={1}
                                         height={20}
-                                        fontSize={16}
                                         displayValue={false}
                                         format="CODE128"
                                     />
                                 </div>
-                                <div style={{ padding: "0 10px" }}>
-                                    <h3 style={{ padding: 0, margin: 0 }}>Item : {stickers?.parentPartNumber}</h3>
+                                <div style={{ padding: "0 8px" }}>
+                                    <h3 style={{ padding: 0, margin: 0 }}>
+                                        Item : {stickers?.parentPartNumber}
+                                    </h3>
                                     <Barcode
                                         value={stickers?.parentPartNumber || "BARCODE"}
                                         width={1}
                                         height={20}
-                                        fontSize={16}
                                         displayValue={false}
                                         format="CODE128"
                                     />
                                 </div>
                                 <div style={footerRow}>
                                     <div>
-                                        <h3 style={{ padding: 0, margin: 0 }}>Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1</h3>
-                                        <>{(index + 1) === 1 && <Barcode
-                                            value={details?.totalQty || "BARCODE"}
-                                            width={1}
-                                            height={17}
-                                            fontSize={16}
-                                            displayValue={false}
-                                            format="CODE128"
-                                        />}</>
+                                        <h3 style={{ padding: 0, margin: 0 }}>
+                                            Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1
+                                        </h3>
+                                        {(index + 1) === 1 &&
+                                            <Barcode
+                                                value={details?.totalQty || "BARCODE"}
+                                                width={1}
+                                                height={17}
+                                                displayValue={false}
+                                                format="CODE128"
+                                            />
+                                        }
                                     </div>
                                     <div style={caseBox}>
                                         Case No
@@ -409,6 +414,7 @@ export const MainBarcode = ({ stickers }) => {
                                 </div>
                             </div>
                         </div>
+
                     </React.Fragment>
                 );
             })}
@@ -416,111 +422,190 @@ export const MainBarcode = ({ stickers }) => {
     );
 };
 
-const secondLabel = {
-    flexDirection: "column",
-    justifyContent: "space-around",
-    padding: "10mm"
-};
-
+// ✅ Page wrapper — overflow hidden MUST
 const pageStyle = {
-    width: "100mm",   // Portrait width
-    height: "150mm",  // Portrait height
+    width: "100mm",
+    height: "150mm",
     pageBreakAfter: "always",
+    breakAfter: "page",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",
+    overflow: "hidden",         // ✅ KEY FIX
     boxSizing: "border-box",
     position: "relative",
 };
 
+// ✅ Page 1 rotate container
+// const rotateContainer = {
+//     width: "150mm",
+//     height: "100mm",
+//     position: "absolute",
+//     top: "50%",
+//     left: "50%",
+//     transform: "translate(-50%, -50%) rotate(90deg)",
+//     transformOrigin: "center center",
+//     display: "flex",
+//     flexDirection: "row",
+//     boxSizing: "border-box",
+//     border: "1px solid black",
+//     overflow: "hidden",    
+//     backgroundColor: "red"     // ✅ KEY FIX
+// };
+
+// const rotateContainer = {
+//     width: "150mm",           // ✅ page width-க்கு equal
+//     height: "100mm",          // ✅ square
+//     position: "absolute",
+//     top: "25mm",              // ✅ (150-100)/2
+//     left: "0",
+//     transform: "rotate(90deg)",
+//     transformOrigin: "center center",
+//     display: "flex",
+//     flexDirection: "row",
+//     boxSizing: "border-box",
+//     border: "1px solid black",
+//     backgroundColor: "yellow"       // ✅
+//     // overflow: "hidden",
+// };
+
 const rotateContainer = {
-    width: "150mm",  // Content width
-    height: "100mm", // Content height
+    width: "150mm",
+    height: "100mm",
     position: "absolute",
     top: "50%",
     left: "50%",
-    transform: "translate(-50%, -50%) rotate(90deg)",
+    marginTop: "-50mm",   // ✅ height/2 = 100/2 = 50mm... no — content width/2
+    marginLeft: "-75mm",  // ✅ width/2 = 150/2 = 75mm
+    transform: "rotate(90deg)",
+    transformOrigin: "center center",
     display: "flex",
-    flexDirection: "row", // Left section and Right section side-by-side
+    flexDirection: "row",
     boxSizing: "border-box",
-    // border: "1px solid black",
-    border: "none",
+    border: "1px solid black",
+    overflow: "hidden",
+};
+
+// ✅ Page 2 rotate container — separate style
+// const secondRotateContainer = {
+//     width: "150mm",
+//     height: "100mm",
+//     position: "absolute",
+//     top: "50%",
+//     left: "50%",
+//     transform: "translate(-50%, -50%) rotate(90deg)",
+//     transformOrigin: "center center",
+//     display: "flex",
+//     flexDirection: "column",    // ✅ column for second label
+//     justifyContent: "space-evenly",
+//     boxSizing: "border-box",
+//     border: "1px solid black",
+//     // overflow: "hidden",         // ✅ KEY FIX
+//     padding: "3mm",
+//     // backgroundColor: "green"
+// };
+
+const secondRotateContainer = {
+    width: "150mm",
+    height: "100mm",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: "-50mm",      // ✅ same
+    marginLeft: "-75mm",     // ✅ same
+    transform: "rotate(90deg)",
+    transformOrigin: "center center",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-evenly",
+    boxSizing: "border-box",
+    border: "1px solid black",
+    overflow: "hidden",
+    padding: "3mm",
 };
 
 const leftSection = {
-    width: "85%", // Table area-kku athiga space
-    height: "100mm",
+    width: "85%",
+    height: "100%",
     borderRight: "1px solid black",
-    borderTop: "1px solid black",
     padding: "2mm",
     display: "flex",
     flexDirection: "column",
+    boxSizing: "border-box",
+    overflow: "hidden",         // ✅
 };
 
 const rightSection = {
-    width: "15%", // Side info area
+    width: "15%",
     height: "100%",
     display: "flex",
     flexDirection: "column",
-    boxSizing: "border-box"
+    boxSizing: "border-box",
+    overflow: "hidden",  
 };
 
 const header = {
-    fontSize: "16px",
+    fontSize: "13px",
     fontWeight: "700",
     padding: "3px",
-    borderBottom: "1px solid #000"
+    borderBottom: "1px solid #000",
 };
 
 const barcodeContainer = {
     textAlign: "center",
-    padding: "5px 0",
-    borderBottom: "1px solid #000"
+    padding: "3px 0",
+    borderBottom: "1px solid #000",
 };
 
 const table = {
     width: "100%",
     borderCollapse: "collapse",
     fontSize: "10px",
-    border: "1px solid #000"
+    border: "1px solid #000",
 };
 
 const th = {
     border: "1px solid #000",
     textAlign: "center",
     fontWeight: "600",
-    lineHeight: "10px"
+    lineHeight: "14px",
 };
 
 const td = {
     border: "1px solid #000",
     textAlign: "center",
-    lineHeight: "10px"
+    lineHeight: "17px",
 };
 
 const sectionStyle = {
+    flex: 1,
     borderBottom: "1px solid #000",
+    borderLeft: "1px solid #000",
     textAlign: "center",
-    height: "12mm",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
 };
 
 const text = {
     fontSize: "11px",
-    margin: 0
+    margin: 0,
 };
 
 const badge = {
     backgroundColor: "#000",
     color: "#fff",
     padding: "4px 8px",
-    fontSize: "11px"
+    fontSize: "11px",
 };
 
 const footerRow = {
     display: "flex",
     justifyContent: "space-between",
-    padding: "0 10px"
+    alignItems: "center",
+    padding: "0 8px",
 };
 
 const caseBox = {
@@ -531,5 +616,5 @@ const caseBox = {
     fontWeight: "600",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
 };
