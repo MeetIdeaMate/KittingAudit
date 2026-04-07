@@ -213,17 +213,18 @@ export const Kitting = () => {
       refetchOnWindowFocus: false,
       onSuccess: (verifyPartNo) => {
         if (verifyPartNo?.status === 200) {
-          setMissingParCode({
-            isPrint: true,
-            missingList: verifyPartNo?.data?.result?.missingBarcodes || [],
-          });
+      setMissingParCode((prev) => ({
+        ...prev,
+        isPrint: true,
+        missingList: verifyPartNo?.data?.result?.missingBarcodes ||[],
+      }));
           if (
             verifyPartNo?.data?.result?.missingBarcodes?.length === 0 &&
             missingParCode?.isVerifyCheck
           ) {
             handlePrintTheStickers();
           } 
-          else if(mode!=="reprint") {
+          else if(mode!=="reprint" && verifyPartNo?.data?.result?.missingBarcodes?.length>0) {
             showToast.warning('Warning', 'Please update the missing Parts');
           }
         } else {
@@ -764,11 +765,12 @@ export const Kitting = () => {
         const allBarcodes = details?.barcodes?.flatMap(
           (part) => part?.barcodeNumbers || []
         );
+         if (allBarcodes?.length === 0) return null;
         return {
           boxNo: index + 1,
           barcodes: allBarcodes,
         };
-      });
+      })?.filter(Boolean);
       queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
         createBarcodeMaster(payload, barCodeKittingInfoId)
       );
@@ -925,9 +927,11 @@ export const Kitting = () => {
       if (!value) return;
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
-      const fintCode = selectedCrExcelDetails?.partDetails?.find(
-        (p) => p?.barCode === mainCode
-      );
+    //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
+    //     (p) => p?.barCode === mainCode
+    //   );
+      const fintCode=selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
+        (parts)=>parts?.barCode===mainCode);
       if (!fintCode) {
         setLastBarcode("");
         return;
@@ -935,8 +939,7 @@ export const Kitting = () => {
       const labelQty =
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
-
-      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.part) || [];
+      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.barcodeNumbers?.map((barCode)=>barCode)) || [];
       const updatedCaseDetails =
         selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
           if (!details?.selectedCase) return details;
@@ -944,7 +947,8 @@ export const Kitting = () => {
           const existing = details?.barcodes || [];
           const idx = existing.findIndex((b) => b.part === partName);
           let updatedList = [...existing];
-          const isPartExistsGlobally = allExistingParts?.includes(partName);
+          const flat = allExistingParts.flat();
+          const isPartExistsGlobally = flat?.includes(value);
           if (idx !== -1 && !checkGrpPrintType) {
             let item = updatedList[idx];
             const barcodeAlreadyAdded = item.barcodeNumbers?.includes(value);
