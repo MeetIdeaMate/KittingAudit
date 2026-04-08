@@ -997,7 +997,7 @@ export const Kitting = () => {
       //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
       //     (p) => p?.barCode === mainCode
       //   );
-      const fintCode = selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
+      const fintCode = mode === "reprint" ? selectedPartDetails?.afterDetails : selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
         (parts) => parts?.barCode === mainCode);
       if (!fintCode) {
         setLastBarcode("");
