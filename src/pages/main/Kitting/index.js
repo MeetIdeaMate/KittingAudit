@@ -1084,6 +1084,12 @@ export const Kitting = () => {
 
   return (
     <React.Fragment>
+        <div style={{ position: "sticky",
+          top: 0,
+          zIndex:10,
+          height: "100px",
+          backgroundColor:"#F5F5F5"
+          }}>
       <div
         style={{
           display: "flex",
@@ -1143,9 +1149,11 @@ export const Kitting = () => {
       <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
         <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
       </div>
+    </div>
       <UiTable
         columns={kittingPartColumn({ handleKittingPart })}
         dataSource={selectedCrExcelDetails?.partDetails ?? []}
+        sticky={{ offsetHeader: 100 }}
         pagination={false}
         rowClassName={(details) => {
           return details?.type === "PARENT" && details?.isSelectd

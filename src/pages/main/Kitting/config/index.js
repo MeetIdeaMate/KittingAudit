@@ -29,6 +29,9 @@ export const kittingPartColumn = ({ handleKittingPart }) => [
         title: "Bal Qty",
         dataIndex: "balanceQty",
         width:70,
+        render:(_,details)=>{
+            return<div>{details?.balanceQty === 0?<p style={{color : "green",padding : 0, margin : 0}}>✔</p>:<p>{details?.balanceQty}</p>}</div>
+        }
     },
     {
         title: "Print",
