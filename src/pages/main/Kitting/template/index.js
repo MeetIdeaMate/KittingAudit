@@ -35,8 +35,8 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
             <div style={{ textAlign: "center", lineHeight: 1 }}>
                 <Barcode
                     value={barcodeValue || ""}
-                    width={1}
-                    height={16}
+                    width={0.5}
+                    height={20}
                     fontSize={9}
                     margin={0}
                     format="CODE128"
