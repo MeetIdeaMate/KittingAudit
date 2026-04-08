@@ -5,7 +5,7 @@ const LABEL_HEIGHT = "0.94in";  // 24mm
 const ROW_WIDTH = "3.94in";     // 100mm
 const ROW_HEIGHT = "0.98in";    // 25mm
 
-export const PrintStickerLabels = ({ stickers, tabDetails }) => {
+export const PrintStickerLabels = ({ stickers, tabDetails,vendorNumber }) => {
 
     const {
         templabeledinfoMap,
@@ -129,18 +129,18 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                     marginTop: "1px",
                 }}
             >
-                <span style={{ fontSize: "9px", fontWeight: "bold", margin: 0 }}>
+                <span style={{ fontSize: "20px", fontWeight: "bold", margin: 0 ,padding:"5px 0px 0px 10px"}}>
                     {title}
                 </span>
                 {extraRight && (
-                    <span style={{ fontSize: "9px", fontWeight: "bold", margin: 0 }}>
-                        {extraRight}
+                    <span style={{ fontSize: "10px", fontWeight: "bold", margin: 0 }}>
+                       Qty : {extraRight}
                     </span>
                 )}
             </div>
 
-            <span style={{ fontSize: "8px", margin: 0, color: "#333" }}>
-                {subtitle}
+            <span style={{ fontSize: "8px", margin: 0, color: "#333" ,paddingLeft:"10px"}}>
+                {subtitle} : {vendorNumber}
             </span>
         </div>
     );
@@ -202,7 +202,7 @@ export const PrintStickerLabels = ({ stickers, tabDetails }) => {
                                         <LabelContent
                                             key={key}
                                             barcodeValue={`${stickers?.barCode}-${key}`}
-                                            title={`${stickers?.partNumber}-${key}`}
+                                            title={`${stickers?.partNumber}`}
                                             subtitle="OTIS VENDOR:"
                                         />
                                     );

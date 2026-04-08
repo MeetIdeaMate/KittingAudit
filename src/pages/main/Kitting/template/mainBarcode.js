@@ -280,9 +280,9 @@ export const MainBarcode = ({ stickers }) => {
                                 <div style={leftSection}>
                                     <div style={header}>
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <div><h2 style={{padding:0,margin:0}}>{stickers?.parentPartNumber}</h2></div>
+                                            <div><h1 style={{padding:0,margin:0,fontSize:"28px",whiteSpace: "nowrap"}}>{stickers?.parentPartNumber}</h1></div>
                                             <div>
-                                                <p style={{ fontSize: "16px", padding: 0, margin: 0 }}>
+                                                <p style={{ fontSize: "14px", padding: 0, margin: 0 }}>
                                                     {details?.barCode}
                                                 </p>
                                             </div>
@@ -366,9 +366,9 @@ export const MainBarcode = ({ stickers }) => {
                         <div style={pageStyle}>
                             <div style={secondRotateContainer}>
                                 <div style={{ padding: "0 8px" }}>
-                                    <h3 style={{ padding: 0, margin: 0}}>
+                                    <h1 style={{ padding: 0, margin: 0,fontSize:"30px",whiteSpace:"nowrap"}}>
                                         Contract No: {stickers?.crNumber}
-                                    </h3>
+                                    </h1>
                                     <Barcode
                                         value={stickers?.crNumber || "BARCODE"}
                                         width={1}
@@ -378,9 +378,9 @@ export const MainBarcode = ({ stickers }) => {
                                     />
                                 </div>
                                 <div style={{ padding: "0 8px" }}>
-                                    <h3 style={{ padding: 0, margin: 0 }}>
+                                    <h1 style={{ padding: 0, margin: 0, fontSize:"30px",whiteSpace:"nowrap"}}>
                                         Item : {stickers?.parentPartNumber}
-                                    </h3>
+                                    </h1>
                                     <Barcode
                                         value={stickers?.parentPartNumber || "BARCODE"}
                                         width={1}
@@ -391,9 +391,9 @@ export const MainBarcode = ({ stickers }) => {
                                 </div>
                                 <div style={footerRow}>
                                     <div>
-                                        <h3 style={{ padding: 0, margin: 0 }}>
+                                        <h1 style={{ padding: 0, margin: 0 ,fontSize:"30px",whiteSpace:"nowrap"}}>
                                             Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1
-                                        </h3>
+                                        </h1>
                                         {(index + 1) === 1 &&
                                             <Barcode
                                                 value={details?.totalQty || "BARCODE"}
@@ -428,7 +428,7 @@ const pageStyle = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    overflow: "hidden",         
+    // overflow: "hidden",         
     boxSizing: "border-box",
     position: "relative",
 };
@@ -471,7 +471,7 @@ const rotateContainer = {
     position: "absolute",
     top: "51%",
     left: "52%",
-    marginTop: "-48mm",   
+    marginTop: "-47mm",   
     marginLeft: "-73mm",  
     transform: "rotate(90deg)",
     transformOrigin: "center center",
@@ -479,7 +479,7 @@ const rotateContainer = {
     flexDirection: "row",
     boxSizing: "border-box",
     border: "1px solid black",
-    overflow: "hidden",
+    // overflow: "hidden",
 };
 
 // ✅ Page 2 rotate container — separate style
@@ -507,8 +507,8 @@ const secondRotateContainer = {
     position: "absolute",
     top: "51%",
     left: "52%",
-    marginTop: "-48mm",       
-    marginLeft: "-73mm",     
+    marginTop: "-47mm",       
+    marginLeft: "-73mm", 
     transform: "rotate(90deg) scale(0.98)",
     transformOrigin: "center center",
     display: "flex",
@@ -516,7 +516,7 @@ const secondRotateContainer = {
     justifyContent: "space-evenly",
     boxSizing: "border-box",
     border: "1px solid black",
-    overflow: "hidden",
+    // overflow: "hidden",
     padding: "3mm",
 };
 
@@ -528,7 +528,7 @@ const leftSection = {
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
-    overflow: "hidden",         
+    // overflow: "hidden",         
 };
 
 const rightSection = {
@@ -537,7 +537,7 @@ const rightSection = {
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
-    overflow: "hidden",  
+    // overflow: "hidden",  
 };
 
 const header = {
@@ -571,6 +571,7 @@ const td = {
     border: "1px solid #000",
     textAlign: "center",
     lineHeight: "16px",
+    fontWeight:"900"
 };
 
 const sectionStyle = {
@@ -582,7 +583,7 @@ const sectionStyle = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
+    // overflow: "hidden",
 };
 
 const text = {

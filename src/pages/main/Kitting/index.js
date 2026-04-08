@@ -19,6 +19,7 @@ import { exclamationCircle } from "../../../assets/images";
 import { PrintStickerLabels } from "./template";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import {
+    CONFIG,
   KITTING,
   KITTINGINFO,
   MISSING_PART_NO,
@@ -34,6 +35,7 @@ const PrintSticker = React.forwardRef((props, ref) => (
     <PrintStickerLabels
       stickers={props?.stickers}
       tabDetails={props?.activeTab}
+      vendorNumber={props?.vendorNumber}
     />
   </div>
 ));
@@ -82,6 +84,7 @@ export const Kitting = () => {
   const [lastBarcode, setLastBarcode] = useState("");
   const [mode, setMode] = useState("");
   const [mainPartPdfDetails, setMainPartPdfDetails] = useState({});
+  const [vendorNumber,setVendorNumber]=useState("");
   const [missingParCode, setMissingParCode] = useState({
     isPrint: false,
     isVerifyCheck: false,
@@ -110,6 +113,16 @@ export const Kitting = () => {
   const getBarcodeByKittingId = (id) => api.get(`${KITTINGINFO}/${id}`);
   const verifyPartNo = ({ id, payload, partId = "" }) =>
     api.post(`${MISSING_PART_NO}/${id}${partId ? `?partId=${partId}` : ""}`, payload);
+
+  const getOtisVendorNo=()=>api.get(`${CONFIG}/OTISVENDORNO`);
+
+  useQuery(["FETCH_OTIS_VENDOR_NO",""],getOtisVendorNo,{
+    enabled:true,
+    refetchOnWindowFocus:false,
+    onSuccess:(configResponse)=>{
+        setVendorNumber(configResponse?.configuration?.[0]);
+    }
+  });
 
   const handlePrintPacking = useReactToPrint({
     content: () =>
@@ -1328,6 +1341,7 @@ export const Kitting = () => {
           ref={stickerRef}
           stickers={{ ...printingDetails, missingList: missingParCode?.missingList ?? [] }}
           activeTab={activeTabDetails}
+          vendorNumber={vendorNumber}
         />
         <PrintCrReportComponent
           ref={componentRef}
