@@ -422,8 +422,8 @@ export const MainBarcode = ({ stickers }) => {
 
 const pageStyle = {
     width: "99mm",
-    height: "148mm",
-    pageBreakAfter: "always",
+    height: "145mm",
+    // pageBreakAfter: "always",
     breakAfter: "page",
     display: "flex",
     alignItems: "center",
@@ -431,6 +431,9 @@ const pageStyle = {
     // overflow: "hidden",         
     boxSizing: "border-box",
     position: "relative",
+    pageBreakInside: "avoid", 
+    breakInside: "avoid",
+    margin:0
 };
 
 // const rotateContainer = {
@@ -469,7 +472,7 @@ const rotateContainer = {
     width: "145mm",
     height: "95mm",
     position: "absolute",
-    top: "51%",
+    top: "52%",
     left: "52%",
     marginTop: "-47mm",   
     marginLeft: "-73mm",  
@@ -505,7 +508,7 @@ const secondRotateContainer = {
     width: "145mm",
     height: "95mm",
     position: "absolute",
-    top: "51%",
+    top: "52%",
     left: "52%",
     marginTop: "-47mm",       
     marginLeft: "-73mm", 
