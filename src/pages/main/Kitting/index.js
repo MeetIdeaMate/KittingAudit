@@ -980,6 +980,8 @@ export const Kitting = () => {
   const hanldePressEnter = (field) => {
     if (field.key === "Enter") {
       const value = field?.target?.value.trim();
+      console.log("value",value);
+      
       if (!value.includes("-")) {
         setLastBarcode("");
         showToast.warning("Warning", "Give valid BarCode");
@@ -995,7 +997,7 @@ export const Kitting = () => {
       //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
       //     (p) => p?.barCode === mainCode
       //   );
-      const fintCode = selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
+      const fintCode = mode === "reprint" ? selectedPartDetails?.afterDetails : selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
         (parts) => parts?.barCode === mainCode);
       if (!fintCode) {
         setLastBarcode("");
