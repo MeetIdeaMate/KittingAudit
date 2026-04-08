@@ -272,15 +272,16 @@ export const MainBarcode = ({ stickers }) => {
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
                 const gridRows = createGridRows(details?.packingDetailsRes || []);
+                const isLast = index === stickers.packingLabelResponses.length - 1;
                 return (
                     <React.Fragment key={index}>
 
-                        <div style={pageStyle}>
+                        <div style={{ ...pageStyle, pageBreakAfter: "always", breakAfter: "page" }}>
                             <div style={rotateContainer}>
                                 <div style={leftSection}>
                                     <div style={header}>
                                         <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                            <div><h1 style={{padding:0,margin:0,fontSize:"28px",whiteSpace: "nowrap"}}>{stickers?.parentPartNumber}</h1></div>
+                                            <div><h1 style={{ padding: 0, margin: 0, fontSize: "28px", whiteSpace: "nowrap" }}>{stickers?.parentPartNumber}</h1></div>
                                             <div>
                                                 <p style={{ fontSize: "14px", padding: 0, margin: 0 }}>
                                                     {details?.barCode}
@@ -363,10 +364,13 @@ export const MainBarcode = ({ stickers }) => {
                             </div>
                         </div>
 
-                        <div style={pageStyle}>
+                        <div style={{
+                            ...pageStyle, pageBreakAfter: isLast ? "auto" : "always",
+                            breakAfter: isLast ? "auto" : "page"
+                        }}>
                             <div style={secondRotateContainer}>
                                 <div style={{ padding: "0 8px" }}>
-                                    <h1 style={{ padding: 0, margin: 0,fontSize:"30px",whiteSpace:"nowrap"}}>
+                                    <h1 style={{ padding: 0, margin: 0, fontSize: "30px", whiteSpace: "nowrap" }}>
                                         Contract No: {stickers?.crNumber}
                                     </h1>
                                     <Barcode
@@ -378,7 +382,7 @@ export const MainBarcode = ({ stickers }) => {
                                     />
                                 </div>
                                 <div style={{ padding: "0 8px" }}>
-                                    <h1 style={{ padding: 0, margin: 0, fontSize:"30px",whiteSpace:"nowrap"}}>
+                                    <h1 style={{ padding: 0, margin: 0, fontSize: "30px", whiteSpace: "nowrap" }}>
                                         Item : {stickers?.parentPartNumber}
                                     </h1>
                                     <Barcode
@@ -391,7 +395,7 @@ export const MainBarcode = ({ stickers }) => {
                                 </div>
                                 <div style={footerRow}>
                                     <div>
-                                        <h1 style={{ padding: 0, margin: 0 ,fontSize:"30px",whiteSpace:"nowrap"}}>
+                                        <h1 style={{ padding: 0, margin: 0, fontSize: "30px", whiteSpace: "nowrap" }}>
                                             Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1
                                         </h1>
                                         {(index + 1) === 1 &&
@@ -424,16 +428,13 @@ const pageStyle = {
     width: "99mm",
     height: "145mm",
     // pageBreakAfter: "always",
-    breakAfter: "page",
+    // breakAfter: "page",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    // overflow: "hidden",         
+    overflow: "hidden",
     boxSizing: "border-box",
     position: "relative",
-    pageBreakInside: "avoid", 
-    breakInside: "avoid",
-    margin:0
 };
 
 // const rotateContainer = {
@@ -472,10 +473,10 @@ const rotateContainer = {
     width: "145mm",
     height: "95mm",
     position: "absolute",
-    top: "52%",
-    left: "52%",
-    marginTop: "-47mm",   
-    marginLeft: "-73mm",  
+    top: "50%",
+    left: "50%",
+    marginTop: "-47mm",
+    marginLeft: "-73mm",
     transform: "rotate(90deg)",
     transformOrigin: "center center",
     display: "flex",
@@ -508,10 +509,10 @@ const secondRotateContainer = {
     width: "145mm",
     height: "95mm",
     position: "absolute",
-    top: "52%",
-    left: "52%",
-    marginTop: "-47mm",       
-    marginLeft: "-73mm", 
+    top: "50%",
+    left: "50%",
+    marginTop: "-47mm",
+    marginLeft: "-73mm",
     transform: "rotate(90deg) scale(0.98)",
     transformOrigin: "center center",
     display: "flex",
@@ -519,7 +520,7 @@ const secondRotateContainer = {
     justifyContent: "space-evenly",
     boxSizing: "border-box",
     border: "1px solid black",
-    // overflow: "hidden",
+    overflow: "hidden",
     padding: "3mm",
 };
 
@@ -531,7 +532,7 @@ const leftSection = {
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
-    // overflow: "hidden",         
+    overflow: "hidden",
 };
 
 const rightSection = {
@@ -540,7 +541,7 @@ const rightSection = {
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
-    // overflow: "hidden",  
+    overflow: "hidden",
 };
 
 const header = {
@@ -574,7 +575,7 @@ const td = {
     border: "1px solid #000",
     textAlign: "center",
     lineHeight: "16px",
-    fontWeight:"900"
+    fontWeight: "900"
 };
 
 const sectionStyle = {
@@ -586,7 +587,7 @@ const sectionStyle = {
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
-    // overflow: "hidden",
+    overflow: "hidden",
 };
 
 const text = {
