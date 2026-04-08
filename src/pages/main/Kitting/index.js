@@ -73,7 +73,6 @@ export const Kitting = () => {
   });
   const [options, setOptions] = useState({ crOptions: [], fimOptions: [] });
   const [selectedCrExcelDetails, setSelectedCrExcelDetails] = useState({});
-  // const [printingDetails, setPrintingDetails] = useState({});
   const [filterInfo, setFilterInfo] = useState({ crNumber: "", fimNumber: "" });
   const [accordActive, setAccordActive] = useState(0);
   const [lastBarcode, setLastBarcode] = useState("");
@@ -122,7 +121,6 @@ export const Kitting = () => {
         isVerifyCheck: false,
         missingList: [],
       });
-      // setPrintingDetails({});
       setChildPartLabels([]);
       setMainPartPdfDetails({});
       handleClose();
@@ -181,7 +179,6 @@ export const Kitting = () => {
         isVerifyCheck: false,
         missingList: [],
       });
-      // setPrintingDetails({});
       setChildPartLabels([]);
       setMainPartPdfDetails({});
       handleClose();
@@ -343,14 +340,11 @@ export const Kitting = () => {
     {
       enabled: false,
       onSuccess: (dubPartResponse) => {
-        console.log(dubPartResponse, "dubPartResponse");
-
         if (dubPartResponse?.status === 200) {
           showToast.success("Success", dubPartResponse?.data?.result?.success);
           handleClose("main");
           fetchCrExcelUpdated();
           setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
-          // setPrintingDetails(selectedPartDetails?.afterDetails);
           setChildPartLabels(dubPartResponse?.data?.result?.barCodes ?? []);
         } else {
           showToast.error("Error", dubPartResponse?.response?.data?.error || dubPartResponse?.message);
@@ -380,7 +374,6 @@ export const Kitting = () => {
   const { isFetching: isfetchBulkResponse } = useQuery(["BULK_LABEL_PRINT", ""], bulkLabelPrint, {
     enabled: false,
     onSuccess: bulkResponse => {
-      console.log(bulkResponse, "bulkResponse");
       if (bulkResponse?.status === 200) {
         setChildPartLabels(bulkResponse?.data?.result?.barCodeResponses ?? []);
       } else {
@@ -1127,73 +1120,74 @@ export const Kitting = () => {
 
   return (
     <React.Fragment>
-        <div style={{ position: "sticky",
-          top: 0,
-          zIndex:10,
-          height: "100px",
-          backgroundColor:"#F5F5F5"
-          }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "5px 10px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <h2 style={{ padding: 0, margin: 0 }}>Kitting</h2>
-          <UiCounterBatch primary>
-            {selectedCrExcelDetails?.partDetails?.length ?? 0}
-          </UiCounterBatch>
-        </div>
+      <div style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+        height: "100px",
+        backgroundColor: "#F5F5F5"
+      }}>
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: 5,
+            padding: "5px 10px",
           }}
         >
-          {selectedCrExcelDetails?.kittingId && (
-            <UiSearchBox
-              placeholder={"Search Part"}
-              handleSearch={handleSearch}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <h2 style={{ padding: 0, margin: 0 }}>Kitting</h2>
+            <UiCounterBatch primary>
+              {selectedCrExcelDetails?.partDetails?.length ?? 0}
+            </UiCounterBatch>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: 5,
+            }}
+          >
+            {selectedCrExcelDetails?.kittingId && (
+              <UiSearchBox
+                placeholder={"Search Part"}
+                handleSearch={handleSearch}
+              />
+            )}
+            <UiSelect
+              isStyle={true}
+              placeholder={"Select Contract Number"}
+              value={filterInfo?.crNumber}
+              style={{ width: "300px" }}
+              options={options?.crOptions}
+              onChange={handleChangeCrExcel}
             />
-          )}
-          <UiSelect
-            isStyle={true}
-            placeholder={"Select Contract Number"}
-            value={filterInfo?.crNumber}
-            style={{ width: "300px" }}
-            options={options?.crOptions}
-            onChange={handleChangeCrExcel}
-          />
-          <UiSelect
-            isStyle={true}
-            placeholder={"Select FIM Number"}
-            style={{ width: "200px" }}
-            value={filterInfo?.fimNumber}
-            options={options?.fimOptions}
-            onChange={handleChangeFimNumber}
-          />
-          {filterInfo?.crNumber && <ReactToPrint
-            trigger={() => <UiButton type="primary">Download Report</UiButton>}
-            content={() => componentRef.current}
-            pageStyle={`
+            <UiSelect
+              isStyle={true}
+              placeholder={"Select FIM Number"}
+              style={{ width: "200px" }}
+              value={filterInfo?.fimNumber}
+              options={options?.fimOptions}
+              onChange={handleChangeFimNumber}
+            />
+            {filterInfo?.crNumber && <ReactToPrint
+              trigger={() => <UiButton type="primary">Download Report</UiButton>}
+              content={() => componentRef.current}
+              pageStyle={`
               @page {
                 size: A4 landscape;
                 margin: 5mm;
               }
             `}
-          />}
+            />}
+          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
+          <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
+          {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select Individual</Checkbox>}
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
-        <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
-        {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select Individual</Checkbox>}
-      </div>
-    </div>
       <UiTable
         columns={kittingPartColumn({ handleKittingPart, handleChangeCheckBox, filterInfo })}
         dataSource={selectedCrExcelDetails?.partDetails ?? []}
