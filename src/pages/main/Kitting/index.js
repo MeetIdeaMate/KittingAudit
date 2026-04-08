@@ -1126,7 +1126,7 @@ export const Kitting = () => {
         position: "sticky",
         top: 0,
         zIndex: 10,
-        height: "100px",
+        // height: "100px",
         backgroundColor: "#F5F5F5"
       }}>
         <div
@@ -1196,7 +1196,7 @@ export const Kitting = () => {
       <UiTable
         columns={kittingPartColumn({ handleKittingPart, handleChangeCheckBox, filterInfo })}
         dataSource={selectedCrExcelDetails?.partDetails ?? []}
-        sticky={{ offsetHeader: 100 }}
+        sticky={{ offsetHeader: 115 }}
         pagination={false}
         rowClassName={(details) => {
           return details?.type === "PARENT" && details?.isSelectd
