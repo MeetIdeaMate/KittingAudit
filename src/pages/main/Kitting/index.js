@@ -980,8 +980,6 @@ export const Kitting = () => {
   const hanldePressEnter = (field) => {
     if (field.key === "Enter") {
       const value = field?.target?.value.trim();
-      console.log("value",value);
-      
       if (!value.includes("-")) {
         setLastBarcode("");
         showToast.warning("Warning", "Give valid BarCode");
