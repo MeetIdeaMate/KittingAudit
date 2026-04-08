@@ -28,3 +28,29 @@
 .ant-table-tbody>tr.parent-with-select-row:hover>td {
   background-color: #d7f7fc !important;
 }
+
+.flotButton {
+  cursor: pointer;
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  animation: blinkAnimate 1s infinite;
+}
+
+.flotButton:hover {
+  animation-play-state: paused;
+}
+
+@keyframes blinkAnimate {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+        transform: scale(1.2);
+  }
+
+  100% {
+        transform: scale(1);
+  }
+}

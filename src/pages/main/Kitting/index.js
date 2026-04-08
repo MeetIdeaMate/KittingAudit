@@ -1,13 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  UiButton,
-  UiCounterBatch,
-  UiDrawer,
-  UiModal,
-  UiSearchBox,
-  UiSelect,
-  UiTable,
-} from "../../../components";
+import { UiButton, UiCounterBatch, UiDrawer, UiModal, UiSearchBox, UiSelect, UiTable } from "../../../components";
 import "./style.scss";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -15,11 +7,11 @@ import { loaderReducer } from "../../../reducers/loader.reducer";
 import * as api from "../../../actions";
 import { kittingPartColumn, tabsData } from "./config";
 import { BarcodeSepareateAndCompained } from "./barcodeSeparateCompined";
-import { exclamationCircle } from "../../../assets/images";
+import { exclamationCircle, flotButton } from "../../../assets/images";
 import { PrintStickerLabels } from "./template";
 import ReactToPrint, { useReactToPrint } from "react-to-print";
 import {
-    CONFIG,
+  CONFIG,
   KITTING,
   KITTINGINFO,
   MISSING_PART_NO,
@@ -29,6 +21,7 @@ import { MainPartBarcode } from "./mainPartBarcode";
 import { GetAvlParts } from "./avlPartModal";
 import { MainBarcode } from "./template/mainBarcode";
 import { CrReport } from "./template/crReport";
+import { Checkbox, Tooltip } from "antd";
 
 const PrintSticker = React.forwardRef((props, ref) => (
   <div ref={ref}>
@@ -36,6 +29,7 @@ const PrintSticker = React.forwardRef((props, ref) => (
       stickers={props?.stickers}
       tabDetails={props?.activeTab}
       vendorNumber={props?.vendorNumber}
+      childPartLabels={props?.childPartLabels}
     />
   </div>
 ));
@@ -67,6 +61,7 @@ export const Kitting = () => {
     isMainPart: false,
     isOpenAvlPartModal: false,
     isOpenMasterPrinter: false,
+    isUpdate: false,
   });
   const [selectedPartDetails, setSelectedPartDetails] = useState({
     afterDetails: {},
@@ -78,49 +73,33 @@ export const Kitting = () => {
   });
   const [options, setOptions] = useState({ crOptions: [], fimOptions: [] });
   const [selectedCrExcelDetails, setSelectedCrExcelDetails] = useState({});
-  const [printingDetails, setPrintingDetails] = useState({});
   const [filterInfo, setFilterInfo] = useState({ crNumber: "", fimNumber: "" });
   const [accordActive, setAccordActive] = useState(0);
   const [lastBarcode, setLastBarcode] = useState("");
   const [mode, setMode] = useState("");
   const [mainPartPdfDetails, setMainPartPdfDetails] = useState({});
-  const [vendorNumber,setVendorNumber]=useState("");
+  const [vendorNumber, setVendorNumber] = useState("");
   const [missingParCode, setMissingParCode] = useState({
     isPrint: false,
     isVerifyCheck: false,
     missingList: [],
   });
+  const [childPartLabels, setChildPartLabels] = useState("");
 
-  const getCrExcelById = (crNumber, fimNumber) =>
-    api.get(
-      `${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""
-      }`
-    );
-  const getAllFimNos = (crNumber) =>
-    api.get(`${KITTINGINFO}/fimNumbers/${crNumber}`);
-  const createBarCodeKittingInfo = (payload, partId, kittingId, type) =>
-    api.patch(
-      `${KITTINGINFO}/${"updateLabelQty"}/${kittingId}?partId=${partId}&printingType=${type.toUpperCase()}`,
-      payload
-    );
-  const createBarcodeMaster = (payload, kittingId) =>
-    api.patch(`${KITTINGINFO}/updateScannedMap/${kittingId}`, payload);
-  const updateDubParts = (payload, kittingId, partId) =>
-    api.patch(
-      `${KITTINGINFO}/updateDuplicateQtyByBarCode/${kittingId}?partId=${partId}`,
-      payload
-    );
+  const getCrExcelById = (crNumber, fimNumber) => api.get(`${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""}`);
+  const getAllFimNos = (crNumber) => api.get(`${KITTINGINFO}/fimNumbers/${crNumber}`);
+  const createBarCodeKittingInfo = (payload, partId, kittingId, type, updateFlag) => api.patch(`${KITTINGINFO}/${"updateLabelQty"}/${kittingId}?partId=${partId}&printingType=${type.toUpperCase()}&isUpdate=${updateFlag}`, payload);
+  const createBarcodeMaster = (payload, kittingId) => api.patch(`${KITTINGINFO}/updateScannedMap/${kittingId}`, payload);
+  const updateDubParts = (payload, kittingId, partId) => api.patch(`${KITTINGINFO}/updateDuplicateQty/${kittingId}?partId=${partId}`, payload);
   const getBarcodeByKittingId = (id) => api.get(`${KITTINGINFO}/${id}`);
-  const verifyPartNo = ({ id, payload, partId = "" }) =>
-    api.post(`${MISSING_PART_NO}/${id}${partId ? `?partId=${partId}` : ""}`, payload);
+  const verifyPartNo = ({ id, payload, partId = "" }) => api.post(`${MISSING_PART_NO}/${id}${partId ? `?partId=${partId}` : ""}`, payload);
+  const bulkLabelPrint = (payload, id) => api.post(`${KITTINGINFO}/bulk-label-printing?barCodeKittingInfoId=${id}`, payload);
 
-  const getOtisVendorNo=()=>api.get(`${CONFIG}/OTISVENDORNO`);
-
-  useQuery(["FETCH_OTIS_VENDOR_NO",""],getOtisVendorNo,{
-    enabled:true,
-    refetchOnWindowFocus:false,
-    onSuccess:(configResponse)=>{
-        setVendorNumber(configResponse?.configuration?.[0]);
+  useQuery(["FETCH_OTIS_VENDOR_NO", ""], () => api.get(`${CONFIG}/OTISVENDORNO`), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onSuccess: (configResponse) => {
+      setVendorNumber(configResponse?.configuration?.[0]);
     }
   });
 
@@ -135,13 +114,14 @@ export const Kitting = () => {
         isOpenPrinter: false,
         isOpenMasterPrinter: false,
         isOpenAvlPartModal: false,
+        isUpdate: false,
       }));
       setMissingParCode({
         isPrint: false,
         isVerifyCheck: false,
         missingList: [],
       });
-      setPrintingDetails({});
+      setChildPartLabels([]);
       setMainPartPdfDetails({});
       handleClose();
     },
@@ -168,9 +148,8 @@ export const Kitting = () => {
 
   const handlePrint = useReactToPrint({
     pageStyle: `
-   
     @page {
-      size: 4in 1in portrait !important;
+      size: ${"4in 1in portrait"} !important;
       margin: 0;
     }
     
@@ -193,17 +172,17 @@ export const Kitting = () => {
         isOpenPrinter: false,
         isOpenMasterPrinter: false,
         isOpenAvlPartModal: false,
+        isUpdate: false
       }));
       setMissingParCode({
         isPrint: false,
         isVerifyCheck: false,
         missingList: [],
       });
-      setPrintingDetails({});
+      setChildPartLabels([]);
       setMainPartPdfDetails({});
       handleClose();
     },
-   
   });
 
   const { isFetching: isFetchAllCrExcel } = useQuery(
@@ -263,18 +242,18 @@ export const Kitting = () => {
       refetchOnWindowFocus: false,
       onSuccess: (verifyPartNo) => {
         if (verifyPartNo?.status === 200) {
-      setMissingParCode((prev) => ({
-        ...prev,
-        isPrint: true,
-        missingList: verifyPartNo?.data?.result?.missingBarcodes ||[],
-      }));
+          setMissingParCode((prev) => ({
+            ...prev,
+            isPrint: true,
+            missingList: verifyPartNo?.data?.result?.missingBarcodes || [],
+          }));
           if (
             verifyPartNo?.data?.result?.missingBarcodes?.length === 0 &&
             missingParCode?.isVerifyCheck
           ) {
             handlePrintTheStickers();
-          } 
-          else if(mode!=="reprint" && verifyPartNo?.data?.result?.missingBarcodes?.length>0) {
+          }
+          else if (mode !== "reprint" && verifyPartNo?.data?.result?.missingBarcodes?.length > 0) {
             showToast.warning('Warning', 'Please update the missing Parts');
           }
         } else {
@@ -296,11 +275,7 @@ export const Kitting = () => {
         if (updatedPartDetailsResponse?.status === 200) {
           fetchCrExcelUpdated();
           setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
-          setPrintingDetails({
-            ...selectedPartDetails?.afterDetails,
-            mode: mode,
-            barCode: updatedPartDetailsResponse?.data?.result?.partDetails?.barCode,
-          });
+          setChildPartLabels(updatedPartDetailsResponse?.data?.result?.partDetails ?? []);
           handleClose("main");
           showToast.success(
             "Success ,",
@@ -370,9 +345,9 @@ export const Kitting = () => {
           handleClose("main");
           fetchCrExcelUpdated();
           setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
-          setPrintingDetails(selectedPartDetails?.afterDetails);
+          setChildPartLabels(dubPartResponse?.data?.result?.barCodes ?? []);
         } else {
-          showToast.error("Error", dubPartResponse?.response?.data?.error||dubPartResponse?.message);
+          showToast.error("Error", dubPartResponse?.response?.data?.error || dubPartResponse?.message);
         }
       },
       refetchOnWindowFocus: false,
@@ -395,6 +370,18 @@ export const Kitting = () => {
       refetchOnWindowFocus: false,
     }
   );
+
+  const { isFetching: isfetchBulkResponse } = useQuery(["BULK_LABEL_PRINT", ""], bulkLabelPrint, {
+    enabled: false,
+    onSuccess: bulkResponse => {
+      if (bulkResponse?.status === 200) {
+        setChildPartLabels(bulkResponse?.data?.result?.barCodeResponses ?? []);
+      } else {
+        showToast.error("Error", `${bulkResponse?.response?.data?.error} ${bulkResponse?.message}`);
+      }
+    },
+    refetchOnWindowFocus: false
+  });
 
   const handleSetLabelinfo = (details, tabKey, activeMode) => {
     const printedMap = details?.labelMap ?? {};
@@ -517,6 +504,32 @@ export const Kitting = () => {
     return updatedDublicate;
   };
 
+  const handleChangeCheckBox = (fieldValue, position) => {
+    const updatePartDetails = selectedCrExcelDetails?.partDetails?.map((details, index) => {
+      return index === position ? { ...details, isSelect: fieldValue } : details
+    });
+    setSelectedCrExcelDetails((prev) => ({ ...prev, partDetails: updatePartDetails }));
+  };
+
+  const handleChangeAllSelect = (field) => {
+    const updateDetails = selectedCrExcelDetails?.partDetails?.map((detail) => {
+      if (detail?.type !== "PARENT") {
+        return {
+          ...detail,
+          isSelect: field,
+        }
+      }
+      return detail;
+    });
+    setSelectedCrExcelDetails((prev) => ({ ...prev, partDetails: updateDetails }));
+    setIsOpen((prev) => ({ ...prev, isAllCheck: field }));
+  };
+
+  const handlePrintBulkIndividual = () => {
+    const allSelectedPart = selectedCrExcelDetails?.partDetails?.filter((detail) => detail?.isSelect)?.map((part) => part?.partId);
+    queryClient.prefetchQuery(["BULK_LABEL_PRINT", ""], () => bulkLabelPrint(allSelectedPart, selectedCrExcelDetails?.partDetails?.[0]?.barCodeKittingInfoId));
+  };
+
   const handleKittingPart = (details, position) => {
     if (details?.isDublicate || details?.isInprogress) {
       setSelectedPartDetails((prev) => ({
@@ -611,6 +624,7 @@ export const Kitting = () => {
     );
     setIsOpen((prev) => ({
       ...prev,
+      isUpdate: status === "update",
       isOpenKittingDrawer: true,
       isOpenDublicateDrawer: false,
     }));
@@ -815,7 +829,7 @@ export const Kitting = () => {
         const allBarcodes = details?.barcodes?.flatMap(
           (part) => part?.barcodeNumbers || []
         );
-         if (allBarcodes?.length === 0) return null;
+        if (allBarcodes?.length === 0) return null;
         return {
           boxNo: index + 1,
           barcodes: allBarcodes,
@@ -847,7 +861,8 @@ export const Kitting = () => {
             payload,
             partId,
             barCodeKittingInfoId,
-            activeTabDetails?.activeTab
+            activeTabDetails?.activeTab,
+            isOpen?.isUpdate
           )
         );
       }
@@ -965,9 +980,9 @@ export const Kitting = () => {
   const hanldePressEnter = (field) => {
     if (field.key === "Enter") {
       const value = field?.target?.value.trim();
-      if (!value.includes("-")){
+      if (!value.includes("-")) {
         setLastBarcode("");
-        showToast.warning("Warning","Give valid BarCode");
+        showToast.warning("Warning", "Give valid BarCode");
         return;
       };
       setMissingParCode((prev) => ({
@@ -977,23 +992,23 @@ export const Kitting = () => {
       if (!value) return;
       const mainCode = value.replace(/-\d+$/, "");
       const splitCode = value.split("-");
-    //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
-    //     (p) => p?.barCode === mainCode
-    //   );
-      const fintCode=selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
-        (parts)=>parts?.barCode===mainCode);
+      //   const fintCode = selectedCrExcelDetails?.partDetails?.find(
+      //     (p) => p?.barCode === mainCode
+      //   );
+      const fintCode = selectedPartDetails?.afterDetails?.partDetailsResponses?.find(
+        (parts) => parts?.barCode === mainCode);
       if (!fintCode) {
         setLastBarcode("");
         return;
       }
       const labelQty =
         fintCode?.labelMap?.[splitCode?.[splitCode?.length - 1]] || 0;
-        if(labelQty===0){
-            setLastBarcode("");
-            return;
-        }
+      if (labelQty === 0) {
+        setLastBarcode("");
+        return;
+      }
       const checkGrpPrintType = fintCode?.printingType === "GROUPED";
-      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.barcodeNumbers?.map((barCode)=>barCode)) || [];
+      const allExistingParts = selectedPartDetails?.afterDetails?.caseInfo?.flatMap(c => c?.barcodes || [])?.map(b => b?.barcodeNumbers?.map((barCode) => barCode)) || [];
       const updatedCaseDetails =
         selectedPartDetails?.afterDetails?.caseInfo?.map((details) => {
           if (!details?.selectedCase) return details;
@@ -1042,6 +1057,12 @@ export const Kitting = () => {
   };
 
   useEffect(() => {
+    const findAllChildLabel = selectedCrExcelDetails?.partDetails?.filter((details) => details?.type !== "PARENT")?.length;
+    const findAllSelectedLabel = selectedCrExcelDetails?.partDetails?.filter((detail) => detail?.isSelect)?.length;
+    setIsOpen((prev) => ({ ...prev, isAllCheck: findAllChildLabel === findAllSelectedLabel }));
+  }, [selectedCrExcelDetails]);
+
+  useEffect(() => {
     const {
       templabeledinfoMap,
       tempduplicateInfoMap,
@@ -1083,6 +1104,7 @@ export const Kitting = () => {
       isFetchVerifyPartNo ||
       isFetchUpdatePart ||
       isFetchMasterBarcode ||
+      isfetchBulkResponse ||
       isfetchBorcodeByKittingId;
     dispatch(loaderReducer(isLoading));
   }, [
@@ -1093,78 +1115,81 @@ export const Kitting = () => {
     isFetchUpdatePart,
     isFetchMasterBarcode,
     isfetchBorcodeByKittingId,
+    isfetchBulkResponse,
   ]);
 
   return (
     <React.Fragment>
-        <div style={{ position: "sticky",
-          top: 0,
-          zIndex:10,
-          height: "100px",
-          backgroundColor:"#F5F5F5"
-          }}>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "5px 10px",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <h2 style={{ padding: 0, margin: 0 }}>Kitting</h2>
-          <UiCounterBatch primary>
-            {selectedCrExcelDetails?.partDetails?.length ?? 0}
-          </UiCounterBatch>
-        </div>
+      <div style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 10,
+        height: "100px",
+        backgroundColor: "#F5F5F5"
+      }}>
         <div
           style={{
             display: "flex",
-            justifyContent: "flex-end",
+            justifyContent: "space-between",
             alignItems: "center",
-            gap: 5,
+            padding: "5px 10px",
           }}
         >
-          {selectedCrExcelDetails?.kittingId && (
-            <UiSearchBox
-              placeholder={"Search Part"}
-              handleSearch={handleSearch}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <h2 style={{ padding: 0, margin: 0 }}>Kitting</h2>
+            <UiCounterBatch primary>
+              {selectedCrExcelDetails?.partDetails?.length ?? 0}
+            </UiCounterBatch>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              gap: 5,
+            }}
+          >
+            {selectedCrExcelDetails?.kittingId && (
+              <UiSearchBox
+                placeholder={"Search Part"}
+                handleSearch={handleSearch}
+              />
+            )}
+            <UiSelect
+              isStyle={true}
+              placeholder={"Select Contract Number"}
+              value={filterInfo?.crNumber}
+              style={{ width: "300px" }}
+              options={options?.crOptions}
+              onChange={handleChangeCrExcel}
             />
-          )}
-          <UiSelect
-            isStyle={true}
-            placeholder={"Select Contract Number"}
-            value={filterInfo?.crNumber}
-            style={{ width: "300px" }}
-            options={options?.crOptions}
-            onChange={handleChangeCrExcel}
-          />
-          <UiSelect
-            isStyle={true}
-            placeholder={"Select FIM Number"}
-            style={{ width: "200px" }}
-            value={filterInfo?.fimNumber}
-            options={options?.fimOptions}
-            onChange={handleChangeFimNumber}
-          />
-          {filterInfo?.crNumber && <ReactToPrint
-            trigger={() => <UiButton type="primary">Download Report</UiButton>}
-            content={() => componentRef.current}
-            pageStyle={`
+            <UiSelect
+              isStyle={true}
+              placeholder={"Select FIM Number"}
+              style={{ width: "200px" }}
+              value={filterInfo?.fimNumber}
+              options={options?.fimOptions}
+              onChange={handleChangeFimNumber}
+            />
+            {filterInfo?.crNumber && <ReactToPrint
+              trigger={() => <UiButton type="primary">Download Report</UiButton>}
+              content={() => componentRef.current}
+              pageStyle={`
               @page {
                 size: A4 landscape;
                 margin: 5mm;
               }
             `}
-          />}
+            />}
+          </div>
+        </div>
+        <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
+          <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
+          {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select Individual</Checkbox>}
         </div>
       </div>
-      <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
-        <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
-      </div>
-    </div>
       <UiTable
-        columns={kittingPartColumn({ handleKittingPart })}
+        columns={kittingPartColumn({ handleKittingPart, handleChangeCheckBox, filterInfo })}
         dataSource={selectedCrExcelDetails?.partDetails ?? []}
         sticky={{ offsetHeader: 100 }}
         pagination={false}
@@ -1178,6 +1203,7 @@ export const Kitting = () => {
                 : "";
         }}
       />
+      {selectedCrExcelDetails?.partDetails?.some((detail) => detail?.isSelect) && <Tooltip title="Print Individual" placement="left"><img src={flotButton} alt="" onClick={() => handlePrintBulkIndividual()} className="flotButton" /></Tooltip>}
       <UiDrawer
         title={"Bar Code"}
         open={isOpen?.isOpenKittingDrawer}
@@ -1216,6 +1242,7 @@ export const Kitting = () => {
                     isFetchMasterBarcode ||
                     isFetchDubParts
                   }
+                  loading={isFetchUpdatePart}
                   onClick={() => handleVerify(false)}
                 >
                   Print
@@ -1347,9 +1374,8 @@ export const Kitting = () => {
         <PrintMasterPdf ref={masterStickerRef} stickers={mainPartPdfDetails} />
         <PrintSticker
           ref={stickerRef}
-          stickers={{ ...printingDetails, missingList: missingParCode?.missingList ?? [] }}
-          activeTab={activeTabDetails}
           vendorNumber={vendorNumber}
+          childPartLabels={childPartLabels}
         />
         <PrintCrReportComponent
           ref={componentRef}

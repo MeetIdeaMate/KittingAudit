@@ -27,6 +27,7 @@ import totalPendingIcon from "./totalPendingIcon.svg";
 import icn_User from "./icn_User.svg";
 import reset from "./reset.svg";
 import statuChange from "./statuschange.svg";
+import flotButton from "./DcInput.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
     TechLambdasLogo,
@@ -53,7 +54,8 @@ export {
     toitalCompleteIcon,
     totalPendingIcon,
     reset,
-    statuChange
+    statuChange,
+    flotButton,
     // techlambdasRightCornerLogo,
 };
 
