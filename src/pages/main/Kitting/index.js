@@ -376,6 +376,8 @@ export const Kitting = () => {
     onSuccess: bulkResponse => {
       if (bulkResponse?.status === 200) {
         setChildPartLabels(bulkResponse?.data?.result?.barCodeResponses ?? []);
+        fetchCrExcelUpdated();
+        setIsOpen((prev) => ({ ...prev, isOpenPrinter: true }));
       } else {
         showToast.error("Error", `${bulkResponse?.response?.data?.error} ${bulkResponse?.message}`);
       }
@@ -1183,9 +1185,12 @@ export const Kitting = () => {
             />}
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-start", gap: "20px", alignItems: "center" }}>
-          <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
-          {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select Individual</Checkbox>}
+        <div className="flexible">
+          <div className="flexible-start">
+            <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
+            {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select All</Checkbox>}
+          </div>
+          {filterInfo?.fimNumber && <p>Select labels for individual printing. Uncheck grouped parts if using ‘Select All’. Use ‘Print Icon’ for grouped labels.</p>}
         </div>
       </div>
       <UiTable
