@@ -95,7 +95,7 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
                             display: "flex",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            breakAfter: "page"
+                            breakAfter: rowIndex !== rows?.length - 1 ? "page" : "auto"
                         }}
                     >
                         {updatedRow?.map((item, index) => (
