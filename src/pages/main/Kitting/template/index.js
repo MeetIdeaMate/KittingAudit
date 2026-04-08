@@ -38,7 +38,7 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
                     width={1}
                     height={20}
                     fontSize={9}
-                    margin={1}
+                    margin={0}
                     format="CODE128"
                     displayValue={false}
                 />
