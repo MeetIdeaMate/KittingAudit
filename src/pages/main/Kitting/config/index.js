@@ -38,7 +38,7 @@ export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, fil
         dataIndex: "balanceQty",
         width: 70,
         render: (_, details) => {
-            return <div>{details?.balanceQty === 0 ? <p style={{ padding: 0, margin: 0 }}><CheckOutlined style={{color: "green"}} /></p> : <p>{details?.balanceQty}</p>}</div>
+            return <div>{details?.balanceQty === 0 ? <p style={{ padding: 0, margin: 0 }}><CheckOutlined style={{ color: "green" }} /></p> : <p>{details?.balanceQty}</p>}</div>
         }
     },
     {
@@ -54,6 +54,12 @@ export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, fil
         title: <p style={{ padding: "0", margin: "0", textAlign: "start" }}>Description</p>,
         dataIndex: "description",
         render: (_, rec) => <p style={{ padding: "0", margin: "0", textAlign: "start" }}>{rec?.description}</p>,
+    },
+    {
+        title: "BOM Qty",
+        render: (details) => {
+            return <p style={{ padding: 0, margin: 0 }}>{details?.bomQty ? details?.bomQty : ""}</p>
+        }
     },
     {
         title: "FIM No",
