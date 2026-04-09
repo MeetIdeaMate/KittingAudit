@@ -395,11 +395,11 @@ export const MainBarcode = ({ stickers }) => {
                                 <div style={footerRow}>
                                     <div>
                                         <h1 style={{ padding: 0, margin: 0, fontSize: "30px", whiteSpace: "nowrap" }}>
-                                            Qty: {details?.bomQty === 1 ? "" : "Refer Box-"}{details?.bomQty || "0"}
+                                            Qty: {(index + 1) === 1 ? "" : "Refer Box-"}{stickers?.bomQty || "0"}
                                         </h1>
                                         {(index + 1) === 1 &&
                                             <Barcode
-                                                value={details?.bomQty || "0"}
+                                                value={stickers?.bomQty || "0"}
                                                 width={1}
                                                 height={20}
                                                 displayValue={false}
