@@ -28,7 +28,7 @@ export const resetForm = [
         key: 'mobileNumber',
         id: 'mobileNumber',
         type: 'text',
-        label: 'Mobile Number',
+        label: 'User Name',
         placeholder: 'Enter your Mobile Number',
     },
     {

@@ -267,7 +267,6 @@ export const MainBarcode = ({ stickers }) => {
         }
         return rows;
     };
-
     return (
         <>
             {stickers?.packingLabelResponses?.map((details, index) => {
@@ -376,7 +375,7 @@ export const MainBarcode = ({ stickers }) => {
                                     <Barcode
                                         value={stickers?.crNumber || "BARCODE"}
                                         width={1}
-                                        height={20}
+                                        height={25}
                                         displayValue={false}
                                         format="CODE128"
                                     />
@@ -388,7 +387,7 @@ export const MainBarcode = ({ stickers }) => {
                                     <Barcode
                                         value={stickers?.parentPartNumber || "BARCODE"}
                                         width={1}
-                                        height={20}
+                                        height={25}
                                         displayValue={false}
                                         format="CODE128"
                                     />
@@ -396,13 +395,13 @@ export const MainBarcode = ({ stickers }) => {
                                 <div style={footerRow}>
                                     <div>
                                         <h1 style={{ padding: 0, margin: 0, fontSize: "30px", whiteSpace: "nowrap" }}>
-                                            Qty: {(index + 1) === 1 ? "" : "Refer Box-"}1
+                                            Qty: {details?.bomQty === 1 ? "" : "Refer Box-"}{details?.bomQty || "0"}
                                         </h1>
                                         {(index + 1) === 1 &&
                                             <Barcode
-                                                value={details?.totalQty || "BARCODE"}
+                                                value={details?.bomQty || "0"}
                                                 width={1}
-                                                height={17}
+                                                height={20}
                                                 displayValue={false}
                                                 format="CODE128"
                                             />

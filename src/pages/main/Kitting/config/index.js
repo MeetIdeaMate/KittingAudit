@@ -56,6 +56,12 @@ export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, fil
         render: (_, rec) => <p style={{ padding: "0", margin: "0", textAlign: "start" }}>{rec?.description}</p>,
     },
     {
+        title:"BOM Qty",
+        render:(details)=>{
+            return <p style={{padding:0,margin:0}}>{details?.bomQty ? details?.bomQty:""}</p>
+        }
+    },
+    {
         title: "FIM No",
         dataIndex: "fimNumber",
     },
