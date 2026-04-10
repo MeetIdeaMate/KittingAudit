@@ -43,7 +43,7 @@ export const MainBarcode = ({ stickers }) => {
                                     <div style={barcodeContainer}>
                                         <Barcode
                                             value={details?.barCode || "BARCODE"}
-                                            width={1.4}
+                                            width={2}
                                             height={30}
                                             margin={0}
                                             displayValue={false}
@@ -103,11 +103,11 @@ export const MainBarcode = ({ stickers }) => {
                                         <div style={text}>Product Color</div>
                                     </div>
                                     <div style={sectionStyle}>
-                                        <div style={text}>Case No.</div>
-                                        <div style={text}>{index + 1}</div>
+                                        <div style={{ ...text, fontSize: "14px" }}>Case No.</div>
+                                        <div style={{ ...text, fontSize: "16px" }}>{index + 1}</div>
                                     </div>
                                     <div style={sectionStyle}>
-                                        <div style={text}>
+                                        <div style={{ ...text, fontSize: "16px" }}>
                                             {stickers?.packingLabelResponses?.length}
                                         </div>
                                     </div>
@@ -126,8 +126,8 @@ export const MainBarcode = ({ stickers }) => {
                                     </h1>
                                     <Barcode
                                         value={stickers?.crNumber || "BARCODE"}
-                                        width={1}
-                                        height={25}
+                                        width={3}
+                                        height={40}
                                         displayValue={false}
                                         format="CODE128"
                                     />
@@ -138,8 +138,8 @@ export const MainBarcode = ({ stickers }) => {
                                     </h1>
                                     <Barcode
                                         value={stickers?.parentPartNumber || "BARCODE"}
-                                        width={1}
-                                        height={25}
+                                        width={2}
+                                        height={40}
                                         displayValue={false}
                                         format="CODE128"
                                     />
@@ -152,8 +152,8 @@ export const MainBarcode = ({ stickers }) => {
                                         {(index + 1) === 1 &&
                                             <Barcode
                                                 value={stickers?.bomQty || "0"}
-                                                width={1}
-                                                height={20}
+                                                width={2}
+                                                height={30}
                                                 displayValue={false}
                                                 format="CODE128"
                                             />
@@ -311,9 +311,10 @@ const footerRow = {
 
 const caseBox = {
     border: "2px solid #000",
-    padding: "5px 40px",
+    padding: "10px 60px",
     textAlign: "center",
-    fontWeight: "600",
+    fontWeight: "700",
+    fontSize: "25px",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
