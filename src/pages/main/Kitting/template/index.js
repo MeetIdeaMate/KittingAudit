@@ -22,7 +22,7 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
             style={{
                 width: LABEL_WIDTH,
                 height: LABEL_HEIGHT,
-                border: "1px solid #999",
+                backgroundColor:"#fff",
                 borderRadius: "3px",
                 padding: "6px 10px",
                 display: "flex",
