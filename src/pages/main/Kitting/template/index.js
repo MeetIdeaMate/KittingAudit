@@ -42,7 +42,7 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
                     format="CODE128"
                     displayValue={false}
                 />
-                <p style={{padding:0,margin:0,fontSize:"9px"}}>{barcodeValue}</p>
+                <p style={{padding:0,margin:0,fontSize:"9px",fontWeight:700}}>{barcodeValue}</p>
             </div>
 
             <div
