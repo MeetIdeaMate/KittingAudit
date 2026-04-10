@@ -29,7 +29,7 @@ export const resetForm = [
         id: 'mobileNumber',
         type: 'text',
         label: 'User Name',
-        placeholder: 'Enter your Mobile Number',
+        placeholder: 'Enter your User Number',
     },
     {
         key: 'oldPassWord',
