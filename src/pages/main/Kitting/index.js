@@ -131,6 +131,9 @@ export const Kitting = () => {
       size: 4in 6in !important;
       margin: 0;
     }
+      html,body{
+        background-color: white !important;
+      }
     
     //  html, body {
     //     margin: 0 !important;
@@ -152,7 +155,9 @@ export const Kitting = () => {
       size: ${"4in 1in portrait"} !important;
       margin: 0;
     }
-    
+    html,body{
+        background-color: white !important;
+      }
     //  html, body {
     //     margin: 0 !important;
     //     padding: 0 !important;

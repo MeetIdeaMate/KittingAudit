@@ -184,6 +184,7 @@ const pageStyle = {
     overflow: "hidden",
     boxSizing: "border-box",
     position: "relative",
+    backgroundColor: "#fff !important"
 };
 
 const rotateContainer = {
