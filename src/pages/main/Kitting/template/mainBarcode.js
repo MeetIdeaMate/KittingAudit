@@ -200,7 +200,6 @@ const rotateContainer = {
     display: "flex",
     flexDirection: "row",
     boxSizing: "border-box",
-    border: "1px solid black",
     backgroundColor: "#fff"
 };
 
