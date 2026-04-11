@@ -126,7 +126,7 @@ export const MainBarcode = ({ stickers }) => {
                                     </h1>
                                     <Barcode
                                         value={stickers?.crNumber || "BARCODE"}
-                                        width={3}
+                                        width={1.5}
                                         height={40}
                                         displayValue={false}
                                         format="CODE128"
@@ -138,7 +138,7 @@ export const MainBarcode = ({ stickers }) => {
                                     </h1>
                                     <Barcode
                                         value={stickers?.parentPartNumber || "BARCODE"}
-                                        width={2}
+                                        width={1.5}
                                         height={40}
                                         displayValue={false}
                                         format="CODE128"
@@ -151,9 +151,9 @@ export const MainBarcode = ({ stickers }) => {
                                         </h1>
                                         {(index + 1) === 1 &&
                                             <Barcode
-                                                value={stickers?.bomQty || "0"}
-                                                width={2}
-                                                height={30}
+                                                value={(stickers?.bomQty <= 9 ? `0${stickers?.bomQty}` : stickers?.bomQty) || "0"}
+                                                width={1.5}
+                                                height={40}
                                                 displayValue={false}
                                                 format="CODE128"
                                             />

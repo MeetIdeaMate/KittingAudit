@@ -44,9 +44,9 @@ const Dashboard = () => {
                     value: crNo,
                 }));
                 setCrNumberOptions(crOptions);
-                if (crOptions?.length > 0) {
-                    setSelectedCrNumber(crOptions?.[0]?.value);
-                }
+                // if (crOptions?.length > 0) {
+                //     setSelectedCrNumber(crOptions?.[0]?.value);
+                // }
             }
         },
         refetchOnWindowFocus: false,
@@ -113,6 +113,8 @@ const Dashboard = () => {
             if (fromDate && toDate) {
                 setDate({ fromDate: fromDate, toDate: toDate, date: date });
             }
+            setSelectedCrNumber("");
+            setCrNumberSummary((prev)=>({...prev,fimNumberSummaryList:[]}));
         }
         else {
             setDate({ fromDate: "", toDate: "" });
