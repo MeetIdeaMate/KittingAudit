@@ -18,6 +18,7 @@ import UiTextArea from "./UiTextArea";
 import UiFileUploader from "./UiFileUpload";
 import UiLoadingSpinner from "./UiLoadingSpinner";
 import UiAccordian from "./UiAccordian";
+import UiDoughnutChart from "./UiDoughnutChart";
 export {
     UiTextBox,
     UiFormWrapper,
@@ -39,4 +40,5 @@ export {
     UiFileUploader,
     UiLoadingSpinner,
     UiAccordian,
+    UiDoughnutChart,
 };

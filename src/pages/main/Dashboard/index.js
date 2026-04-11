@@ -9,7 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { useDispatch } from "react-redux";
 import dayjs from "dayjs";
-import { UiSelect, UiTable } from "../../../components";
+import { UiDoughnutChart, UiRangePicker, UiSelect, UiTable } from "../../../components";
 import { labeledIcon, scannedIcon, toitalCompleteIcon, totalCrNumberIcon, totalFirmIcon, totalPendingIcon, totalQuantityIcon, totalUploadedIcon } from "../../../assets/images";
 import { DASHBOARD_TABLE_HEADERS } from "./config";
 const Dashboard = () => {
@@ -20,9 +20,10 @@ const Dashboard = () => {
     const [crNumberOptions, setCrNumberOptions] = useState([]);
     const [crNumberSummary, setCrNumberSummary] = useState({});
     const [selectedCrNumber, setSelectedCrNumber] = useState("");
+    const [date, setDate] = useState({ fromDate: dayjs().format("YYYY-MM-DD"), toDate: dayjs().format("YYYY-MM-DD"), date: [dayjs(), dayjs()] });
 
     const getDashboardData = (year) => api.get(`${KITTING}/dashboard-summary?year=${year}`);
-    const getByCrNumber = (crNumber) => api.get(`${KITTINGINFO}/cr-number-summary?crNumber=${crNumber}`);
+    const getByCrNumber = (crNumber, date) => api.get(`${KITTINGINFO}/cr-number-summary?crNumber=${crNumber}${date?.fromDate && date?.toDate ? `&fromDate=${date?.fromDate}&toDate=${date?.toDate}` : ""}`);
 
     const { isFetching: isFetchDashboardData } = useQuery(["DASHBOARD_DATA", year], () => getDashboardData(year), {
         enabled: Boolean(year),
@@ -32,42 +33,24 @@ const Dashboard = () => {
         refetchOnWindowFocus: false,
     });
 
-    const { isFetching: isFetchByCrNumber } = useQuery(["CR_NUMBER_SUMMARY", selectedCrNumber], () => getByCrNumber(selectedCrNumber), {
-        enabled: Boolean(selectedCrNumber),
+    const { isFetching: isFetchByCrNumber } = useQuery(["CR_NUMBER_SUMMARY", selectedCrNumber, date], () => getByCrNumber(selectedCrNumber, date), {
+        enabled: Boolean(selectedCrNumber || date),
         onSuccess: (crNumberSummaryResponse) => {
             if (crNumberSummaryResponse?.statusCode === 200) {
-                setCrNumberSummary(crNumberSummaryResponse?.result?.crNumberSummary);
+                const findDetails = crNumberSummaryResponse?.result?.crNumberSummary;
+                setCrNumberSummary(findDetails);
+                const crOptions = findDetails?.crNumbers?.map((crNo) => ({
+                    key: crNo,
+                    value: crNo,
+                }));
+                setCrNumberOptions(crOptions);
+                if (crOptions?.length > 0) {
+                    setSelectedCrNumber(crOptions?.[0]?.value);
+                }
             }
         },
         refetchOnWindowFocus: false,
     });
-
-    const { isFetching: isFetchAllCrExcel } = useQuery(
-        ["GET_ALL_CR_EXCEL", ""],
-        () => api.get(`${KITTING}/get-all`),
-        {
-            enabled: true,
-            onSuccess: (crExcelResponse) => {
-                if (crExcelResponse?.statusCode === 200) {
-                    const crOptions = [
-                        ...new Set(
-                            crExcelResponse?.result?.barCodeKittings?.flatMap(
-                                (item) => item?.crNumbers || []
-                            )
-                        ),
-                    ]?.map((crNo) => ({
-                        key: crNo,
-                        value: crNo,
-                    }));
-                    setCrNumberOptions(crOptions);
-                    if (crOptions?.length > 0) {
-                        setSelectedCrNumber(crOptions?.[0]?.value);
-                    }
-                }
-            },
-            refetchOnWindowFocus: false,
-        }
-    );
 
     const prepareChartData = (list) => {
         return {
@@ -94,9 +77,45 @@ const Dashboard = () => {
     const { labels, datasets } =
         prepareChartData(dashboardData?.monthWiseCrNumberSummaryList || []);
 
+    const doughnutData = {
+        labels: ["Completed CR", "FIM NOS", "Box Qty", "Labeled", "Scanned"],
+        datasets: [
+            {
+                data: [
+                    crNumberSummary?.totalCrNumbers || 0,
+                    crNumberSummary?.totalFimNumbers || 0,
+                    crNumberSummary?.totalBoxes || 0,
+                    crNumberSummary?.totalLabeledQty || 0,
+                    crNumberSummary?.totalScannedQty || 0,
+                ],
+                backgroundColor: [
+                    "#4CAF50",
+                    "#2196F3",
+                    "#FFC107",
+                    "#9C27B0",
+                    "#FF5722",
+                ],
+                borderWidth: 1,
+            },
+        ],
+    };
+
     const handleYearChange = (date) => {
         if (date) {
             setYear(date.year());
+        }
+    };
+
+    const handleChangeFormDateToDate = (date) => {
+        if (date) {
+            const fromDate = dayjs(date[0]).format("YYYY-MM-DD");
+            const toDate = dayjs(date[1]).format("YYYY-MM-DD");
+            if (fromDate && toDate) {
+                setDate({ fromDate: fromDate, toDate: toDate, date: date });
+            }
+        }
+        else {
+            setDate({ fromDate: "", toDate: "" });
         }
     };
 
@@ -105,15 +124,15 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        let isLoading = isFetchDashboardData || isFetchAllCrExcel || isFetchByCrNumber;
+        let isLoading = isFetchDashboardData || isFetchByCrNumber;
         dispatch(loaderReducer(isLoading));
-    }, [dispatch, isFetchDashboardData, isFetchAllCrExcel, isFetchByCrNumber]);
+    }, [dispatch, isFetchDashboardData, isFetchByCrNumber]);
 
     return (
         <div className="dashboard-container">
             <div className="dashboard-header">
                 <h3>Dashboard</h3>
-                <div style={{width:"40%", display:"flex",gap:"20px"}}>
+                <div style={{ width: "50%", display: "flex", gap: "20px", alignItems: "center" }}>
                     <div className="flexible">
                         <div className="pending-color-label"></div>
                         <p>Pending</p>
@@ -122,6 +141,7 @@ const Dashboard = () => {
                         <div className="completed-color-label"></div>
                         <p>Completed</p>
                     </div>
+                    <UiRangePicker style={{ width: "250px" }} value={date?.date} onChange={(date) => handleChangeFormDateToDate(date)} />
                 </div>
             </div>
             <div className="dashboard-layout">
@@ -182,6 +202,62 @@ const Dashboard = () => {
                     </div>
                 </div>
                 <div className="dashboard-right">
+                    <div className="flexible">
+                        <div style={{ width: "60%" }}>
+                            <div className="dashboard-summary-cards1">
+                                <div className="dashboard-card">
+                                    <div className="dashboard-toal-qty-card">
+                                        <img className="image" src={totalQuantityIcon} alt="" />
+                                    </div>
+                                    <h5 className="dashboard-card-month-subtitle">COMPLETED CR</h5>
+                                    <p className="dashboard-crNumber-card">
+                                        {crNumberSummary?.totalCrNumbers || 0}
+                                    </p>
+                                </div>
+                                <div className="dashboard-card">
+                                    <div className="dashboard-total-firm-card">
+                                        <img className="image" src={totalFirmIcon} alt="" />
+                                    </div>
+                                    <h5 className="dashboard-card-month-subtitle">FIM NOS QTY </h5>
+                                    <p className="dashboard-crNumber-card">
+                                        {crNumberSummary?.totalFimNumbers || 0}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className="dashboard-summary-cards">
+                                <div className="dashboard-card">
+                                    <div className="dashboard-toal-qty-card">
+                                        <img className="image" src={totalQuantityIcon} alt="" />
+                                    </div>
+                                    <h5 className="dashboard-card-month-subtitle">BOX QTY</h5>
+                                    <p className="dashboard-crNumber-card">
+                                        {crNumberSummary?.totalBoxes || 0}
+                                    </p>
+                                </div>
+                                <div className="dashboard-card">
+                                    <div className="dashboard-card-label">
+                                        <img className="image" src={labeledIcon} alt="" />
+                                    </div>
+                                    <h5 className="dashboard-card-month-subtitle">LABELED</h5>
+                                    <p className="dashboard-crNumber-card">
+                                        {crNumberSummary?.totalLabeledQty || 0}
+                                    </p>
+                                </div>
+                                <div className="dashboard-card">
+                                    <div className="dashboard-total-firm-card">
+                                        <img className="image" src={scannedIcon} alt="" />
+                                    </div>
+                                    <h5 className="dashboard-card-month-subtitle">SCANNED</h5>
+                                    <p className="dashboard-crNumber-card">
+                                        {crNumberSummary?.totalScannedQty || 0}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style={{ width: "40%" }} className="doughnut-chart-container">
+                            <UiDoughnutChart data={doughnutData} />
+                        </div>
+                    </div>
                     <div className="dashboard-search-container">
                         <label>Select Contract Number</label>
                         <UiSelect
@@ -189,45 +265,8 @@ const Dashboard = () => {
                             value={selectedCrNumber}
                             options={crNumberOptions}
                             onChange={(value) => handleChangeCrNumber(value)}
+                            allowClear={false}
                         />
-                    </div>
-                    <div className="dashboard-summary-cards">
-                        <div className="dashboard-card">
-                            <div className="dashboard-total-firm-card">
-                                <img className="image" src={totalFirmIcon} alt="" />
-                            </div>
-                            <h5 className="dashboard-card-month-subtitle">Total Fim</h5>
-                            <p className="dashboard-crNumber-card">
-                                {crNumberSummary?.totalFimNumbers || 0}
-                            </p>
-                        </div>
-                        <div className="dashboard-card">
-                            <div className="dashboard-toal-qty-card">
-                                <img className="image" src={totalQuantityIcon} alt="" />
-                            </div>
-                            <h5 className="dashboard-card-month-subtitle">Total Quantity</h5>
-                            <p className="dashboard-crNumber-card">
-                                {crNumberSummary?.totalQty || 0}
-                            </p>
-                        </div>
-                        <div className="dashboard-card">
-                            <div className="dashboard-card-label">
-                                <img className="image" src={labeledIcon} alt="" />
-                            </div>
-                            <h5 className="dashboard-card-month-subtitle">Labeled</h5>
-                            <p className="dashboard-crNumber-card">
-                                {crNumberSummary?.totalLabeledQty || 0}
-                            </p>
-                        </div>
-                        <div className="dashboard-card">
-                            <div className="dashboard-total-firm-card">
-                                <img className="image" src={scannedIcon} alt="" />
-                            </div>
-                            <h5 className="dashboard-card-month-subtitle">Scanned</h5>
-                            <p className="dashboard-crNumber-card">
-                                {crNumberSummary?.totalScannedQty || 0}
-                            </p>
-                        </div>
                     </div>
                     <div className="dashboard-table">
                         <div className="right-table-scroll">
