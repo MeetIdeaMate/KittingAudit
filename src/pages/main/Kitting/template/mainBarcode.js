@@ -151,7 +151,7 @@ export const MainBarcode = ({ stickers }) => {
                                         </h1>
                                         {(index + 1) === 1 &&
                                             <Barcode
-                                                value={stickers?.bomQty <= 9 ? `0${stickers?.bomQty}` : stickers?.bomQty || "0"}
+                                                value={(stickers?.bomQty <= 9 ? `0${stickers?.bomQty}` : stickers?.bomQty) || "0"}
                                                 width={1.5}
                                                 height={40}
                                                 displayValue={false}
