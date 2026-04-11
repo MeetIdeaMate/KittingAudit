@@ -194,7 +194,7 @@ const rotateContainer = {
     top: "50%",
     left: "50%",
     marginTop: "-47mm",
-    marginLeft: "-73mm",
+    marginLeft: "-69mm",
     transform: "rotate(90deg)",
     transformOrigin: "center center",
     display: "flex",
