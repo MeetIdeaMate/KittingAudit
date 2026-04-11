@@ -161,8 +161,15 @@
 
 .dashboard-summary-cards {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
+}
+
+.dashboard-summary-cards1 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding-bottom: 5px;
 }
 
 .dashboard-chart-container {
@@ -170,7 +177,12 @@
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 10px;
-    margin-top: 10px;
+}
+
+.doughnut-chart-container {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
 }
 
 .dashboard-chart-header {
