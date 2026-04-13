@@ -520,7 +520,7 @@ export const Kitting = () => {
 
   const handleChangeAllSelect = (field) => {
     const updateDetails = selectedCrExcelDetails?.partDetails?.map((detail) => {
-      if (detail?.type !== "PARENT") {
+      if (detail?.type !== "PARENT" && detail?.printingType !== "GROUPED") {
         return {
           ...detail,
           isSelect: field,
@@ -1064,7 +1064,7 @@ export const Kitting = () => {
   };
 
   useEffect(() => {
-    const findAllChildLabel = selectedCrExcelDetails?.partDetails?.filter((details) => details?.type !== "PARENT")?.length;
+    const findAllChildLabel = selectedCrExcelDetails?.partDetails?.filter((details) => details?.type !== "PARENT" && details?.printingType !== "GROUPED")?.length;
     const findAllSelectedLabel = selectedCrExcelDetails?.partDetails?.filter((detail) => detail?.isSelect)?.length;
     setIsOpen((prev) => ({ ...prev, isAllCheck: findAllChildLabel === findAllSelectedLabel }));
   }, [selectedCrExcelDetails]);
@@ -1195,7 +1195,7 @@ export const Kitting = () => {
             <p><b>TOTAL FIM NOS:</b> <span style={{ color: "blue" }}>{options?.fimOptions?.length ?? 0}</span></p>
             {filterInfo?.fimNumber && <Checkbox name="isAllCheck" value={isOpen?.isAllCheck} checked={isOpen?.isAllCheck} onChange={(field) => handleChangeAllSelect(field?.target?.checked)}>Select All</Checkbox>}
           </div>
-          {filterInfo?.fimNumber && <p>Select labels for individual printing. Uncheck grouped parts if using ‘Select All’. Use ‘Print Icon’ for grouped labels.</p>}
+          {filterInfo?.fimNumber && <p>First print grouped parts using the ‘Print Icon’. Then click ‘Select All’ to proceed with individual label printing.</p>}
         </div>
       </div>
       <UiTable

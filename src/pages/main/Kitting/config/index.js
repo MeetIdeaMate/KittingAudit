@@ -14,7 +14,7 @@ export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, fil
         title: "-",
         width: 40,
         render: (_, details, index) => {
-            return details?.type === "PARENT" ? "" : <Checkbox value={details?.isSelect} name="isSelect" checked={details?.isSelect} onChange={(field) => handleChangeCheckBox(field?.target?.checked, index)}></Checkbox>
+            return details?.type === "PARENT" ? "" : <Checkbox value={details?.isSelect} disabled={details?.printingType === "GROUPED"} name="isSelect" checked={details?.isSelect} onChange={(field) => handleChangeCheckBox(field?.target?.checked, index)}></Checkbox>
         }
     },] : []),
     {
