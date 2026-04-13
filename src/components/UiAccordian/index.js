@@ -5,11 +5,11 @@ import { DownArrow } from '../../assets/images';
 
 const UiAccordian = ({ children, ...props }) => {
     const contentEl = useRef();
-    const { handleToggle, active, data, noborder } = props;
+    const { handleToggle, active, data, noborder, balanceQty } = props;
     const { label, id } = data;
     
     return (
-        <div style={{backgroundColor: active === id ? "#FFF3EB" : ""}} className={classNames({ 'accordion__card': true, 'no-border': noborder })}>
+        <div style={{backgroundColor: balanceQty === 0 ? "#d8f7c9" : ( active === id ? "#FFF3EB" : "" )}} className={classNames({ 'accordion__card': true, 'no-border': noborder })}>
             <div className="accordion__header">
                 <div className={`accordion__toggle ${active === id ? 'active' : ''}`} onClick={() => handleToggle(id)}>
                     <div style={{ padding: 0, margin: 0 }}>

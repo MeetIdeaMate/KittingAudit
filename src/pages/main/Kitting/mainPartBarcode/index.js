@@ -95,6 +95,7 @@ export const MainPartBarcode = ({
               }}
               handleToggle={handleToggle}
               active={accordActive}
+              balanceQty = {Number(selectedPartDetails?.quantity) - Number(totalMainParts)}
             >
               <UiTable
                 pagination={false}

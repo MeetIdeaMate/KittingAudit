@@ -84,7 +84,7 @@ export const PrintStickerLabels = ({ vendorNumber, childPartLabels = [] }) => {
 
                 const updatedRow =
                     row.length === 1
-                        ? [...row, { partNumber: "", barCode: "" }]
+                        ? [...row, { partNumber: "DUMMY", barCode: "DUMMY" }]
                         : row;
 
                 return (
