@@ -25,7 +25,7 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                 <Barcode
                     value={barcodeValue || ""}
                     width={0.8}
-                    height={10}
+                    height={15}
                     fontSize={7}
                     margin={0}
                     format="CODE128"
@@ -34,7 +34,14 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                 <div style={{ fontSize: "8px", fontWeight: "bold" }}>
                     {barcodeValue}
                 </div>
-                <span style={{ fontSize: "10px", fontWeight: "bold" }}>{title || ""}</span>
+                <span style={{ fontSize: "10px", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>{title || ""}</div> 
+                    {printingType === "GROUPED" && (
+                        <div style={{ fontSize: "8px", fontWeight: "bold" }}>
+                            Qty: {qty}
+                        </div>
+                    )}
+                </span>
             </div>
             <div style={{ width: "30%", display: "flex", justifyContent: "center", alignItems: "center" }}>
                 <div style={{ fontSize: "9px", fontWeight: 600, lineHeight: "1", width: "100%", textAlign: "right", paddingRight: "30px" }}>
@@ -43,11 +50,6 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                     <p style={{ padding: 0, margin: 0 }}>{vendorName}</p>
                 </div>
             </div>
-            {printingType === "GROUPED" && (
-                <div style={{ fontSize: "8px", fontWeight: "bold" }}>
-                    Qty: {qty}
-                </div>
-            )}
         </div>
     );
 
