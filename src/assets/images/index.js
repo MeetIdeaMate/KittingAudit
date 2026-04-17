@@ -28,6 +28,7 @@ import icn_User from "./icn_User.svg";
 import reset from "./reset.svg";
 import statuChange from "./statuschange.svg";
 import flotButton from "./DcInput.svg";
+import otislogoPdf from "./otisLogoPdf.png";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
     TechLambdasLogo,
@@ -56,6 +57,7 @@ export {
     reset,
     statuChange,
     flotButton,
+    otislogoPdf
     // techlambdasRightCornerLogo,
 };
 

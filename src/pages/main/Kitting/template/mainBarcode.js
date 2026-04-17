@@ -3,7 +3,6 @@ import React from "react";
 import Barcode from "react-barcode";
 
 export const MainBarcode = ({ stickers }) => {
-
     const MAX_ROWS = 12;
     const GROUPS = 3;
 

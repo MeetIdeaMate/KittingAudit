@@ -1,56 +1,122 @@
 .ant-table-tbody>tr.custom-row>td {
-  background-color: #faddc9 !important;
+    background-color: #faddc9 !important;
 }
 
 .ant-table-tbody>tr.custom-row:hover>td {
-  background-color: #faddc9 !important;
+    background-color: #faddc9 !important;
 }
 
 .custom-row {
-  -webkit-print-color-adjust: exact;
-  print-color-adjust: exact;
-  background-color: #F3F3F3 !important;
-  border-top: 1px solid #ccc !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    background-color: #F3F3F3 !important;
+    border-top: 1px solid #ccc !important;
 }
 
 .ant-table-tbody>tr.selectd-row>td {
-  background-color: #d7f7fc !important;
+    background-color: #d7f7fc !important;
 }
 
 .ant-table-tbody>tr.selectd-row:hover>td {
-  background-color: #d7f7fc !important;
+    background-color: #d7f7fc !important;
 }
 
 .ant-table-tbody>tr.parent-with-select-row>td {
-  background-color: #d7f7fc !important;
+    background-color: #d7f7fc !important;
 }
 
 .ant-table-tbody>tr.parent-with-select-row:hover>td {
-  background-color: #d7f7fc !important;
+    background-color: #d7f7fc !important;
 }
 
 .flotButton {
-  cursor: pointer;
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  animation: blinkAnimate 1s infinite;
+    cursor: pointer;
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    animation: blinkAnimate 1s infinite;
 }
 
 .flotButton:hover {
-  animation-play-state: paused;
+    animation-play-state: paused;
 }
 
 @keyframes blinkAnimate {
-  0% {
-    transform: scale(1);
-  }
-
-  50% {
-        transform: scale(1.2);
-  }
-
-  100% {
+    0% {
         transform: scale(1);
-  }
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.print-page-wrapper {
+    page-break-after: always !important;
+    break-after: page !important;
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.main-print-table {
+    width: 100%;
+    border: 1px solid #000;
+    border-collapse: collapse;
+}
+
+.main-print-table tbody td {
+    border-top: none !important;
+    border-bottom: none !important;
+    border-right: 1px solid black !important;
+    padding: 0;
+    margin: 0;
+}
+
+.main-print-table tbody tr th {
+    border: 1px solid #000;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px 0px 10px;
+}
+
+.companyLogo {
+    padding: 5px;
+}
+
+.companyLogo img {
+    width: 100px;
+    height: 50px;
+}
+
+.header-info {
+    width: 100%;
+    display: flex;
+}
+
+.info-box {
+    width: 50%;
+    text-align: center;
+}
+
+.footer-barcodes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px;
+}
+
+.table-column-headers {
+    border: 1px solid #000;
 }
