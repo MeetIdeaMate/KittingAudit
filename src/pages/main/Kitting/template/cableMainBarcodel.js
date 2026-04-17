@@ -58,9 +58,9 @@ const CableMainBarcode = ({ stickers,vendorName }) => {
                                 {gridRows?.map((row, rowIdx) => (
                                     <tr key={rowIdx}>
                                         <td style={{ textAlign: "center" }}>{rowIdx + 1}</td>
-                                        <td>{row?.partNumber}</td>
-                                        <td>{row?.description}</td>
-                                        <td>{row?.qty}</td>
+                                        <td style={{paddingLeft:"5px"}}>{row?.partNumber}</td>
+                                        <td style={{paddingLeft:"5px"}}>{row?.description}</td>
+                                        <td style={{textAlign:"center"}}>{row?.totalQty}</td>
                                     </tr>
                                 ))}
                             </tbody>
