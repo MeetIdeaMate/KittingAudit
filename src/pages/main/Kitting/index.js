@@ -22,15 +22,20 @@ import { GetAvlParts } from "./avlPartModal";
 import { MainBarcode } from "./template/mainBarcode";
 import { CrReport } from "./template/crReport";
 import { Checkbox, Tooltip } from "antd";
+import { CablePrintStickerLabels } from "./template/cablePartBarcode";
 
 const PrintSticker = React.forwardRef((props, ref) => (
   <div ref={ref}>
-    <PrintStickerLabels
-      stickers={props?.stickers}
-      tabDetails={props?.activeTab}
-      vendorNumber={props?.vendorNumber}
-      childPartLabels={props?.childPartLabels}
-    />
+    {props?.partLabelSize === "100*25" ?
+      <PrintStickerLabels
+        vendorNumber={props?.vendorNumber}
+        childPartLabels={props?.childPartLabels}
+      /> :
+      <CablePrintStickerLabels
+        vendorNumber={props?.vendorNumber}
+        vendorName={props?.vendorName}
+        childPartLabels={props?.childPartLabels}
+      />}
   </div>
 ));
 
@@ -79,12 +84,14 @@ export const Kitting = () => {
   const [mode, setMode] = useState("");
   const [mainPartPdfDetails, setMainPartPdfDetails] = useState({});
   const [vendorNumber, setVendorNumber] = useState("");
+  const [vendorName, setVendorName] = useState("");
+  const [partLabelSize, setPartLabelSize] = useState("");
   const [missingParCode, setMissingParCode] = useState({
     isPrint: false,
     isVerifyCheck: false,
     missingList: [],
   });
-  const [childPartLabels, setChildPartLabels] = useState("");
+  const [childPartLabels, setChildPartLabels] = useState([]);
 
   const getCrExcelById = (crNumber, fimNumber) => api.get(`${KITTINGINFO}/getAllBarCodeKittingInfos?crNumber=${crNumber}${fimNumber ? `&fimNumber=${fimNumber}` : ""}`);
   const getAllFimNos = (crNumber) => api.get(`${KITTINGINFO}/fimNumbers/${crNumber}`);
@@ -100,6 +107,22 @@ export const Kitting = () => {
     refetchOnWindowFocus: false,
     onSuccess: (configResponse) => {
       setVendorNumber(configResponse?.configuration?.[0]);
+    }
+  });
+
+  useQuery(["FETCH_OTIS_VENDOR_NAME", ""], () => api.get(`${CONFIG}/OTISVENDORNAME`), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onSuccess: (configResponse) => {
+      setVendorName(configResponse?.configuration?.[0]);
+    }
+  });
+
+  useQuery(["FETCH_OTIS_VENDOR_NAME", ""], () => api.get(`${CONFIG}/PartLabelSize`), {
+    enabled: true,
+    refetchOnWindowFocus: false,
+    onSuccess: (configResponse) => {
+      setPartLabelSize(configResponse?.configuration?.[0]);
     }
   });
 
@@ -152,7 +175,7 @@ export const Kitting = () => {
   const handlePrint = useReactToPrint({
     pageStyle: `
     @page {
-      size: ${"4in 1in portrait"} !important;
+      size: ${partLabelSize === "100*25" ? "4in 1in portrait" : "4in 0.59in portrait"} !important;
       margin: 0;
     }
     html,body{
@@ -1385,7 +1408,9 @@ export const Kitting = () => {
         <PrintSticker
           ref={stickerRef}
           vendorNumber={vendorNumber}
+          vendorName={vendorName}
           childPartLabels={childPartLabels}
+          partLabelSize={partLabelSize}
         />
         <PrintCrReportComponent
           ref={componentRef}
