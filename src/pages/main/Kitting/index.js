@@ -164,7 +164,7 @@ export const Kitting = () => {
    
     @page {
       size: ${packingLabelSize === "210*297"?"":"4in 6in !important"} ;
-      margin: ${packingLabelSize === "210*297"?"20px 30px":"0"} ;;
+      margin: ${packingLabelSize === "210*297"?"20px 30px":"0"} ;
     }
       html,body{
         background-color: white !important;
