@@ -2,11 +2,11 @@ import Barcode from "react-barcode";
 import { otislogoPdf } from "../../../../assets/images";
 import dayjs from "dayjs";
 
-const CableMainBarcode = ({ stickers,vendorName }) => {
+const CableMainBarcode = ({ stickers, vendorName }) => {
     return (
         <div className="print-root">
             {stickers?.packingLabelResponses?.map((details, index) => {
-                const gridRows =details?.packingDetailsRes || [];
+                const gridRows = details?.packingDetailsRes || []
                 return (
                     <div
                         key={index}
@@ -27,9 +27,9 @@ const CableMainBarcode = ({ stickers,vendorName }) => {
                                                         margin={0}
                                                         displayValue={false}
                                                     />
-                                                    <p style={{ padding: 0, margin: 0 }}>{details?.barCode}</p>
+                                                    <p style={{ padding: 0, margin: 0, fontSize: "14px" }}>{details?.barCode}</p>
                                                 </div>
-                                                <div className="companyLogo"><img src={otislogoPdf} alt="loading"/></div>
+                                                <div className="companyLogo"><img src={otislogoPdf} alt="loading" /></div>
                                             </div>
                                         </div>
                                     </th>
@@ -41,8 +41,8 @@ const CableMainBarcode = ({ stickers,vendorName }) => {
                                                 <p style={{ padding: 0, margin: 0 }}>GROSS WEIGHT :</p>
                                             </div>
                                             <div className="info-box">
-                                                <p style={{ padding: 0, margin: 0 }}>Current Qty:  {index + 1}  </p>
-                                                <p style={{ padding: 0, margin: 0 }}>Required Qty: {stickers?.packingLabelResponses?.length}</p>
+                                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}>Current Qty:  {index + 1}  </p>
+                                                <p style={{ padding: 0, margin: 0, fontSize: "14px" }}>Required Qty: {stickers?.packingLabelResponses?.length}</p>
                                             </div>
                                         </div>
                                     </td>
@@ -50,17 +50,17 @@ const CableMainBarcode = ({ stickers,vendorName }) => {
                             </thead>
                             <tbody>
                                 <tr className="table-column-headers">
-                                    <th style={{ width: '10%' }}>Sl. No</th>
-                                    <th style={{ width: '30%' }}>PART NO.</th>
-                                    <th style={{ width: '50%' }}>DESCRIPTION</th>
-                                    <th style={{ width: '10%' }}>QTY</th>
+                                    <th style={{ width: '10%', fontSize: "14px" }}>Sl. No</th>
+                                    <th style={{ width: '30%', fontSize: "14px" }}>PART NO.</th>
+                                    <th style={{ width: '50%', fontSize: "14px" }}>DESCRIPTION</th>
+                                    <th style={{ width: '10%', fontSize: "14px" }}>QTY</th>
                                 </tr>
                                 {gridRows?.map((row, rowIdx) => (
                                     <tr key={rowIdx}>
-                                        <td style={{ textAlign: "center" }}>{rowIdx + 1}</td>
-                                        <td style={{paddingLeft:"5px"}}>{row?.partNumber}</td>
-                                        <td style={{paddingLeft:"5px"}}>{row?.description}</td>
-                                        <td style={{textAlign:"center"}}>{row?.totalQty}</td>
+                                        <td style={{ textAlign: "center", fontSize: "14px" }}>{rowIdx + 1}</td>
+                                        <td style={{ paddingLeft: "5px", fontSize: "14px" }}>{row?.partNumber}</td>
+                                        <td style={{ paddingLeft: "5px", fontSize: "14px" }}>{row?.description}</td>
+                                        <td style={{ textAlign: "center", fontSize: "14px" }}>{row?.totalQty}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -83,12 +83,12 @@ const CableMainBarcode = ({ stickers,vendorName }) => {
                                         </div>
                                         <div className="footer-bottom">
                                             <div className="signature">
-                                                <p style={{ padding: 0, margin: 0 }}>Packed By: {stickers?.packedBy} </p>
-                                                <p style={{ padding: 0, margin: 0 }}>Date: {dayjs(stickers?.packedDate).format('DD/MM/YYYY hh:mm:ss A')}</p>
+                                                <p style={{ padding: 0, margin: 0, fontWeight: 700 }}>Packed By: {stickers?.packedBy} </p>
+                                                <p style={{ padding: 0, margin: 0, fontWeight: 700 }}>Date: {dayjs(stickers?.packedDate).format('DD/MM/YYYY hh:mm:ss A')}</p>
                                             </div>
                                             <div>
-                                                <p style={{ padding: 0, margin: 0 }}>SUPPLIED BY</p>
-                                                <p style={{ padding: 0, margin: 0 }}>{vendorName}</p>
+                                                <p style={{ padding: 0, margin: 0, fontWeight: 700 }}>SUPPLIED BY : </p>
+                                                <p style={{ padding: 0, margin: 0, fontWeight: 700 }}>{vendorName}</p>
                                             </div>
                                         </div>
                                     </td>
