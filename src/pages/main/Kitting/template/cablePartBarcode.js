@@ -25,7 +25,7 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                 <Barcode
                     value={barcodeValue || ""}
                     width={0.8}
-                    height={15}
+                    height={18}
                     fontSize={7}
                     margin={0}
                     format="CODE128"
