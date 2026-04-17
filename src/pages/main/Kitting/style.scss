@@ -110,6 +110,9 @@
 .footer-barcodes {
     display: flex;
     justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-start !important;
+    gap: 29px !important;
 }
 
 .footer-bottom {
@@ -118,6 +121,7 @@
     padding: 0 10px;
 }
 
-.table-column-headers {
+.table-column-headers th{
     border: 1px solid #000;
+    line-height: 1.1;
 }

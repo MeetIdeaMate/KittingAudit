@@ -67,18 +67,18 @@ const CableMainBarcode = ({ stickers, vendorName }) => {
                             <tfoot>
                                 <tr>
                                     <td colSpan="4">
-                                        <div className="footer-barcodes" style={{ padding: "5px", borderBottom: "1px solid #000", borderTop: "1px solid #000" }}>
+                                        <div className="footer-barcodes" style={{ padding: "5px", borderBottom: "1px solid #000", borderTop: "1px solid #000",whiteSpace:"nowrap" }}>
                                             <div className="footer-item">
-                                                <h2 style={{ padding: 0, margin: 0 }}>Contract No: {stickers?.crNumber}</h2>
+                                                <h2 style={{ padding: 0, margin: 0,fontSize:"24px" }}>Contract No: {stickers?.crNumber}</h2>
                                                 <Barcode value={stickers?.crNumber || "BARCODE"} width={1} height={30} displayValue={false} />
                                             </div>
                                             <div className="footer-item">
-                                                <h2 style={{ padding: 0, margin: 0 }}>Item: {stickers?.parentPartNumber}</h2>
+                                                <h2 style={{ padding: 0, margin: 0,fontSize:"24px" }}>Item: {stickers?.parentPartNumber}</h2>
                                                 <Barcode value={stickers?.parentPartNumber || "BARCODE"} width={1} height={30} displayValue={false} />
                                             </div>
                                             <div className="footer-item">
-                                                <h2 style={{ padding: 0, margin: 0 }}>Qty: {stickers?.bomQty}</h2>
-                                                <Barcode value={String(stickers?.bomQty) || "BARCODE"} width={1} height={30} displayValue={false} />
+                                                <h2 style={{ padding: 0, margin: 0,fontSize:"24px" }}>Qty: {(index + 1) === 1 ? "" : "Refer Box-"}{stickers?.bomQty || "0"}</h2>
+                                                {(index + 1) === 1 &&<Barcode value={((stickers?.bomQty <= 9 ? `0${stickers?.bomQty}` : stickers?.bomQty) || "0") || "BARCODE"} width={1} height={30} displayValue={false} />}
                                             </div>
                                         </div>
                                         <div className="footer-bottom">
