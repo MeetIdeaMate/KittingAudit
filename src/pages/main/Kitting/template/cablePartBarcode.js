@@ -31,13 +31,13 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                     format="CODE128"
                     displayValue={false}
                 />
-                <div style={{ fontSize: "8px", fontWeight: "bold" }}>
+                <div style={{ fontSize: "10px", fontWeight: "bold" }}>
                     {barcodeValue}
                 </div>
                 <span style={{ fontSize: "10px", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <div>{title || ""}</div> 
                     {printingType === "GROUPED" && (
-                        <div style={{ fontSize: "8px", fontWeight: "bold" }}>
+                        <div style={{ fontSize: "10px", fontWeight: "bold" }}>
                             Qty: {qty}
                         </div>
                     )}
