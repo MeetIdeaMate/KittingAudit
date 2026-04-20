@@ -1225,6 +1225,7 @@ export const Kitting = () => {
                             style={{ width: "300px" }}
                             options={options?.crOptions}
                             onChange={handleChangeCrExcel}
+                            allowClear={false}
                         />
                         <UiSelect
                             isStyle={true}
