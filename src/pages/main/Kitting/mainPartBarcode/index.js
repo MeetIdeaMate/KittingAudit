@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   UiAccordian,
   UiButton,
+  UiDecimalNumber,
   UiTable,
   UiTextBox,
 } from "../../../../components";
@@ -20,6 +21,7 @@ export const MainPartBarcode = ({
   inputRef,
   handleRemoveSpecificPart,
   missingParCode,
+  handleGrossWeightChange
 }) => {
   const [isMissingOpen, setIsMissingOpen] = useState(1);
 
@@ -81,6 +83,7 @@ export const MainPartBarcode = ({
         )}
         {selectedPartDetails?.caseInfo?.map((details, index) => {
           return (
+            <div >
             <UiAccordian
               style={{
                 backgroundColor: details?.selectedCase
@@ -89,7 +92,14 @@ export const MainPartBarcode = ({
               }}
               key={index}
               data={{
-                label: `${details?.boxNo} - ${totalLabelQty(details?.barcodes) || 0}`,
+                label: (
+                    <div style={{display:"flex",gap:"10px"}}>
+                        <p> {details?.boxNo} - {totalLabelQty(details?.barcodes) || 0}</p>
+                        <div style={{padding:"10px 10px 0px 10px"}}>
+                            <UiDecimalNumber placeholder="Gross Weight" suffix="Kgs" style={{width:"150px"}}  controls={false}  onChange={(value)=>handleGrossWeightChange(value,index)}/>
+                        </div>
+                    </div>
+                ),
                 subLabel: "",
                 id: index,
               }}
@@ -103,6 +113,7 @@ export const MainPartBarcode = ({
                 dataSource={details?.barcodes}
               />
             </UiAccordian>
+            </div>
           );
         })}
         <UiButton

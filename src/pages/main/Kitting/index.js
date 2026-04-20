@@ -164,8 +164,8 @@ export const Kitting = () => {
         pageStyle: `
    
     @page {
-      size: ${packingLabelSize === "210*297"?"":"4in 6in !important"} ;
-      margin: ${packingLabelSize === "210*297"?"20px 30px":"0"} ;
+      size: ${packingLabelSize === "210*297" ? "" : "4in 6in !important"} ;
+      margin: ${packingLabelSize === "210*297" ? "20px 30px" : "0"} ;
     }
       html,body{
         background-color: white !important;
@@ -225,8 +225,6 @@ export const Kitting = () => {
             handleClose();
         },
     });
-    console.log("packingLabelSize",packingLabelSize);
-    
     const { isFetching: isFetchAllCrExcel } = useQuery(
         ["GET_ALL_CR_EXCEL", ""],
         () => api.get(`${KITTING}/get-all`),
@@ -555,6 +553,24 @@ export const Kitting = () => {
         setSelectedCrExcelDetails((prev) => ({ ...prev, partDetails: updatePartDetails }));
     };
 
+    const handleGrossWeightChange = (value, position) => {
+        setSelectedPartDetails((prev) => {
+            const updatedCaseInfo = (prev.afterDetails?.caseInfo)?.map(
+                (item, index) =>
+                    index === position
+                        ? { ...item, grossWeight: value }
+                        : item
+            );
+
+            return {
+                ...prev,
+                afterDetails: {
+                    ...prev.afterDetails,
+                    caseInfo: updatedCaseInfo,
+                },
+            };
+        });
+    };
     const handleChangeAllSelect = (field) => {
         const updateDetails = selectedCrExcelDetails?.partDetails?.map((detail) => {
             if (detail?.type !== "PARENT" && detail?.printingType !== "GROUPED") {
@@ -877,6 +893,9 @@ export const Kitting = () => {
                 return {
                     boxNo: index + 1,
                     barcodes: allBarcodes,
+                    ...(details?.grossWeight ? {
+                        grossWeight: Number(details?.grossWeight)
+                    } : {}),
                 };
             })?.filter(Boolean);
             queryClient.prefetchQuery(["BARCODE_MAIN_CASE", ""], () =>
@@ -1311,6 +1330,7 @@ export const Kitting = () => {
                             handleChangeFieldValue={handleChangeBarcodeId}
                             inputRef={inputRef}
                             handleRemoveSpecificPart={handleRemoveSpecificPart}
+                            handleGrossWeightChange={handleGrossWeightChange}
                         />
                     ) : (
                         <BarcodeSepareateAndCompained
