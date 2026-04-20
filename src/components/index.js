@@ -19,6 +19,7 @@ import UiFileUploader from "./UiFileUpload";
 import UiLoadingSpinner from "./UiLoadingSpinner";
 import UiAccordian from "./UiAccordian";
 import UiDoughnutChart from "./UiDoughnutChart";
+import UiDecimalNumber from "./UiDecimalNumber";
 export {
     UiTextBox,
     UiFormWrapper,
@@ -41,4 +42,5 @@ export {
     UiLoadingSpinner,
     UiAccordian,
     UiDoughnutChart,
+    UiDecimalNumber
 };

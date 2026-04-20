@@ -38,7 +38,7 @@ const CableMainBarcode = ({ stickers, vendorName }) => {
                                     <td colSpan="4">
                                         <div className="header-info">
                                             <div className="info-box">
-                                                <p style={{ padding: 0, margin: 0 }}>GROSS WEIGHT :</p>
+                                                <p style={{ padding: 0, margin: 0 }}>GROSS WEIGHT : {details?.grossWeight>0 ? details?.grossWeight:""} </p>
                                             </div>
                                             <div className="info-box">
                                                 <p style={{ padding: 0, margin: 0, fontSize: "14px" }}>Current Qty:  {index + 1}  </p>
