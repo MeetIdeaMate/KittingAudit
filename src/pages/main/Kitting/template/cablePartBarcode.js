@@ -1,10 +1,9 @@
 import Barcode from "react-barcode";
 
-const LABEL_WIDTH = "100mm";
-const LABEL_HEIGHT = "15mm";
+export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], vendorName, pageSize }) => {
 
-export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], vendorName }) => {
-
+    const LABEL_WIDTH = "100mm";
+    const LABEL_HEIGHT = pageSize === "100*15" ? "15mm" : "25mm";
     const LabelContent = ({ barcodeValue, title, subtitle, qty, printingType }) => (
         <div
             style={{
@@ -35,7 +34,7 @@ export const CablePrintStickerLabels = ({ vendorNumber, childPartLabels = [], ve
                     {barcodeValue}
                 </div>
                 <span style={{ fontSize: "10px", fontWeight: "bold", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <div>{title || ""}</div> 
+                    <div>{title || ""}</div>
                     {printingType === "GROUPED" && (
                         <div style={{ fontSize: "10px", fontWeight: "bold" }}>
                             Qty: {qty}

@@ -36,6 +36,7 @@ const PrintSticker = React.forwardRef((props, ref) => (
                 vendorNumber={props?.vendorNumber}
                 vendorName={props?.vendorName}
                 childPartLabels={props?.childPartLabels}
+                pageSize={props?.partLabelSize}
             />}
     </div>
 ));
