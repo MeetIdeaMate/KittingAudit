@@ -311,7 +311,8 @@ export const ExcelUpload = () => {
             {isOpen?.isOpenFindExistCr && <UiModal
                 onCancel={() => handleClose()}
                 open={isOpen?.isOpenFindExistCr}
-                title={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.map((crNo) => crNo)} CR number?`}
+                title={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.length > 1 ? "CR numbers" : "CR number"
+                    } (${crExcelDetails?.existCrNumbers?.join(", ")})?`}
                 footer={<div className="flexible-end">
                     <UiButton key="close" onClick={() => handleClose()}>
                         NO
