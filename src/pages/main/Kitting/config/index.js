@@ -1,6 +1,7 @@
 import { Checkbox } from "antd";
 import { deleteIcon, printer } from "../../../../assets/images";
 import { CheckOutlined } from "@ant-design/icons";
+import dayjs from "dayjs";
 
 export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, filterInfo }) => [
     {
@@ -54,6 +55,13 @@ export const kittingPartColumn = ({ handleKittingPart, handleChangeCheckBox, fil
         title: <p style={{ padding: "0", margin: "0", textAlign: "start" }}>Description</p>,
         dataIndex: "description",
         render: (_, rec) => <p style={{ padding: "0", margin: "0", textAlign: "start" }}>{rec?.description}</p>,
+    },
+    {
+        title:"Date",
+        render:(details)=>{
+            const date = details?.uploadedDate;
+            return date? <p style={{fontWeight:700}}>{dayjs(date).format("DD-MM-YYYY")}</p>:null
+        }
     },
     {
         title: "BOM Qty",
