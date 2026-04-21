@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { UiButton, UiCounterBatch, UiFileUploader, UiRangePicker, UiSearchBox, UiTable } from "../../../components";
+import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSearchBox, UiTable } from "../../../components";
 import './style.scss';
 import { colorStatus, ExcelUploadTaleColumn } from "./config";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -22,10 +22,12 @@ export const ExcelUpload = () => {
     const [isValidate, setIsValidate] = useState(false);
     const [barCodeKittingAllData, setBarCodeKittingAllData] = useState({});
     const [selectedDetails, setSelectedDetails] = useState({});
+    const [isOpen, setIsOpen] = useState({ isOpenFindExistCr: false });
 
     const getAllCrExcels = (details) => api.get(`${KITTING}/get-by-page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&commonSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&fromDate=${details?.fromDate}&toDate=${details?.toDate}` : ""}`);
     const uploadExcel = (file) => api.patch(`${KITTING}/file-upload`, file);
     const getExcelDownload = (id) => api.get(`${KITTING}/download-file/${id}`);
+    const alreadyCrUploaded = (file) => api.post(`${KITTING}/validateCrNumber`, file);
 
     const { isFetching: isFetchCrExcel, refetch: fetchAllCrExcels } = useQuery(["", filterValue?.page, filterValue?.size, filterValue?.searchValue, filterValue?.fromDate, filterValue?.toDate], () => getAllCrExcels(filterValue), {
         enabled: Boolean(filterValue?.page || filterValue?.size || filterValue?.searchValue || (filterValue?.fromDate && filterValue?.toDate)),
@@ -66,8 +68,26 @@ export const ExcelUpload = () => {
                 showToast.success("Success", uploadResponse?.response?.data?.message);
                 setCrExcelDetails({});
                 fetchAllCrExcels();
+                setIsOpen((prev) => ({ ...prev, isOpenFindExistCr: false }));
             } else {
                 showToast.error("Error", uploadResponse?.response?.data?.error?.message);
+            }
+        },
+        refetchOnWindowFocus: false,
+    });
+
+    const { isFetching: isFetchExistCr } = useQuery(["FIND_EXIST_CR", ""], alreadyCrUploaded, {
+        enabled: false,
+        onSuccess: (findCrResponse) => {
+            if (findCrResponse?.status === 200) {
+                if (findCrResponse?.data?.result?.success?.length > 0) {
+                    setCrExcelDetails((prev) => ({ ...prev, existCrNumbers: findCrResponse?.data?.result?.success }));
+                    setIsOpen((prev) => ({ ...prev, isOpenFindExistCr: true }));
+                } else {
+                    handleSubmit();
+                }
+            } else {
+                showToast.error("Error", findCrResponse?.response?.data?.error?.message);
             }
         },
         refetchOnWindowFocus: false,
@@ -121,6 +141,17 @@ export const ExcelUpload = () => {
     };
 
     const handleUploadExcel = async () => {
+        const payload = new FormData();
+        payload.append("file", crExcelDetails?.excel);
+        queryClient.prefetchQuery(["FIND_EXIST_CR", ""], () => alreadyCrUploaded(payload));
+    };
+
+    const handleClose = () => {
+        setIsOpen((prev) => ({ ...prev, isOpenFindExistCr: false }));
+        setCrExcelDetails({});
+    };
+
+    const handleSubmit = () => {
         const payload = new FormData();
         payload.append("file", crExcelDetails?.excel);
         queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload));
@@ -211,9 +242,9 @@ export const ExcelUpload = () => {
     }, [crExcelDetails]);
 
     useEffect(() => {
-        let isLoading = isFetchCrExcel || isFetchExcelDownload || isFetchUploadingExcel;
+        let isLoading = isFetchCrExcel || isFetchExcelDownload || isFetchUploadingExcel || isFetchExistCr;
         dispatch(loaderReducer(isLoading));
-    }, [dispatch, isFetchCrExcel, isFetchExcelDownload, isFetchUploadingExcel]);
+    }, [dispatch, isFetchCrExcel, isFetchExcelDownload, isFetchUploadingExcel, isFetchExistCr]);
 
     return (
         <>
@@ -244,7 +275,7 @@ export const ExcelUpload = () => {
 
             <div className="excel-container">
                 <div className="excel-left">
-                    <UiFileUploader onFileSelect={(file) => handleChangeFieldValue(file, "excel")} />
+                    <UiFileUploader localFileName={crExcelDetails?.excel?.name} onFileSelect={(file) => handleChangeFieldValue(file, "excel")} />
                     <div className="submit-area">
                         <UiButton
                             disabled={!isValidate}
@@ -277,6 +308,19 @@ export const ExcelUpload = () => {
                     />
                 </div>
             </div>
+            {isOpen?.isOpenFindExistCr && <UiModal
+                onCancel={() => handleClose()}
+                open={isOpen?.isOpenFindExistCr}
+                title={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.map((crNo) => crNo)} CR number?`}
+                footer={<div className="flexible-end">
+                    <UiButton key="close" onClick={() => handleClose()}>
+                        NO
+                    </UiButton>
+                    <UiButton key="submit" type="primary" onClick={() => handleSubmit()}>
+                        YES
+                    </UiButton>
+                </div>}
+            />}
         </>
     );
 
