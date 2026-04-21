@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { excelFileUpload } from "../../assets/images";
 import { showToast } from "../UiToastNotification";
 
-export default function UiFileUploader({ onFileSelect }) {
+export default function UiFileUploader({ onFileSelect, localFileName }) {
     const fileRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [fileName, setFileName] = useState("");
@@ -11,6 +11,10 @@ export default function UiFileUploader({ onFileSelect }) {
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "application/vnd.ms-excel"
     ];
+
+    useEffect(() => {
+        setFileName(localFileName);
+    }, [localFileName]);
 
     const handleFile = (file) => {
         if (!file) return;
