@@ -50,7 +50,7 @@ export const MainBarcode = ({ stickers }) => {
                                         />
                                     </div>
                                     <div style={{ width: "100%", display: "flex" }}>
-                                        <h6 style={{ width: "50%", padding: 0, margin: 0 }}>GROSS WEIGHT</h6>
+                                        <h6 style={{ width: "50%", padding: 0, margin: 0 }}>GROSS WEIGHT: {details?.grossWeight>0 ? `${details?.grossWeight} KGS` :""}</h6>
                                         <h6 style={{ width: "50%", padding: 0, margin: 0 }}>{stickers?.description}</h6>
                                     </div>
                                     <table style={table}>
