@@ -123,7 +123,7 @@ export const Kitting = () => {
         }
     });
 
-    useQuery(["FETCH_OTIS_VENDOR_NAME", ""], () => api.get(`${CONFIG}/PartLabelSize`), {
+    useQuery(["FETCH_OTIS_PART_LABEL_SIZE", ""], () => api.get(`${CONFIG}/PartLabelSize`), {
         enabled: true,
         refetchOnWindowFocus: false,
         onSuccess: (configResponse) => {
