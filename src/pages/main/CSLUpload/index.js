@@ -1,6 +1,6 @@
 import { ExcelUploadLayout } from "../../../components";
 import * as api from "../../../actions"
-import { KITTING } from "../../../apiservices/endpoints";
+import { CSL, KITTING } from "../../../apiservices/endpoints";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -21,8 +21,8 @@ const CSLUpload = () => {
     const [selectedDetails, setSelectedDetails] = useState({});
     const [isOpen, setIsOpen] = useState({ isOpenFindExistCr: false });
 
-    const getAllCrExcels = (details) => api.get(`${KITTING}/get-by-page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&commonSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&fromDate=${details?.fromDate}&toDate=${details?.toDate}` : ""}`);
-    const uploadExcel = (file) => api.patch(`${KITTING}/file-upload`, file);
+    const getAllCrExcels = (details) => api.get(`${CSL}/get-by-page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&crNumberSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&fromDate=${details?.fromDate}&toDate=${details?.toDate}` : ""}`);
+    const uploadExcel = (file) => api.patch(`${CSL}/file-upload`, file);
     const getExcelDownload = (id) => api.get(`${KITTING}/download-file/${id}`);
     const alreadyCrUploaded = (file) => api.post(`${KITTING}/validateCrNumber`, file);
 

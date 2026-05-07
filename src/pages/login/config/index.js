@@ -7,7 +7,7 @@ export const loginForm = [
         placeholder: 'Enter your user name'
     },
     {
-        key: 'passWord',
+        key: 'password',
         id: 'passWord',
         type: 'password',
         label: 'Password',
@@ -32,15 +32,15 @@ export const resetForm = [
         placeholder: 'Enter your User Number',
     },
     {
-        key: 'oldPassWord',
-        id: 'oldPassWord',
+        key: 'oldPassword',
+        id: 'oldPassword',
         type: 'text',
         label: 'Old Password',
         placeholder: 'Enter your Old Password',
     },
     {
-        key: 'newPassWord',
-        id: 'newPassWord',
+        key: 'newPassword',
+        id: 'newPassword',
         type: 'password',
         label: 'New Password',
         placeholder: 'Enter your New Password',
@@ -61,6 +61,6 @@ export const signInInitialValues = {
 
 export const resetInitialValues = {
     mobileNumber: '',
-    oldPassWord: '',
-    newPassWord: ''
+    oldPassword: '',
+    newPassword: ''
 };

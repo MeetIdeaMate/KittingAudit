@@ -102,14 +102,14 @@ export const Login = () => {
     });
 
     const handleResetSubmit = async (values) => {
-        if (values.oldPassWord === values.newPassWord) {
+        if (values.oldPassword === values.newPassWord) {
             showToast.error("The new password cannot be the same as the old password.")
             return;
         }
         try {
             const response = await api.put(`${USER}/changePwd`, {
-                newPassword: values?.newPassWord,
-                oldPassWord: values?.oldPassWord,
+                newPassword: values?.newPassword,
+                oldPassword: values?.oldPassword,
                 userName: values?.mobileNumber,
             },
                 {
@@ -132,7 +132,7 @@ export const Login = () => {
 
     const validationSchema = Yup.object().shape({
         userName: Yup.string().required(""),
-        passWord: Yup.string().required(""),
+        password: Yup.string().required(""),
     });
 
     useEffect(() => {
