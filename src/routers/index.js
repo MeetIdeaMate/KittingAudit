@@ -1,9 +1,12 @@
 import { ConfigProvider } from "antd";
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { Dashboard, ExcelUpload, Kitting, Login } from "../pages";
+import { Dashboard, Login } from "../pages";
 import LayoutComponent from "../pages/main/layout";
 import { User } from "../pages/main/User";
+import CSLUpload from "../pages/main/CSLUpload";
+import SOBUpload from "../pages/main/SOBUpload";
+import KabanUpload from "../pages/main/KabanUpload";
 
 export const RouterNavigation = () => {
 
@@ -38,8 +41,10 @@ export const RouterNavigation = () => {
             {authenticatedStorage ? (
                 <Routes>
                     <Route path="/" element={<LayoutComponent />}>
-                        <Route path="/ExcelUpload" element={<ExcelUpload />} />
-                        <Route path="/Kitting" element={<Kitting />} />
+                        <Route path="/CSLUpload" element={<CSLUpload />}/>
+                        <Route path="/SOBUpload" element={<SOBUpload />}/>
+                        <Route path="/KabanUpload" element={<KabanUpload />}/>
+                        {/* <Route path="/Kitting" element={<Kitting />} /> */}
                         <Route path="/Dashboard" element={<Dashboard />} />
                         <Route path="/User" element={<User/>}/>
                     </Route>

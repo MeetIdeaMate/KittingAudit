@@ -21,8 +21,10 @@
 // ];
 export const KbMenus = () => [
     { MenuName: 'Dashboard', subMenu: [] },
-    { MenuName: 'ExcelUpload', subMenu: [] },
-    { MenuName: 'Kitting', subMenu: [] },
+    { MenuName: 'CSLUpload', subMenu: [] },
+    { MenuName: 'SOBUpload', subMenu: [] },
+    { MenuName: 'KabanUpload', subMenu: [] },
+    // { MenuName: 'Kitting', subMenu: [] },
     { MenuName: 'Download', subMenu: [] },
     { MenuName: 'User', subMenu: [] },
     {

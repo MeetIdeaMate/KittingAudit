@@ -6,7 +6,6 @@ import userProfile from "./user-profile.svg";
 import Notification from "./notification.svg";
 import emptyImageGray from "./empty-img-gray.svg";
 import icn_Kitting from "./icn_Kitting.svg";
-import icn_ExcelUpload from "./icn_ExcelUpload.svg";
 import excelFileUpload from "./excelUploadBox.svg"
 import printer from "./printer.svg";
 import exclamationCircle from "./ExclamationCircle.svg";
@@ -29,6 +28,9 @@ import reset from "./reset.svg";
 import statuChange from "./statuschange.svg";
 import flotButton from "./DcInput.svg";
 import otislogoPdf from "./otisLogoPdf.png";
+import icn_CSLUpload from "./icn_ExcelUploadIcon.svg";
+import icn_SOBUpload from "./icn_ExcelUploadIcon.svg";
+import icn_KabanUpload from "./icn_ExcelUploadIcon.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
     TechLambdasLogo,
@@ -64,7 +66,9 @@ export {
 export const sideMenuIcon = {
    logout,
    icn_Kitting,
-   icn_ExcelUpload,
    icn_Dashboard,
-   icn_User
+   icn_User,
+   icn_CSLUpload,
+   icn_SOBUpload,
+   icn_KabanUpload
 };

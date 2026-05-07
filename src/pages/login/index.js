@@ -57,8 +57,10 @@ export const Login = () => {
                     sessionStorage.setItem("_ac", data.token);
                     const accessData = [
                         { menuName: "Dashboard", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
-                        { menuName: "ExcelUpload", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
-                        { menuName: "Kitting", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        { menuName: "CSLUpload", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        { menuName: "SOBUpload", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        { menuName: "KabanUpload", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        // { menuName: "Kitting", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         { menuName: "User", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                     ];
                     sessionStorage.setItem("access", JSON.stringify(accessData));

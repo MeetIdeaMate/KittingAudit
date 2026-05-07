@@ -20,6 +20,7 @@ import UiLoadingSpinner from "./UiLoadingSpinner";
 import UiAccordian from "./UiAccordian";
 import UiDoughnutChart from "./UiDoughnutChart";
 import UiDecimalNumber from "./UiDecimalNumber";
+import ExcelUploadLayout from "./ExcelUploadScreen";
 export {
     UiTextBox,
     UiFormWrapper,
@@ -42,5 +43,6 @@ export {
     UiLoadingSpinner,
     UiAccordian,
     UiDoughnutChart,
-    UiDecimalNumber
+    UiDecimalNumber,
+    ExcelUploadLayout
 };

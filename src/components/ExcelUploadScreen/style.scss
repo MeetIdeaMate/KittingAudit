@@ -1,0 +1,114 @@
+.excel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.excel-title-box{
+  display: flex;
+  align-items: center;
+}
+
+.excel-header h3 {
+  margin: 0;
+}
+
+.excel-header-controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.excel-container {
+  display: flex;
+  gap: 10px;
+  height: calc(100vh - 100px);
+}
+
+.excel-left {
+  width: 30%;
+  border-right: 1px solid #ccc;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.submit-area {
+  margin-top: auto;
+  position: sticky;
+  bottom: 0;
+  padding: 5px 0;
+}
+
+.excel-right {
+  width: 70%;
+  height: 100%;
+}
+
+.status-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.excel-title-box {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.status-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.excel-container,
+.excel-header-controls,
+.status-wrapper {
+  transition: all 0.2s ease;
+}
+
+.ant-table-expanded-row > td {
+  padding: 0 !important;
+}
+
+@media (max-width: 1024px) {
+  .excel-container {
+    flex-direction: column;
+  }
+  .excel-left,
+  .excel-right {
+    width: 100%;
+    height: auto;
+  }
+}
+
+@media (max-width: 600px) {
+  .excel-header-controls {
+    flex-direction: column;
+    width: 100%;
+  }
+  .excel-header h3 {
+    margin-bottom: 10px;
+  }
+  .status-wrapper {
+    justify-content: center;
+    gap: 8px;
+  }
+  .excel-title-box {
+    font-size: 13px;
+  }
+  .status-dot {
+    width: 16px;
+    height: 16px;
+  }
+}
