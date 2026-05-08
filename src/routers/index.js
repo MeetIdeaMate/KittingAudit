@@ -7,6 +7,8 @@ import { User } from "../pages/main/User";
 import CSLUpload from "../pages/main/CSLUpload";
 import SOBUpload from "../pages/main/SOBUpload";
 import KabanUpload from "../pages/main/KabanUpload";
+import { AuditScreen } from "../pages/main/Audit";
+import { ReportScreen } from "../pages/main/reports";
 
 export const RouterNavigation = () => {
 
@@ -41,12 +43,14 @@ export const RouterNavigation = () => {
             {authenticatedStorage ? (
                 <Routes>
                     <Route path="/" element={<LayoutComponent />}>
-                        <Route path="/CSLUpload" element={<CSLUpload />}/>
-                        <Route path="/SOBUpload" element={<SOBUpload />}/>
-                        <Route path="/KabanUpload" element={<KabanUpload />}/>
+                        <Route path="/CSLUpload" element={<CSLUpload />} />
+                        <Route path="/SOBUpload" element={<SOBUpload />} />
+                        <Route path="/KabanUpload" element={<KabanUpload />} />
                         {/* <Route path="/Kitting" element={<Kitting />} /> */}
                         <Route path="/Dashboard" element={<Dashboard />} />
-                        <Route path="/User" element={<User/>}/>
+                        <Route path="/User" element={<User />} />
+                        <Route path="/Audit" element={<AuditScreen />} />
+                        <Route path="/Reports" element={<ReportScreen />} />
                     </Route>
                 </Routes>
             ) : (
