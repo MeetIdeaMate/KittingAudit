@@ -1,0 +1,37 @@
+# Autodeploy barcodekitting 
+
+name: Deploy kittingaudit
+
+on:
+  push:
+    branches:
+      - deploy/kitting-audit-auto-deploy
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.11.1
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build React App
+        run: |
+          export NODE_OPTIONS=--max_old_space_size=4096
+          export GENERATE_SOURCEMAP=false
+          CI=false npm run build
+
+      - name: Deploy to Firebase
+        uses: docker://w9jds/firebase-action:v14.9.0
+        with:
+          args: deploy --only hosting --project kitting-audit
+        env:
+          FIREBASE_TOKEN:  ${{ secrets.KITTING_AUDIT_TOKEN}}
