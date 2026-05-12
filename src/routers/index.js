@@ -9,6 +9,7 @@ import SOBUpload from "../pages/main/SOBUpload";
 import KabanUpload from "../pages/main/KabanUpload";
 import { AuditScreen } from "../pages/main/Audit";
 import { ReportScreen } from "../pages/main/reports";
+import AuditDashboard from "../pages/main/Dashboard/auditDashBoard";
 
 export const RouterNavigation = () => {
 
@@ -45,9 +46,9 @@ export const RouterNavigation = () => {
                     <Route path="/" element={<LayoutComponent />}>
                         <Route path="/CSLUpload" element={<CSLUpload />} />
                         <Route path="/SOBUpload" element={<SOBUpload />} />
-                        <Route path="/KabanUpload" element={<KabanUpload />} />
+                        <Route path="/KanbanUpload" element={<KabanUpload />} />
                         {/* <Route path="/Kitting" element={<Kitting />} /> */}
-                        <Route path="/Dashboard" element={<Dashboard />} />
+                        <Route path="/Dashboard" element={<AuditDashboard />} />
                         <Route path="/User" element={<User />} />
                         <Route path="/Audit" element={<AuditScreen />} />
                         <Route path="/Reports" element={<ReportScreen />} />

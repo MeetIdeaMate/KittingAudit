@@ -23,7 +23,7 @@ export const KbMenus = () => [
     { MenuName: 'Dashboard', subMenu: [] },
     { MenuName: 'CSLUpload', subMenu: [] },
     { MenuName: 'SOBUpload', subMenu: [] },
-    { MenuName: 'KabanUpload', subMenu: [] },
+    { MenuName: 'KanbanUpload', subMenu: [] },
     // { MenuName: 'Kitting', subMenu: [] },
     { MenuName: 'Download', subMenu: [] },
     { MenuName: 'Audit', subMenu: [] },

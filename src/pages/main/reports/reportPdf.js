@@ -1,7 +1,8 @@
+import dayjs from "dayjs";
 import { tl_pdf_logo } from "../../../assets/images";
 import "./style.scss";
 
-export const DispatchPrint = ({ tableData = [] }) => {
+export const DispatchPrint = ({ tableData = [], filters = {} }) => {
 
     return (
         <div className="dispatch-print">
@@ -15,12 +16,12 @@ export const DispatchPrint = ({ tableData = [] }) => {
                 </div>
 
                 <div className="dispatch-print-date">
-                    Date : 01-04-2026 To 30-04-2026
+                    Date : {dayjs().format("DD-MM-YYYY")}
                 </div>
 
             </div>
             <div className="dispatch-print-title">
-                Dispatch
+                {filters?.reportType}
             </div>
             <table className="dispatch-print-table">
                 <thead>
@@ -39,19 +40,19 @@ export const DispatchPrint = ({ tableData = [] }) => {
                 </thead>
                 <tbody>
                     {
-                        tableData?.map((item, index) => (
+                        tableData?.content?.map((item, index) => (
                             <tr key={item?.key || index}>
 
                                 <td>{index + 1}</td>
-                                <td>{item?.crDate}</td>
-                                <td>{item?.dispatchDate}</td>
-                                <td>{item?.kanbanDate}</td>
-                                <td>{item?.contractNo}</td>
-                                <td>{item?.partNumber}</td>
-                                <td>{item?.weekNo}</td>
-                                <td>{item?.bomQty}</td>
-                                <td>{item?.totalQty}</td>
-                                <td>{item?.description}</td>
+                                <td>{item?.date || "-"}</td>
+                                <td>{item?.dispatchDate || "-"}</td>
+                                <td>{item?.kanbanDate || "-"}</td>
+                                <td>{item?.crNumber || "-"}</td>
+                                <td>{item?.parentPartNumber || "-"}</td>
+                                <td>{item?.weekNo || "-"}</td>
+                                <td>{item?.bomQty || "-"}</td>
+                                <td>{item?.totalQty || "-"}</td>
+                                <td>{item?.description || "-"}</td>
 
                             </tr>
                         ))

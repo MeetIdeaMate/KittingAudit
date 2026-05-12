@@ -1,66 +1,63 @@
+import dayjs from "dayjs";
+
 export const REPORTS_TABLE_COLUMNS = [
     {
         title: "S.No",
         dataIndex: "sNo",
         key: "sNo",
         width: 80,
-        align: "center",
+        render: (_, tableRecord, index) => index + 1,
     },
     {
         title: "CR Date",
         dataIndex: "crDate",
         key: "crDate",
         width: 140,
-        align: "center",
+        render: (_, tableRecord,) => tableRecord?.date ? dayjs(tableRecord?.date).format("DD-MM-YYYY") : "-"
     },
     {
         title: "Dispatch Date",
         dataIndex: "dispatchDate",
         key: "dispatchDate",
         width: 150,
-        align: "center",
+        render: (_, tableRecord,) => tableRecord?.dispatchDate ? dayjs(tableRecord?.dispatchDate).format("DD-MM-YYYY") : "-"
     },
     {
         title: "Kanban Date",
         dataIndex: "kanbanDate",
         key: "kanbanDate",
         width: 150,
-        align: "center",
+        render: (_, tableRecord,) => tableRecord?.kanbanDate ? dayjs(tableRecord?.kanbanDate).format("DD-MM-YYYY") : "-"
     },
     {
         title: "Contract No",
-        dataIndex: "contractNo",
-        key: "contractNo",
+        dataIndex: "crNumber",
+        key: "crNumber",
         width: 180,
-        align: "center",
     },
     {
         title: "Part Number",
-        dataIndex: "partNumber",
-        key: "partNumber",
+        dataIndex: "parentPartNumber",
+        key: "parentPartNumber",
         width: 220,
-        align: "center",
     },
     {
         title: "Week No",
         dataIndex: "weekNo",
         key: "weekNo",
         width: 120,
-        align: "center",
     },
     {
         title: "BOM Qty",
         dataIndex: "bomQty",
         key: "bomQty",
         width: 100,
-        align: "center",
     },
     {
         title: "Total Qty",
         dataIndex: "totalQty",
         key: "totalQty",
         width: 100,
-        align: "center",
     },
     {
         title: "Description",
@@ -70,89 +67,47 @@ export const REPORTS_TABLE_COLUMNS = [
     },
 ];
 
-export const dataSource = [
+export const REPORT_CHILD_COLUMN = [
     {
-        key: "1",
-        sNo: 1,
-        crDate: "29-04-2026",
-        dispatchDate: "29-04-2026",
-        kanbanDate: "29-04-2026",
-        contractNo: "CR-3456",
-        partNumber: "RFIM1I.0-52IS5374",
-        weekNo: "202638A",
-        bomQty: 1,
-        totalQty: 1,
-        description: "False Ceiling",
+        title: "S.No",
+        dataIndex: "sNo",
+        key: "sNo",
+        width: 80,
+        render: (_, tableRecord, index) => index + 1,
+    },
+    {
+        title: "Part No",
+        dataIndex: "partNumber",
+        key: "partNumber",
+        width: 250,
+    },
+    {
+        title: "Qty",
+        dataIndex: "quantity",
+        key: "quantity",
+        width: 80,
+    },
+    {
+        title: "Disciption",
+        dataIndex: "description",
+        key: "description",
+    },
+];
 
-        children: [
-            {
-                key: "1-1",
-                sNo: "1.1",
-                crDate: "29-04-2026",
-                dispatchDate: "29-04-2026",
-                kanbanDate: "29-04-2026",
-                contractNo: "CR-3456-A",
-                partNumber: "RFIM1I.0-52IS5374-A",
-                weekNo: "202638A",
-                bomQty: 2,
-                totalQty: 2,
-                description: "False Ceiling Child Row 1",
-            },
-            {
-                key: "1-2",
-                sNo: "1.2",
-                crDate: "30-04-2026",
-                dispatchDate: "30-04-2026",
-                kanbanDate: "30-04-2026",
-                contractNo: "CR-3456-B",
-                partNumber: "RFIM1I.0-52IS5374-B",
-                weekNo: "202638B",
-                bomQty: 3,
-                totalQty: 3,
-                description: "False Ceiling Child Row 2",
-            },
-        ],
+export const reportTypeOptions = [
+    {
+        key: "NOT_AUDIT",
+        value: "NOT_AUDIT",
+        label: "Not Audit",
     },
     {
-        key: "2",
-        sNo: 2,
-        crDate: "01-05-2026",
-        dispatchDate: "30-04-2026",
-        kanbanDate: "30-04-2026",
-        contractNo: "CR-3465",
-        partNumber: "RFIM2.0-52IS5347",
-        weekNo: "202638A",
-        bomQty: 1,
-        totalQty: 1,
-        description: "PACKAGING–11.0FM",
-
-        children: [
-            {
-                key: "2-1",
-                sNo: "2.1",
-                crDate: "01-05-2026",
-                dispatchDate: "01-05-2026",
-                kanbanDate: "01-05-2026",
-                contractNo: "CR-3465-A",
-                partNumber: "RFIM2.0-52IS5347-A",
-                weekNo: "202638A",
-                bomQty: 5,
-                totalQty: 5,
-                description: "Packaging Child",
-            },
-        ],
+        key: "AUDIT",
+        value: "AUDIT",
+        label: "Audit",
     },
     {
-        key: "3",
-        sNo: 3,
-        crDate: "30-04-2026",
-        dispatchDate: "02-05-2026",
-        kanbanDate: "01-05-2026",
-        contractNo: "CR-2345",
-        partNumber: "RFIM1I.0-52IS5374",
-        weekNo: "202638A",
-        bomQty: 1,
-        totalQty: 1,
-        description: "PACKAGING–GREEN CONTRACT",
-    },
+        key: "DISPATCH",
+        value: "DISPATCH",
+        label: "Dispatch",
+    }
 ];

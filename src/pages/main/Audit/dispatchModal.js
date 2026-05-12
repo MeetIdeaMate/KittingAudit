@@ -8,12 +8,10 @@ export const DispatchModal = ({ open, handleClose }) => {
 
     const [dispatchDate, setDispatchDate] = useState(dayjs());
 
-    const handleMoveSubmit = () => { };
-
     return <div>
         <UiModal
             open={open}
-            onCancel={() => handleClose(false)}
+            onCancel={() => handleClose(false, null)}
             footer={null}
         >
             <div style={{ textAlign: "center" }}>
@@ -46,14 +44,14 @@ export const DispatchModal = ({ open, handleClose }) => {
             >
                 <UiButton
                     style={{ width: "90px" }}
-                    onClick={() => handleClose(false)}
+                    onClick={() => handleClose(false, null)}
                 >
                     No
                 </UiButton>
                 <UiButton
                     type="primary"
                     disabled={!dispatchDate}
-                    onClick={handleMoveSubmit}
+                    onClick={() => handleClose(true, dispatchDate)}
                     style={{ marginRight: "10px", width: "90px" }}
                 >
                     Yes

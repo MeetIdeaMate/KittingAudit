@@ -1,47 +1,8 @@
 import React from "react";
 import "./style.scss";
 import { tl_pdf_logo } from "../../../assets/images";
-
-const tableData = [
-    {
-        sno: 1,
-        material: "NAA5701AP4",
-        weekNo: "202538A",
-        quantity: 50,
-    },
-    {
-        sno: 2,
-        material: "NPK5710C014",
-        weekNo: "202538A",
-        quantity: 10,
-    },
-    {
-        sno: 3,
-        material: "NAA5701AP4",
-        weekNo: "202538A",
-        quantity: 10,
-    },
-    {
-        sno: 4,
-        material: "NAA368ZP9",
-        weekNo: "202538A",
-        quantity: 10,
-    },
-    {
-        sno: 5,
-        material: "NAA27076KX3",
-        weekNo: "202538A",
-        quantity: 5,
-    },
-    {
-        sno: 6,
-        material: "NAA27076KX3",
-        weekNo: "202538A",
-        quantity: 5,
-    },
-];
-
-const AuditReport = () => {
+import dayjs from "dayjs";
+const AuditReport = ({ selectedRecord }) => {
     return (
         <div className="audit-report">
             <div className="report-header">
@@ -52,7 +13,7 @@ const AuditReport = () => {
                 <h2>Contract - Wise Packed Audit Report</h2>
 
                 <p>
-                    Contract No : <strong>52N1X097-MFIM8.1</strong>
+                    Contract No : <strong>{selectedRecord?.parentPartNumber || "-"}</strong>
                 </p>
             </div>
             <div className="table-wrapper">
@@ -71,11 +32,11 @@ const AuditReport = () => {
                     </thead>
 
                     <tbody>
-                        {tableData.map((item) => (
-                            <tr key={item.sno}>
-                                <td>{item.sno}</td>
-                                <td>{item.material}</td>
-                                <td>{item.weekNo}</td>
+                        {selectedRecord?.partDetails?.map((item, index) => (
+                            <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{selectedRecord?.partNumber}</td>
+                                <td>{selectedRecord?.weekNo}</td>
                                 <td>{item.quantity}</td>
                                 <td></td>
                                 <td></td>
@@ -90,7 +51,7 @@ const AuditReport = () => {
                 <div className="info-box">
                     <div className="info-row">
                         <span>Contract Packed Date</span>
-                        <span>29-04-2026</span>
+                        <span>{selectedRecord?.date ? dayjs(selectedRecord?.date).format("DD-MM-YYYY") : dayjs().format("DD-MM-YYYY")}</span>
                     </div>
                     <div className="info-row">
                         <span>No of Boxes</span>

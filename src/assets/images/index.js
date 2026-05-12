@@ -30,7 +30,7 @@ import flotButton from "./DcInput.svg";
 import otislogoPdf from "./otisLogoPdf.png";
 import icn_CSLUpload from "./icn_ExcelUploadIcon.svg";
 import icn_SOBUpload from "./icn_ExcelUploadIcon.svg";
-import icn_KabanUpload from "./icn_ExcelUploadIcon.svg";
+import icn_KanbanUpload from "./icn_ExcelUploadIcon.svg";
 import icn_Audit from "./icn_Audit.svg";
 import audit_print_icon from "./audit_print_icon.svg";
 import disatch_icon from "./disatch_icon.svg";
@@ -78,7 +78,7 @@ export const sideMenuIcon = {
     icn_User,
     icn_CSLUpload,
     icn_SOBUpload,
-    icn_KabanUpload,
+    icn_KanbanUpload,
     icn_Audit,
     icn_Reports
 };

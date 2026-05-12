@@ -1,11 +1,13 @@
+import dayjs from "dayjs";
 import { audit_print_icon, disatch_icon } from "../../../assets/images";
 
-export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handleDispatch }) => [
+export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
     {
         title: "S.No",
         dataIndex: "sNo",
         key: "sNo",
-        width: 70,
+        width: 50,
+        render: (_, rec, index) => index + 1,
     },
     {
         title: "Part Number",
@@ -19,8 +21,8 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handleDispatch }) => [
     },
     {
         title: "Qty",
-        dataIndex: "qty",
-        key: "qty",
+        dataIndex: "quantity",
+        key: "quantity",
         width: 80,
     },
     {
@@ -32,98 +34,29 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handleDispatch }) => [
         title: "Audit",
         dataIndex: "audit",
         key: "audit",
-        render: (_, auditRecord) => auditRecord?.isParent ? <img style={{ cursor: "pointer" }} src={audit_print_icon} onClick={() => handlePrintAudit(auditRecord)} alt="" /> : "-",
+        render: (_, auditRecord) => auditRecord?.isParentPart ? <img style={{ cursor: "pointer" }} src={audit_print_icon} onClick={() => handlePrintAudit(auditRecord, "AUDIT")} alt="" /> : "-",
     },
     {
         title: "Date",
         dataIndex: "date",
         key: "date",
+        render: (_, auditRecord) => <p>{auditRecord?.auditDate ? dayjs(auditRecord?.auditDate).format("DD-MM-YYYY") : "-"}</p>
     },
     {
         title: "Dispatch",
         dataIndex: "dispatch",
         key: "dispatch",
-        render: (_, dispatchRecord) => dispatchRecord?.isParent ? <img style={{ cursor: "pointer" }} onClick={() => handleDispatch(dispatchRecord)} src={disatch_icon} alt="" /> : "-",
+        render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
     {
         title: "Kanban date",
         dataIndex: "kanbanDate",
         key: "kanbanDate",
+        render: (_, kanbanRecord) => <p>{kanbanRecord?.kanbanDate ? dayjs(kanbanRecord?.kanbanDate).format("DD-MM-YYYY") : "-"}</p>
     },
     {
         title: "BOM Qty",
         dataIndex: "bomQty",
         key: "bomQty",
-    },
-];
-
-export const dataSource = [
-    {
-        key: 1,
-        sNo: 1,
-        partNumber: "52NIK373-LMFIM4.4",
-        weekNo: "202538A",
-        qty: 1,
-        description: "Platform & Accessories",
-        date: "29-04-2026",
-        kanbanDate: "05-05-2026",
-        bomQty: "",
-        isParent: true,
-    },
-    {
-        key: 2,
-        sNo: 2,
-        partNumber: "NAA5709AF4",
-        weekNo: "202538A",
-        qty: 1,
-        description: "Kit for Panel/Fascia & Platform Sundries",
-        audit: "",
-        date: "",
-        dispatch: "",
-        kanbanDate: "",
-        bomQty: "",
-        isParent: false,
-    },
-    {
-        key: 3,
-        sNo: 3,
-        partNumber: "NAA281Q2",
-        weekNo: "202538A",
-        qty: 1,
-        description: "TOE GUARD, CLD",
-        audit: "",
-        date: "",
-        dispatch: "",
-        kanbanDate: "",
-        bomQty: "",
-        isParent: false,
-    },
-    {
-        key: 4,
-        sNo: 4,
-        partNumber: "NAA27076C3",
-        weekNo: "202538A",
-        qty: 10,
-        description: "KIT FOR T.C MOUNTING",
-        audit: "",
-        date: "",
-        dispatch: "",
-        kanbanDate: "",
-        bomQty: "",
-        isParent: false,
-    },
-    {
-        key: 5,
-        sNo: 5,
-        partNumber: "NAA24240GE51",
-        weekNo: "202538A",
-        qty: 1,
-        description: "ASSY PLATFORM-10D",
-        audit: "",
-        date: "",
-        dispatch: "",
-        kanbanDate: "",
-        bomQty: "",
-        isParent: false,
     },
 ];

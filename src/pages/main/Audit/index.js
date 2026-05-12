@@ -1,25 +1,90 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { UiCounterBatch, UiSelect, UiTable } from "../../../components"
-import { AUDIT_TABLE_COLUMN, dataSource } from "./config";
+import { AUDIT_TABLE_COLUMN, } from "./config";
 import AuditReport from "./auditPrint";
 import { useReactToPrint } from "react-to-print";
 import { DispatchModal } from "./dispatchModal";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import * as api from "../../../actions";
+import { CSLBASEURL } from "../../../apiservices/endpoints";
+import { useDispatch } from "react-redux";
+import { loaderReducer } from "../../../reducers/loader.reducer";
+import { showToast } from "../../../components/UiToastNotification";
+import dayjs from "dayjs";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
-        <AuditReport />
+        <AuditReport selectedRecord={props?.selectedRecord} />
     </div>
 ));
 
 export const AuditScreen = () => {
 
     const printRef = useRef();
+    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
+    const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
 
-    const [pageSize, setPageSize] = useState({ page: 0, size: 25, });
     const [isOpenDispatch, setIsOpenDispatch] = useState(false);
+    const [filters, setFilters] = useState({ crNumber: "", finNmber: "" });
+    const [cslSource, setCslSource] = useState({ crNumber: [], finNmber: [] });
+    const [auditSource, setAuditSource] = useState([]);
+    const [currentStatus, setCurrentStatus] = useState("");
+    const [selectedRecord, setSelectedRecord] = useState({});
+
+    const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
+        () => api.get(`${CSLBASEURL}/get_csl_details${filters?.crNumber ? `?crNumber=${filters?.crNumber}` : ""}`), {
+        enabled: true,
+        refetchOnWindowFocus: false,
+        onSuccess: crNumberResponse => {
+            if (crNumberResponse?.statusCode === 200) {
+                const cslDetails = crNumberResponse?.result?.cslDetails || [];
+                const source = cslDetails?.map(csl => ({ key: csl, value: csl }));
+                setCslSource(prev => ({ crNumber: !filters?.crNumber ? source : prev?.crNumber, finNmber: filters?.crNumber ? source : [] }));
+                if (!filters?.crNumber) {
+                    setFilters(prev => ({ ...prev, crNumber: cslDetails?.[0] }));
+                }
+            } else {
+                showToast.error("Error", crNumberResponse?.response?.data?.error?.message);
+            }
+        },
+    });
+
+    const { isFetching: isFetchingGetAllAudit, refetch: refetchGetAllAudit } = useQuery(["GET_ALL_AUDIT_DETAILS", ""],
+        () => api.get(`${CSLBASEURL}/audit_details?crNumber=${filters?.crNumber}${filters?.finNmber ? `&finNumber=${filters?.finNmber}` : ""}`), {
+        enabled: false,
+        refetchOnWindowFocus: false,
+        onSuccess: getAllAuditResponse => {
+            if (getAllAuditResponse?.statusCode === 200) {
+                const auditDetails = getAllAuditResponse?.result?.auditDetails || [];
+                const auditMap = auditDetails?.flatMap(mapDetails => [
+                    {
+                        ...mapDetails,
+                        partNumber: mapDetails.parentPartNumber,
+                        isParentPart: true,
+                    },
+                    ...mapDetails.partDetails.map(part => ({
+                        ...part,
+                        parentPartNumber: mapDetails.parentPartNumber,
+                        crNumber: mapDetails.crNumber,
+                        fimNumber: mapDetails.fimNumber,
+                        isParentPart: false
+                    }))
+                ]);
+                setAuditSource(auditMap || []);
+            }
+        },
+    });
 
     const handlePrint = useReactToPrint({
         content: () => printRef.current,
+        onAfterPrint: () => {
+            if (selectedRecord?.status === "NOT_AUDIT") {
+                refetchGetAllAudit();
+            }
+            setSelectedRecord({});
+            setCurrentStatus("");
+        },
         pageStyle: `
     @page {
       size: A4;
@@ -42,17 +107,63 @@ export const AuditScreen = () => {
   `,
     });
 
-    const handlePagination = (pages, size) => {
-        setPageSize({ page: pages - 1, size: size, });
+    const { isFetching: isFetchingAuditUpdate } = useQuery(["UPDATE_AUDIT_STATUS", ""], changeAuditStatus, {
+        enabled: false,
+        refetchOnWindowFocus: false,
+        onSuccess: auditResponse => {
+            if (currentStatus === "AUDIT") {
+                handlePrint();
+            } else {
+                setIsOpenDispatch(false);
+                refetchGetAllAudit();
+                setSelectedRecord({});
+                setCurrentStatus("");
+            }
+        },
+    });
+
+    const handlePrintAudit = (auditRec, status, date) => {
+        setCurrentStatus(status);
+        setSelectedRecord(auditRec);
+        let payload = {
+            date: date ? dayjs(date).toISOString() : dayjs().toISOString(),
+            userId: sessionStorage.getItem("userId"),
+        }
+        if ((status === "AUDIT" && !auditRec?.auditDate) || (status === "DISPATCH" && date)) {
+            payload.status = status;
+            queryClient.prefetchQuery(["UPDATE_AUDIT_STATUS", ""], () => changeAuditStatus(auditRec?.cslDetailInfoId, payload));
+        } else if (status === "DISPATCH") {
+            setIsOpenDispatch(true);
+        }
     };
 
-    const handlePrintAudit = auditRec => {
-        handlePrint();
+    const handleFiltersChange = (fileldalue, fieldName) => {
+        setFilters(prev => ({ ...prev, [fieldName]: fileldalue, ...(fieldName === "crNumber" ? { finNmber: "" } : {}) }));
     };
 
-    const handleDispatch = dispatchRec => {
-        setIsOpenDispatch(true);
-    };
+    useEffect(() => {
+        if (currentStatus === "AUDIT" && selectedRecord?.status !== "NOT_AUDIT") {
+            handlePrint();
+        }
+    }, [currentStatus, selectedRecord?.status]);
+
+    useEffect(() => {
+        if (filters?.crNumber) {
+            refetchGetAllAudit();
+        }
+    }, [filters, refetchGetAllAudit]);
+
+    useEffect(() => {
+        if (filters?.crNumber && cslSource?.crNumber?.length > 0) {
+            refetchCRNumbers();
+        }
+    }, [filters?.crNumber, cslSource?.crNumber?.length, refetchCRNumbers]);
+
+    useEffect(() => {
+        let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;
+        dispatch(loaderReducer(isLoading));
+    }, [dispatch, isFetchingCRNumbers, isFetchingGetAllAudit, isFetchingAuditUpdate]);
+
 
     return <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -62,33 +173,42 @@ export const AuditScreen = () => {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <UiSelect
                     isStyle={true}
+                    allowClear={false}
+                    options={cslSource?.crNumber || []}
                     style={{ width: "150px" }}
+                    value={filters?.crNumber || null}
+                    onChange={fileldalue => handleFiltersChange(fileldalue, "crNumber")}
                 // placeholder="Search CR "
                 />
                 <UiSelect
                     isStyle={true}
+                    options={cslSource?.finNmber || []}
                     style={{ width: "150px" }}
+                    value={filters?.finNmber || null}
+                    onChange={fileldalue => handleFiltersChange(fileldalue, "finNmber")}
                 // placeholder="Search user"
                 />
             </div>
         </div>
         <UiTable
-            columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, handleDispatch })}
-            dataSource={dataSource}
-            pagination={{
-                pageSize: pageSize?.size,
-                current: pageSize?.page + 1,
-                pageSizeOptions: [25, 50, 75, 100],
-                showSizeChanger: true,
-                // total: allUsers?.result?.usersWithPage?.totalElements,
-                onChange: (page, size) => handlePagination(page, size),
-            }}
+            columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, })}
+            dataSource={auditSource}
+            rowClassName={(record) =>
+                record?.isParentPart ? "parent-part-row" : ""
+            }
         />
         <div style={{ display: "none", width: "100%" }}>
             <PrintAuditPDF
+                selectedRecord={selectedRecord}
                 ref={printRef}
             />
         </div>
-        {isOpenDispatch && <DispatchModal open={isOpenDispatch} handleClose={() => setIsOpenDispatch(false)} />}
+        {isOpenDispatch && <DispatchModal open={isOpenDispatch} handleClose={(isCheck, date) => {
+            if (isCheck && date) {
+                handlePrintAudit(selectedRecord, currentStatus, date);
+            } else {
+                setIsOpenDispatch(false);
+            }
+        }} />}
     </div>
 }

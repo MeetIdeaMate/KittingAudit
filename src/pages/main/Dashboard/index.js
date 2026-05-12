@@ -114,7 +114,7 @@ const Dashboard = () => {
                 setDate({ fromDate: fromDate, toDate: toDate, date: date });
             }
             setSelectedCrNumber("");
-            setCrNumberSummary((prev)=>({...prev,fimNumberSummaryList:[]}));
+            setCrNumberSummary((prev) => ({ ...prev, fimNumberSummaryList: [] }));
         }
         else {
             setDate({ fromDate: "", toDate: "" });

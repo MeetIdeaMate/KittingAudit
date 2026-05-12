@@ -69,7 +69,7 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
             >
                 <h3 style={{ textAlign: "center", margin: 0 }}><img src={excelFileUpload} alt="" /></h3>
                 <p style={{ margin: 0, fontWeight: 400 }}>
-                    {isDragging ? "Drop your Excel file…" : "Click or drag file to this area to upload your Excel"}
+                    {"Click or drag file to this area to upload your Excel"}
                 </p>
                 <p style={{ margin: 0, opacity: 0.3 }}>
                     Only .xlsx / .xls supported

@@ -1,6 +1,6 @@
 import { ExcelUploadLayout } from "../../../components";
 import * as api from "../../../actions"
-import { KITTING } from "../../../apiservices/endpoints";
+import { SOCBASEURL } from "../../../apiservices/endpoints";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -21,16 +21,16 @@ const SOBUpload = () => {
     const [selectedDetails, setSelectedDetails] = useState({});
     const [isOpen, setIsOpen] = useState({ isOpenFindExistCr: false });
 
-    const getAllCrExcels = (details) => api.get(`${KITTING}/get-by-page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&commonSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&fromDate=${details?.fromDate}&toDate=${details?.toDate}` : ""}`);
-    const uploadExcel = (file) => api.patch(`${KITTING}/file-upload`, file);
-    const getExcelDownload = (id) => api.get(`${KITTING}/download-file/${id}`);
-    const alreadyCrUploaded = (file) => api.post(`${KITTING}/validateCrNumber`, file);
+    const getAllCrExcels = (details) => api.get(`${SOCBASEURL}/page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&crNumberSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&startDate=${details?.fromDate}&endDate=${details?.toDate}` : ""}`);
+    const uploadExcel = (file) => api.post(`${SOCBASEURL}/file-upload`, file);
+    const getExcelDownload = (id) => api.get(`${SOCBASEURL}/download-file/${id}`);
+    const alreadyCrUploaded = (file) => api.post(`${SOCBASEURL}/validateCrNumber`, file);
 
     const { isFetching: isFetchCrExcel, refetch: fetchAllCrExcels } = useQuery(["", filterValue?.page, filterValue?.size, filterValue?.searchValue, filterValue?.fromDate, filterValue?.toDate], () => getAllCrExcels(filterValue), {
         enabled: Boolean(filterValue?.page || filterValue?.size || filterValue?.searchValue || (filterValue?.fromDate && filterValue?.toDate)),
         onSuccess: (crResponse) => {
             if (crResponse?.statusCode) {
-                setBarCodeKittingAllData(crResponse?.result?.barCodeKittings);
+                setBarCodeKittingAllData(crResponse?.result?.sobDetailResponsePage);
             }
         },
         refetchOnWindowFocus: false,
@@ -77,8 +77,8 @@ const SOBUpload = () => {
         enabled: false,
         onSuccess: (findCrResponse) => {
             if (findCrResponse?.status === 200) {
-                if (findCrResponse?.data?.result?.success?.length > 0) {
-                    setCrExcelDetails((prev) => ({ ...prev, existCrNumbers: findCrResponse?.data?.result?.success }));
+                if (findCrResponse?.data?.result?.crNumberExist?.length > 0) {
+                    setCrExcelDetails((prev) => ({ ...prev, existCrNumbers: findCrResponse?.data?.result?.crNumberExist }));
                     setIsOpen((prev) => ({ ...prev, isOpenFindExistCr: true }));
                 } else {
                     handleSubmit();
@@ -130,7 +130,7 @@ const SOBUpload = () => {
 
     const handleDownloadFile = (details) => {
         setSelectedDetails(details);
-        handleDownload({ url: `${KITTING}/download-file/${details?.fileName}`, name: details?.fileName });
+        handleDownload({ url: `${SOCBASEURL}/download-file/${details?.fileName}`, name: details?.fileName });
     };
 
     const handlePagination = (page, size) => {
