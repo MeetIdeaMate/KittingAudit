@@ -20,8 +20,8 @@ const UiTable = ({
             components={components}
             rowKey={rowKey}
             rowSelection={rowSelection}
+            scroll={{ x: true }}
             {...restProps}
-            scroll={{x: true}}
         />
     );
 };

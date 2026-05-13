@@ -14,7 +14,7 @@ import barcodeIcon from "./barcode-icon.svg";
 import DownArrow from "./downArrow.svg";
 import phone from "./phone.svg";
 import questionCircle from "./questionCircle.svg";
-import icn_Dashboard from"./icn_DashboardIcon.svg";
+import icn_Dashboard from "./icn_DashboardIcon.svg";
 import totalFirmIcon from "./totalFirmIcon.svg";
 import totalQuantityIcon from "./totalQuantityIcon.svg";
 import labeledIcon from "./labeledIcon.svg";
@@ -30,9 +30,17 @@ import flotButton from "./DcInput.svg";
 import otislogoPdf from "./otisLogoPdf.png";
 import icn_CSLUpload from "./icn_ExcelUploadIcon.svg";
 import icn_SOBUpload from "./icn_ExcelUploadIcon.svg";
-import icn_KabanUpload from "./icn_ExcelUploadIcon.svg";
+import icn_KanbanUpload from "./icn_ExcelUploadIcon.svg";
+import icn_Audit from "./icn_Audit.svg";
+import audit_print_icon from "./audit_print_icon.svg";
+import disatch_icon from "./disatch_icon.svg";
+import tl_pdf_logo from "./tl_pdf_logo.svg";
+import icn_Reports from "./icn_Reports.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
+    tl_pdf_logo,
+    disatch_icon,
+    audit_print_icon,
     TechLambdasLogo,
     SignInBG,
     Generateicon,
@@ -64,11 +72,13 @@ export {
 };
 
 export const sideMenuIcon = {
-   logout,
-   icn_Kitting,
-   icn_Dashboard,
-   icn_User,
-   icn_CSLUpload,
-   icn_SOBUpload,
-   icn_KabanUpload
+    logout,
+    icn_Kitting,
+    icn_Dashboard,
+    icn_User,
+    icn_CSLUpload,
+    icn_SOBUpload,
+    icn_KanbanUpload,
+    icn_Audit,
+    icn_Reports
 };
