@@ -9,9 +9,7 @@ const AuditReport = ({ selectedRecord }) => {
                 <div className="logo-section">
                     <img src={tl_pdf_logo} alt="" />
                 </div>
-
                 <h2>Contract - Wise Packed Audit Report</h2>
-
                 <p>
                     Contract No : <strong>{selectedRecord?.parentPartNumber || "-"}</strong>
                 </p>
@@ -30,14 +28,13 @@ const AuditReport = ({ selectedRecord }) => {
                             <th>Remarks</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         {selectedRecord?.partDetails?.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{selectedRecord?.partNumber}</td>
                                 <td>{selectedRecord?.weekNo}</td>
-                                <td>{item.quantity}</td>
+                                <td>{item?.quantity}</td>
                                 <td></td>
                                 <td></td>
                                 <td></td>

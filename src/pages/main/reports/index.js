@@ -96,7 +96,6 @@ export const ReportScreen = () => {
         const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
         const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
         const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
-
         return api.get(`${CSLBASEURL}/report_filter_details?${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
     }, {
         enabled: true,
@@ -115,6 +114,8 @@ export const ReportScreen = () => {
                     partNos: !filters?.partNo ? convertOption(filterDetails?.partNos || []) : prev?.partNos,
                     weekNos: convertOption(filterDetails?.weekNos || []),
                 }));
+            } else {
+                showToast.error("Error", getAllDropdownResponse?.response?.data?.error?.message || getAllDropdownResponse?.response?.data?.error);
             }
         },
     })
@@ -145,7 +146,6 @@ export const ReportScreen = () => {
             size: A4 landscape;
             margin: 8mm;
         }
-
         body {
             margin: 0;
             padding: 0;
@@ -174,7 +174,6 @@ export const ReportScreen = () => {
         dispatch(loaderReducer(isLoading));
     }, [dispatch, isFetchingGetAllReportsPage, isFetchingGetAllReports, isFetchinngGetDropdown]);
 
-
     return (
         <div>
             <div className="flexible-start" style={{ padding: 0, margin: 0 }}>
@@ -182,7 +181,7 @@ export const ReportScreen = () => {
                     Reports
                 </h3>
                 <UiCounterBatch primary>
-                    {tableData?.length || 0}
+                    {tableData?.totalElements || 0}
                 </UiCounterBatch>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", marginBottom: "10px", }} >
@@ -265,12 +264,11 @@ export const ReportScreen = () => {
                             if (expanded) {
                                 setExpandedRowKeys(prev => [
                                     ...prev,
-                                    record.cslDetailInfoId,
+                                    record?.cslDetailInfoId,
                                 ]);
-
                             } else {
                                 setExpandedRowKeys(prev =>
-                                    prev.filter(key => key !== record.cslDetailInfoId)
+                                    prev?.filter(key => key !== record?.cslDetailInfoId)
                                 );
                             }
                         },

@@ -10,7 +10,7 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile, title }) => [
     {
         title: "Excel Name",
         dataIndex: "fileName",
-        render: (_, fileRecord) => fileRecord?.fileName || fileRecord?.filename || "-"
+        render: (_, fileRecord) => fileRecord?.fileName || "-"
     },
     {
         title: "Date",

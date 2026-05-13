@@ -2,9 +2,8 @@ import { useState } from "react";
 import { disatch_icon } from "../../../assets/images"
 import { UiButton, UiDatePicker, UiModal, } from "../../../components"
 import dayjs from "dayjs";
-import * as api from "../../../actions";
 
-export const DispatchModal = ({ open, handleClose }) => {
+export const DispatchModal = ({ open, handleClose, isFetchingAuditUpdate }) => {
 
     const [dispatchDate, setDispatchDate] = useState(dayjs());
 
@@ -49,6 +48,7 @@ export const DispatchModal = ({ open, handleClose }) => {
                     No
                 </UiButton>
                 <UiButton
+                    loading={isFetchingAuditUpdate}
                     type="primary"
                     disabled={!dispatchDate}
                     onClick={() => handleClose(true, dispatchDate)}

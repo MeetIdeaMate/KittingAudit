@@ -60,18 +60,20 @@ export const AuditScreen = () => {
                 const auditMap = auditDetails?.flatMap(mapDetails => [
                     {
                         ...mapDetails,
-                        partNumber: mapDetails.parentPartNumber,
+                        partNumber: mapDetails?.parentPartNumber,
                         isParentPart: true,
                     },
-                    ...mapDetails.partDetails.map(part => ({
+                    ...mapDetails?.partDetails?.map(part => ({
                         ...part,
-                        parentPartNumber: mapDetails.parentPartNumber,
-                        crNumber: mapDetails.crNumber,
-                        fimNumber: mapDetails.fimNumber,
+                        parentPartNumber: mapDetails?.parentPartNumber,
+                        crNumber: mapDetails?.crNumber,
+                        fimNumber: mapDetails?.fimNumber,
                         isParentPart: false
                     }))
                 ]);
                 setAuditSource(auditMap || []);
+            } else {
+                showToast.error("Error", getAllAuditResponse?.response?.data?.error?.message);
             }
         },
     });
@@ -111,13 +113,17 @@ export const AuditScreen = () => {
         enabled: false,
         refetchOnWindowFocus: false,
         onSuccess: auditResponse => {
-            if (currentStatus === "AUDIT") {
-                handlePrint();
+            if (auditResponse?.status === 200) {
+                if (currentStatus === "AUDIT") {
+                    handlePrint();
+                } else {
+                    setIsOpenDispatch(false);
+                    refetchGetAllAudit();
+                    setSelectedRecord({});
+                    setCurrentStatus("");
+                }
             } else {
-                setIsOpenDispatch(false);
-                refetchGetAllAudit();
-                setSelectedRecord({});
-                setCurrentStatus("");
+                showToast.error("Error", auditResponse?.response?.data?.error?.message || auditResponse?.response?.data?.message);
             }
         },
     });
@@ -164,11 +170,10 @@ export const AuditScreen = () => {
         dispatch(loaderReducer(isLoading));
     }, [dispatch, isFetchingCRNumbers, isFetchingGetAllAudit, isFetchingAuditUpdate]);
 
-
     return <div>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div className="flexible-start">
-                <h3>Audit</h3> <UiCounterBatch primary >{0}</UiCounterBatch>
+                <h3>Audit</h3> <UiCounterBatch primary >{auditSource?.length || 0}</UiCounterBatch>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <UiSelect
@@ -178,7 +183,6 @@ export const AuditScreen = () => {
                     style={{ width: "150px" }}
                     value={filters?.crNumber || null}
                     onChange={fileldalue => handleFiltersChange(fileldalue, "crNumber")}
-                // placeholder="Search CR "
                 />
                 <UiSelect
                     isStyle={true}
@@ -186,7 +190,6 @@ export const AuditScreen = () => {
                     style={{ width: "150px" }}
                     value={filters?.finNmber || null}
                     onChange={fileldalue => handleFiltersChange(fileldalue, "finNmber")}
-                // placeholder="Search user"
                 />
             </div>
         </div>
@@ -203,7 +206,7 @@ export const AuditScreen = () => {
                 ref={printRef}
             />
         </div>
-        {isOpenDispatch && <DispatchModal open={isOpenDispatch} handleClose={(isCheck, date) => {
+        {isOpenDispatch && <DispatchModal isFetchingAuditUpdate={isFetchingAuditUpdate} open={isOpenDispatch} handleClose={(isCheck, date) => {
             if (isCheck && date) {
                 handlePrintAudit(selectedRecord, currentStatus, date);
             } else {

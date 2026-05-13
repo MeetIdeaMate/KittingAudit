@@ -3,22 +3,18 @@ import { tl_pdf_logo } from "../../../assets/images";
 import "./style.scss";
 
 export const DispatchPrint = ({ tableData = [], filters = {} }) => {
-
     return (
         <div className="dispatch-print">
             <div className="dispatch-print-header">
-
                 <div className="dispatch-print-company">
                     <img
                         src={tl_pdf_logo}
                         alt="logo"
                     />
                 </div>
-
                 <div className="dispatch-print-date">
                     Date : {dayjs().format("DD-MM-YYYY")}
                 </div>
-
             </div>
             <div className="dispatch-print-title">
                 {filters?.reportType}
@@ -42,7 +38,6 @@ export const DispatchPrint = ({ tableData = [], filters = {} }) => {
                     {
                         tableData?.content?.map((item, index) => (
                             <tr key={item?.key || index}>
-
                                 <td>{index + 1}</td>
                                 <td>{item?.date || "-"}</td>
                                 <td>{item?.dispatchDate || "-"}</td>
@@ -53,7 +48,6 @@ export const DispatchPrint = ({ tableData = [], filters = {} }) => {
                                 <td>{item?.bomQty || "-"}</td>
                                 <td>{item?.totalQty || "-"}</td>
                                 <td>{item?.description || "-"}</td>
-
                             </tr>
                         ))
                     }
