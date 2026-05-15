@@ -1,8 +1,9 @@
 @import 'src/scss/variables';
 @import 'src/scss/mixins';
+
 .layout {
     position: relative;
-    padding-left: 245px;
+    padding-left: 205px;
     background-color: var(--bg-color);
 
     &__container {

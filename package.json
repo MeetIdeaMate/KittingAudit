@@ -17,6 +17,7 @@
     "axios": "^1.13.2",
     "chart.js": "^4.5.1",
     "dayjs": "^1.11.19",
+    "file-saver": "^2.0.5",
     "formik": "^2.4.9",
     "react": "^18.2.0",
     "react-barcode": "^1.6.1",
@@ -29,6 +30,7 @@
     "react-toastify": "^11.0.5",
     "sass": "^1.94.0",
     "web-vitals": "^2.1.4",
+    "xlsx": "^0.18.5",
     "yup": "^1.7.1"
   },
   "scripts": {

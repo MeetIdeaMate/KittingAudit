@@ -199,6 +199,7 @@ const ExcelUploadLayout = ({
 
                 <div className="excel-right">
                     <UiTable
+                        className="ChangeTablePadding"
                         columns={ExcelUploadTaleColumn({ handleDownloadFile, title })}
                         dataSource={tableData}
                         pagination={pagination}

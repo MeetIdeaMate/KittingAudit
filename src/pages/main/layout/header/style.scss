@@ -23,7 +23,7 @@
 // @import 'src/scss/mixins';
 
 .header {
-    @include width-height(100%, 75px);
+    @include width-height(100%, 45px);
     @include display-flex(flex);
     @include justify-content(space-between);
     @include align-items(center);

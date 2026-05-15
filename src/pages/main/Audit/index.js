@@ -11,6 +11,8 @@ import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
 import dayjs from "dayjs";
+import { toast } from "react-toastify";
+import { reportTypeOptions } from "../reports/config";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
@@ -26,7 +28,7 @@ export const AuditScreen = () => {
     const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
 
     const [isOpenDispatch, setIsOpenDispatch] = useState(false);
-    const [filters, setFilters] = useState({ crNumber: "", finNmber: "" });
+    const [filters, setFilters] = useState({ crNumber: "", finNmber: "", reportType: "" });
     const [cslSource, setCslSource] = useState({ crNumber: [], finNmber: [] });
     const [auditSource, setAuditSource] = useState([]);
     const [currentStatus, setCurrentStatus] = useState("");
@@ -122,6 +124,7 @@ export const AuditScreen = () => {
                     setSelectedRecord({});
                     setCurrentStatus("");
                 }
+                showToast.success("Success", auditResponse?.data?.result?.updateCslDetails || "Update successfully");
             } else {
                 showToast.error("Error", auditResponse?.response?.data?.error?.message || auditResponse?.response?.data?.message);
             }
@@ -170,12 +173,21 @@ export const AuditScreen = () => {
         dispatch(loaderReducer(isLoading));
     }, [dispatch, isFetchingCRNumbers, isFetchingGetAllAudit, isFetchingAuditUpdate]);
 
-    return <div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
+    return <div className="audit-page">
+        <div className="audit-header" style={{ display: "flex", justifyContent: "space-between", padding: "0 5px" }}>
             <div className="flexible-start">
                 <h3>Audit</h3> <UiCounterBatch primary >{auditSource?.length || 0}</UiCounterBatch>
             </div>
-            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <UiSelect
+                    allowClear={false}
+                    options={reportTypeOptions}
+                    isStyle={true}
+                    style={{ width: "130px" }}
+                    placeholder="Report Type"
+                    value={filters?.reportType || null}
+                    onChange={(selectValue) => handleFiltersChange(selectValue, "reportType",)}
+                />
                 <UiSelect
                     isStyle={true}
                     allowClear={false}
@@ -193,13 +205,17 @@ export const AuditScreen = () => {
                 />
             </div>
         </div>
-        <UiTable
-            columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, })}
-            dataSource={auditSource}
-            rowClassName={(record) =>
-                record?.isParentPart ? "parent-part-row" : ""
-            }
-        />
+        <div className="audit-body">
+            <UiTable
+                className="ChangeTablePadding"
+                columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, })}
+                dataSource={auditSource}
+                rowClassName={(record) =>
+                    record?.isParentPart ? "parent-part-row" : ""
+                }
+                pagination={false}
+            />
+        </div>
         <div style={{ display: "none", width: "100%" }}>
             <PrintAuditPDF
                 selectedRecord={selectedRecord}
