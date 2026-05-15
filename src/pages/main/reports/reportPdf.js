@@ -36,10 +36,10 @@ export const DispatchPrint = ({ tableData = [], filters = {} }) => {
                 </thead>
                 <tbody>
                     {
-                        [...(tableData?.content || []), ...(tableData?.content || [])]?.map((item, index) => (
+                        tableData?.content?.map((item, index) => (
                             <tr key={item?.key || index}>
                                 <td>{index + 1}</td>
-                                <td>{item?.date || "-"}</td>
+                                <td>{item?.date ? dayjs(item?.date).format("DD-MM-YYYY") : "-"}</td>
                                 <td>{item?.dispatchDate || "-"}</td>
                                 <td>{item?.kanbanDate || "-"}</td>
                                 <td>{item?.crNumber || "-"}</td>

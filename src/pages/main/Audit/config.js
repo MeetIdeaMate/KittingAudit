@@ -40,20 +40,6 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
         render: (_, auditRecord) => auditRecord?.isParentPart ? <img style={{ cursor: "pointer" }} src={audit_print_icon} onClick={() => handlePrintAudit(auditRecord, "AUDIT")} alt="" /> : "-",
     },
     {
-        title: "Date",
-        dataIndex: "date",
-        key: "date",
-        width: 120,
-        render: (_, auditRecord) => <p>{auditRecord?.auditDate ? dayjs(auditRecord?.auditDate).format("DD-MM-YYYY") : "-"}</p>
-    },
-    {
-        title: "CR Date",
-        dataIndex: "date",
-        key: "date",
-        width: 120,
-        render: (_, auditRecord) => <p>{auditRecord?.crDate ? dayjs(auditRecord?.crDate).format("DD-MM-YYYY") : "-"}</p>
-    },
-    {
         title: "Dispatch",
         dataIndex: "dispatch",
         key: "dispatch",
@@ -61,11 +47,11 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
         render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
     {
-        title: "Dispatch Date",
-        dataIndex: "dispatchDate",
+        title: "CR Date",
+        dataIndex: "date",
         key: "date",
         width: 120,
-        render: (_, auditRecord) => <p>{auditRecord?.dispatchDate ? dayjs(auditRecord?.dispatchDate).format("DD-MM-YYYY") : "-"}</p>
+        render: (_, auditRecord) => <p>{auditRecord?.date ? dayjs(auditRecord?.date).format("DD-MM-YYYY") : "-"}</p>
     },
     {
         title: "Kanban date",
@@ -75,9 +61,29 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
         render: (_, kanbanRecord) => <p>{kanbanRecord?.kanbanDate ? dayjs(kanbanRecord?.kanbanDate).format("DD-MM-YYYY") : "-"}</p>
     },
     {
+        title: "Audit Date",
+        dataIndex: "date",
+        key: "date",
+        width: 120,
+        render: (_, auditRecord) => <p>{auditRecord?.auditDate ? dayjs(auditRecord?.auditDate).format("DD-MM-YYYY") : "-"}</p>
+    },
+    {
+        title: "Dispatch Date",
+        dataIndex: "dispatchDate",
+        key: "date",
+        width: 120,
+        render: (_, auditRecord) => <p>{auditRecord?.dispatchDate ? dayjs(auditRecord?.dispatchDate).format("DD-MM-YYYY") : "-"}</p>
+    },
+    {
         title: "BOM Qty",
         dataIndex: "bomQty",
         key: "bomQty",
         width: 90,
     },
 ];
+
+export const colorStatus = [
+    { label: "Not Audit", color: "#000", bgColor: "#fff2e8" },
+    { label: "Audit", color: "#000", bgColor: "#e6f7ff" },
+    { label: "Dispatch", color: "#000", bgColor: "#f6ffed" }
+]

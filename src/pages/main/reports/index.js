@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { UiButton, UiCounterBatch, UiRangePicker, UiSelect, UiTextBox, } from "../../../components";
 
-import { DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeOptions } from "./config";
+import { DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeDateOptions, reportTypeOptions } from "./config";
 import { DispatchPrint } from "./reportPdf";
 import { useQuery } from "@tanstack/react-query";
 import * as api from "../../../actions";
@@ -34,6 +34,7 @@ export const ReportScreen = () => {
         weekNo: null,
         page: 0,
         size: 25,
+        datePickerStatus: "NOT_AUDIT",
     });
     const [isFetchApiCall, setIsFetchApiCall] = useState(false);
     const [tableData, setTableData] = useState({});
@@ -50,7 +51,14 @@ export const ReportScreen = () => {
             const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
             const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
             const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
-            const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            let startAndEndDate = "";
+            if (filters?.datePickerStatus === "NOT_AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "DISPATCH") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            }
             return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
         }, {
         enabled: true,
@@ -125,6 +133,11 @@ export const ReportScreen = () => {
         setFilters(prev => ({
             ...prev,
             [fieldName]: fieldValue,
+            ...(fieldName === "reportType" ? { crNo: "", finNo: "", partNo: "", weekNo: null } : {}),
+            ...(fieldName === "dateRange" ? { crNo: "", finNo: "", partNo: "", weekNo: null } : {}),
+            ...(fieldName === "crNo" ? { finNo: "", partNo: "", weekNo: null } : {}),
+            ...(fieldName === "finNo" ? { partNo: "", weekNo: null } : {}),
+            ...(fieldName === "partNo" ? { weekNo: null } : {}),
             page: 0,
             size: 25
         }));
@@ -171,7 +184,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (!isFetchApiCall) return;
         refetchGetAllDropdown();
-    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.partNo]);
+    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.dateRange?.length]);
 
     useEffect(() => {
         if (!isFetchApiCall) return;
@@ -195,7 +208,7 @@ export const ReportScreen = () => {
                     </UiCounterBatch>
                 </div>
                 <div style={{ display: "flex", justifyContent: "end", marginTop: "10px", marginBottom: "10px", }} >
-                    <div style={{ display: "flex", alignItems: "center", gap: "2px", }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "2px", flexWrap: "wrap", justifyContent: "flex-end" }}>
                         <UiSelect
                             allowClear={false}
                             options={reportTypeOptions}
@@ -205,12 +218,24 @@ export const ReportScreen = () => {
                             value={filters?.reportType || null}
                             onChange={(selectValue) => handleFilter("reportType", selectValue)}
                         />
-                        <UiRangePicker value={filters?.dateRange?.length > 0 ? filters?.dateRange : []} onChange={date => handleFilter("dateRange", (date?.length > 0 ? date : []))} />
+                        <UiSelect
+                            allowClear={false}
+                            options={reportTypeDateOptions}
+                            isStyle={true}
+                            style={{ width: "130px" }}
+                            placeholder="Report Type"
+                            value={filters?.datePickerStatus || null}
+                            onChange={(selectValue) => handleFilter("datePickerStatus", selectValue)}
+                        />
+                        <UiRangePicker
+                            style={{ width: "170px" }}
+                            value={filters?.dateRange?.length > 0 ? filters?.dateRange : []}
+                            onChange={date => handleFilter("dateRange", (date?.length > 0 ? date : []))} />
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.crNumbers}
-                            style={{ width: "150px" }}
-                            placeholder="CR no"
+                            style={{ width: "130px" }}
+                            placeholder="CR No"
                             value={filters?.crNo || ""}
                             onChange={(fileldValue) =>
                                 handleFilter("crNo", fileldValue)
@@ -219,8 +244,8 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.fimNumbers}
-                            style={{ width: "150px" }}
-                            placeholder="FIN no"
+                            style={{ width: "130px" }}
+                            placeholder="FIM No"
                             value={filters?.finNo || ""}
                             onChange={(fileldValue) =>
                                 handleFilter("finNo", fileldValue)
@@ -229,8 +254,8 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.partNos}
-                            style={{ width: "150px" }}
-                            placeholder="Part no"
+                            style={{ width: "130px" }}
+                            placeholder="Part No"
                             value={filters?.partNo || ""}
                             onChange={(fileldValue) =>
                                 handleFilter("partNo", fileldValue)
@@ -239,14 +264,14 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.weekNos}
-                            style={{ width: "150px" }}
-                            placeholder="Week no"
+                            style={{ width: "130px" }}
+                            placeholder="Week No"
                             value={filters?.weekNo || null}
                             onChange={(fileldValue) =>
                                 handleFilter("weekNo", fileldValue)
                             }
                         />
-                        <Space.Compact>
+                        {tableData?.totalElements > 0 && <Space.Compact>
                             <UiButton
                                 icon={<DownloadOutlined />}
                                 type="primary"
@@ -257,7 +282,7 @@ export const ReportScreen = () => {
                             <Dropdown menu={{ items: DownloadOptions, onClick: onMenuClick, activeKey: selectDownloadOption?.key }} placement="bottomRight">
                                 <UiButton type="primary" icon={<EllipsisOutlined />} />
                             </Dropdown>
-                        </Space.Compact>
+                        </Space.Compact>}
                     </div>
                 </div>
             </div>
