@@ -18,10 +18,10 @@ const AuditReport = ({ selectedRecord }) => {
                 <table>
                     <thead>
                         <tr>
-                            <th>S.No</th>
+                            <th style={{ width: "40px" }}>S.No</th>
                             <th>Bill of Material</th>
                             <th>Week No</th>
-                            <th>Quantity</th>
+                            <th style={{ width: "90px" }}>Quantity</th>
                             <th>Remarks</th>
                             <th>Hardware Inspection Remarks</th>
                             <th>Kitting Inspection Remarks</th>

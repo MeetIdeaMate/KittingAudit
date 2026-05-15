@@ -22,21 +22,21 @@ export const DispatchPrint = ({ tableData = [], filters = {} }) => {
             <table className="dispatch-print-table">
                 <thead>
                     <tr>
-                        <th>S.No</th>
-                        <th>CR Date</th>
-                        <th>Dispatch Date</th>
-                        <th>Kanban Date</th>
+                        <th style={{ width: "60px" }}>S.No</th>
+                        <th style={{ width: "90px" }}>CR Date</th>
+                        <th style={{ width: "90px" }}>Dispatch Date</th>
+                        <th style={{ width: "90px" }}>Kanban Date</th>
                         <th>Contract No</th>
                         <th>Part Number</th>
                         <th>Week No</th>
-                        <th>BOM Qty</th>
-                        <th>Total Qty</th>
+                        <th style={{ width: "60px" }}>BOM Qty</th>
+                        <th style={{ width: "60px" }}>Total Qty</th>
                         <th>Description</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        tableData?.content?.map((item, index) => (
+                        [...(tableData?.content || []), ...(tableData?.content || [])]?.map((item, index) => (
                             <tr key={item?.key || index}>
                                 <td>{index + 1}</td>
                                 <td>{item?.date || "-"}</td>

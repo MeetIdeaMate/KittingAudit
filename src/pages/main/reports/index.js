@@ -1,10 +1,10 @@
-import { DownloadOutlined, } from "@ant-design/icons";
-import { Select, Table } from "antd";
+import { DownloadOutlined, EllipsisOutlined, } from "@ant-design/icons";
+import { Dropdown, Pagination, Select, Space, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { UiButton, UiCounterBatch, UiRangePicker, UiSelect, UiTextBox, } from "../../../components";
 
-import { REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeOptions } from "./config";
+import { DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeOptions } from "./config";
 import { DispatchPrint } from "./reportPdf";
 import { useQuery } from "@tanstack/react-query";
 import * as api from "../../../actions";
@@ -40,6 +40,7 @@ export const ReportScreen = () => {
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [pdfSource, setPdfSource] = useState({});
     const [dropDownSource, setDropDownSource] = useState({ crNumbers: [], fimNumbers: [], partNos: [], weekNos: [] });
+    const [selectDownloadOption, setSelectDownloadOption] = useState({ key: "1", content: "EXL" });
 
     const { isFetching: isFetchingGetAllReportsPage, refetch: refetchAllReportsPage } = useQuery(["GET_ALL_REPORTS_PAGE", ""],
         () => {
@@ -130,6 +131,10 @@ export const ReportScreen = () => {
         setIsFetchApiCall(true);
     };
 
+    const onMenuClick = dropClick => {
+        setSelectDownloadOption({ key: dropClick?.key, content: DownloadOptions?.find(findKey => findKey?.key === dropClick?.key)?.label });
+    };
+
     const handlePagination = (pages, size) => {
         setFilters(prev => ({ ...prev, page: pages - 1, size: size, }));
         setIsFetchApiCall(true);
@@ -155,7 +160,11 @@ export const ReportScreen = () => {
 
     useEffect(() => {
         if (pdfSource?.content?.length > 0) {
-            handlePrint();
+            if (selectDownloadOption?.content === "EXL") {
+                handleDownloadExcel({ tableData: pdfSource, setTableData: setPdfSource });
+            } else {
+                handlePrint();
+            }
         }
     }, [pdfSource?.content?.length]);
 
@@ -175,88 +184,89 @@ export const ReportScreen = () => {
     }, [dispatch, isFetchingGetAllReportsPage, isFetchingGetAllReports, isFetchinngGetDropdown]);
 
     return (
-        <div>
-            <div className="flexible-start" style={{ padding: 0, margin: 0 }}>
-                <h3 style={{ padding: 0, margin: 0 }}>
-                    Reports
-                </h3>
-                <UiCounterBatch primary>
-                    {tableData?.totalElements || 0}
-                </UiCounterBatch>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", marginBottom: "10px", }} >
-                <div style={{ display: "flex", alignItems: "center", gap: "2px", }}>
-                    <UiSelect
-                        allowClear={false}
-                        options={reportTypeOptions}
-                        isStyle={true}
-                        style={{ width: "130px" }}
-                        placeholder="Report Type"
-                        value={filters?.reportType || null}
-                        onChange={(selectValue) => handleFilter("reportType", selectValue)}
-                    />
-                    <UiRangePicker value={filters?.dateRange?.length > 0 ? filters?.dateRange : []} onChange={date => handleFilter("dateRange", (date?.length > 0 ? date : []))} />
-                    <UiSelect
-                        isStyle={true}
-                        options={dropDownSource?.crNumbers}
-                        style={{ width: "150px" }}
-                        placeholder="CR no"
-                        value={filters?.crNo || ""}
-                        onChange={(fileldValue) =>
-                            handleFilter("crNo", fileldValue)
-                        }
-                    />
-                    <UiSelect
-                        isStyle={true}
-                        options={dropDownSource?.fimNumbers}
-                        style={{ width: "150px" }}
-                        placeholder="FIN no"
-                        value={filters?.finNo || ""}
-                        onChange={(fileldValue) =>
-                            handleFilter("finNo", fileldValue)
-                        }
-                    />
-                    <UiSelect
-                        isStyle={true}
-                        options={dropDownSource?.partNos}
-                        style={{ width: "150px" }}
-                        placeholder="Part no"
-                        value={filters?.partNo || ""}
-                        onChange={(fileldValue) =>
-                            handleFilter("partNo", fileldValue)
-                        }
-                    />
-                    <UiSelect
-                        isStyle={true}
-                        options={dropDownSource?.weekNos}
-                        style={{ width: "150px" }}
-                        placeholder="Week no"
-                        value={filters?.weekNo || null}
-                        onChange={(fileldValue) =>
-                            handleFilter("weekNo", fileldValue)
-                        }
-                    />
-                    <UiButton
-                        icon={<DownloadOutlined />}
-                        type="primary"
-                        onClick={refetchAllReports}
-                    >
-                        Export
-                    </UiButton>
+        <div className="report-page">
+            <div className="report-header">
+                <div className="flexible-start" style={{ padding: 0, margin: 0 }}>
+                    <h3 style={{ padding: 0, margin: 0 }}>
+                        Reports
+                    </h3>
+                    <UiCounterBatch primary>
+                        {tableData?.totalElements || 0}
+                    </UiCounterBatch>
+                </div>
+                <div style={{ display: "flex", justifyContent: "end", marginTop: "10px", marginBottom: "10px", }} >
+                    <div style={{ display: "flex", alignItems: "center", gap: "2px", }}>
+                        <UiSelect
+                            allowClear={false}
+                            options={reportTypeOptions}
+                            isStyle={true}
+                            style={{ width: "130px" }}
+                            placeholder="Report Type"
+                            value={filters?.reportType || null}
+                            onChange={(selectValue) => handleFilter("reportType", selectValue)}
+                        />
+                        <UiRangePicker value={filters?.dateRange?.length > 0 ? filters?.dateRange : []} onChange={date => handleFilter("dateRange", (date?.length > 0 ? date : []))} />
+                        <UiSelect
+                            isStyle={true}
+                            options={dropDownSource?.crNumbers}
+                            style={{ width: "150px" }}
+                            placeholder="CR no"
+                            value={filters?.crNo || ""}
+                            onChange={(fileldValue) =>
+                                handleFilter("crNo", fileldValue)
+                            }
+                        />
+                        <UiSelect
+                            isStyle={true}
+                            options={dropDownSource?.fimNumbers}
+                            style={{ width: "150px" }}
+                            placeholder="FIN no"
+                            value={filters?.finNo || ""}
+                            onChange={(fileldValue) =>
+                                handleFilter("finNo", fileldValue)
+                            }
+                        />
+                        <UiSelect
+                            isStyle={true}
+                            options={dropDownSource?.partNos}
+                            style={{ width: "150px" }}
+                            placeholder="Part no"
+                            value={filters?.partNo || ""}
+                            onChange={(fileldValue) =>
+                                handleFilter("partNo", fileldValue)
+                            }
+                        />
+                        <UiSelect
+                            isStyle={true}
+                            options={dropDownSource?.weekNos}
+                            style={{ width: "150px" }}
+                            placeholder="Week no"
+                            value={filters?.weekNo || null}
+                            onChange={(fileldValue) =>
+                                handleFilter("weekNo", fileldValue)
+                            }
+                        />
+                        <Space.Compact>
+                            <UiButton
+                                icon={<DownloadOutlined />}
+                                type="primary"
+                                onClick={refetchAllReports}
+                            >
+                                {selectDownloadOption?.content || "-"}
+                            </UiButton>
+                            <Dropdown menu={{ items: DownloadOptions, onClick: onMenuClick, activeKey: selectDownloadOption?.key }} placement="bottomRight">
+                                <UiButton type="primary" icon={<EllipsisOutlined />} />
+                            </Dropdown>
+                        </Space.Compact>
+                    </div>
                 </div>
             </div>
-            <div>
+            <div className="report-body ">
                 <Table
+                    className="ChangeTablePadding"
                     columns={REPORTS_TABLE_COLUMNS}
                     dataSource={tableData?.content}
-                    scroll={{ x: 1500 }}
-                    pagination={{
-                        onChange: handlePagination,
-                        current: filters?.page + 1,
-                        total: tableData?.totalElements || 0,
-                        pageSize: filters?.size,
-                        pageSizeOptions: [20, 50, 75, 100]
-                    }}
+                    pagination={false}
                     rowKey={"cslDetailInfoId"}
                     expandable={{
                         expandedRowKeys,
@@ -275,12 +285,23 @@ export const ReportScreen = () => {
                         expandedRowRender: (record) => {
                             return (
                                 <Table
+                                    className="ChangeTablePadding"
                                     dataSource={record?.partDetails || []}
                                     pagination={false}
                                     columns={REPORT_CHILD_COLUMN}
                                 />)
                         }
                     }}
+                />
+            </div>
+            <div className="report-footer">
+                <Pagination
+                    onChange={handlePagination}
+                    current={filters?.page + 1}
+                    total={tableData?.totalElements || 0}
+                    pageSize={filters?.size}
+                    pageSizeOptions={[25, 50, 75, 100]}
+                    showSizeChanger
                 />
             </div>
             <div style={{ display: "none", width: "100%" }}>
