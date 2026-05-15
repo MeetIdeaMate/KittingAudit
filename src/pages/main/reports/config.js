@@ -114,6 +114,24 @@ export const reportTypeOptions = [
     }
 ];
 
+export const reportTypeDateOptions = [
+    {
+        key: "NOT_AUDIT",
+        value: "NOT_AUDIT",
+        label: "Not Audit Date",
+    },
+    {
+        key: "AUDIT",
+        value: "AUDIT",
+        label: "Audit Date",
+    },
+    {
+        key: "DISPATCH",
+        value: "DISPATCH",
+        label: "Dispatch Date",
+    }
+];
+
 export const DownloadOptions = [{ key: '1', label: 'EXL', }, { key: '2', label: 'Print', }];
 
 export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }) => {

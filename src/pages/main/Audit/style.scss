@@ -60,6 +60,7 @@
                 font-size: 12px;
                 word-break: break-word;
                 vertical-align: middle;
+                text-align: center;
             }
 
             th {
@@ -145,7 +146,17 @@
 }
 
 .parent-part-row td {
-    background-color: #fff3eb !important;
+    background-color: #fff2e8 !important;
+    font-weight: 600;
+}
+
+.parent-part-row-inprogross td {
+    background-color: #e6f7ff !important;
+    font-weight: 600;
+}
+
+.parent-part-row-comleted td {
+    background-color: #f6ffed !important;
     font-weight: 600;
 }
 
@@ -168,6 +179,12 @@
     padding: 5px;
 }
 
+.status-dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
 @media print {
 
     @page {
@@ -177,22 +194,24 @@
 
     html,
     body {
-        width: 210mm;
+        margin: 0 !important;
+        padding: 0 !important;
         background: #fff !important;
+        overflow: visible !important;
+
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
     }
 
     .audit-report {
         width: 100%;
-        min-height: auto;
-        border: 1px solid #000;
-        overflow: visible;
+        height: auto !important;
+        min-height: unset !important;
+        overflow: visible !important;
+        border: none !important;
         page-break-after: auto;
     }
 
-    .table-wrapper,
-    table,
     tr,
     td,
     th,
@@ -202,10 +221,22 @@
     }
 
     table {
+        width: 100%;
         border-collapse: collapse !important;
     }
 
     .parent-part-row td {
         background-color: #fff3eb !important;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+}
+
+@media (max-width: 600px) {
+    .status-dot {
+        width: 16px;
+        height: 16px;
     }
 }

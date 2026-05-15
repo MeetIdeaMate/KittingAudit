@@ -32,7 +32,7 @@ const AuditReport = ({ selectedRecord }) => {
                         {selectedRecord?.partDetails?.map((item, index) => (
                             <tr key={index}>
                                 <td>{index + 1}</td>
-                                <td>{selectedRecord?.partNumber}</td>
+                                <td>{item?.partNumber}</td>
                                 <td>{selectedRecord?.weekNo}</td>
                                 <td>{item?.quantity}</td>
                                 <td></td>

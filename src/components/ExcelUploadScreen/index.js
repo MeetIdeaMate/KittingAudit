@@ -30,17 +30,17 @@ const ExcelUploadLayout = ({
             return partWeekNo
         }) || [];
         const kanbanContractNumberDetail = details?.kanbanContractNumberDetail?.map(kamban => `${kamban?.crNumber} - ${dayjs(kamban?.date).format("DD-MM-YYYY")}`) || [];
-        const nonAudit = title !== "SOB Upload" ? details?.nonAudit : [];
-        const audit = title !== "SOB Upload" ? details?.audit : [];
-        const dispatch = title !== "SOB Upload" ? details?.dispatch : [];
+        const notStarted = title !== "SOB Upload" ? details?.notStarted : [];
+        const inProgress = title !== "SOB Upload" ? details?.inProgress : [];
+        const completed = title !== "SOB Upload" ? details?.completed : [];
 
         return (
             <div style={{ width: "100%", padding: "10px", }}>
                 {
-                    nonAudit?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
-                        <p className="padding-remove">{nonAudit?.length > 0 ? `Not Audit CR Numbers  (${nonAudit?.length}) :` : ""}</p>
+                    notStarted?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
+                        <p className="padding-remove">{notStarted?.length > 0 ? `Not Yet Started CR Numbers  (${notStarted?.length}) :` : ""}</p>
                         {
-                            nonAudit?.map((pendingCrNo) => {
+                            notStarted?.map((pendingCrNo) => {
                                 return (
                                     <span style={{
                                         padding: "4px 10px",
@@ -59,10 +59,10 @@ const ExcelUploadLayout = ({
                     </div>
                 }
                 {
-                    audit?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
-                        <p className="padding-remove">{audit?.length > 0 ? `Audit CR Numbers  (${audit?.length}) :` : ""}</p>
+                    inProgress?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
+                        <p className="padding-remove">{inProgress?.length > 0 ? `In Progress CR Numbers  (${inProgress?.length}) :` : ""}</p>
                         {
-                            audit?.map((pendingCrNo) => {
+                            inProgress?.map((pendingCrNo) => {
                                 return (
                                     <span style={{
                                         padding: "4px 10px",
@@ -81,10 +81,10 @@ const ExcelUploadLayout = ({
                     </div>
                 }
                 {
-                    dispatch?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
-                        <p className="padding-remove">{dispatch?.length > 0 ? `Dispatch CR Numbers  (${dispatch?.length}) :` : ""}</p>
+                    completed?.length > 0 && <div style={{ width: "100%", display: "flex", gap: "10px", flexWrap: "wrap", marginTop: "3px" }}>
+                        <p className="padding-remove">{completed?.length > 0 ? `Completed CR Numbers  (${completed?.length}) :` : ""}</p>
                         {
-                            dispatch?.map((pendingCrNo) => {
+                            completed?.map((pendingCrNo) => {
                                 return (
                                     <span style={{
                                         padding: "4px 10px",

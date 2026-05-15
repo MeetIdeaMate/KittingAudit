@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { UiCounterBatch, UiSelect, UiTable } from "../../../components"
-import { AUDIT_TABLE_COLUMN, } from "./config";
+import { AUDIT_TABLE_COLUMN, colorStatus, } from "./config";
 import AuditReport from "./auditPrint";
 import { useReactToPrint } from "react-to-print";
 import { DispatchModal } from "./dispatchModal";
@@ -35,7 +35,7 @@ export const AuditScreen = () => {
     const [selectedRecord, setSelectedRecord] = useState({});
 
     const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
-        () => api.get(`${CSLBASEURL}/get_csl_details${filters?.crNumber ? `?crNumber=${filters?.crNumber}` : ""}`), {
+        () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
         enabled: true,
         refetchOnWindowFocus: false,
         onSuccess: crNumberResponse => {
@@ -53,7 +53,7 @@ export const AuditScreen = () => {
     });
 
     const { isFetching: isFetchingGetAllAudit, refetch: refetchGetAllAudit } = useQuery(["GET_ALL_AUDIT_DETAILS", ""],
-        () => api.get(`${CSLBASEURL}/audit_details?crNumber=${filters?.crNumber}${filters?.finNmber ? `&finNumber=${filters?.finNmber}` : ""}`), {
+        () => api.get(`${CSLBASEURL}/audit_details?crNumber=${filters?.crNumber}${filters?.finNmber ? `&fimNumber=${filters?.finNmber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
         enabled: false,
         refetchOnWindowFocus: false,
         onSuccess: getAllAuditResponse => {
@@ -147,7 +147,12 @@ export const AuditScreen = () => {
     };
 
     const handleFiltersChange = (fileldalue, fieldName) => {
-        setFilters(prev => ({ ...prev, [fieldName]: fileldalue, ...(fieldName === "crNumber" ? { finNmber: "" } : {}) }));
+        setFilters(prev => ({
+            ...prev,
+            [fieldName]: fileldalue,
+            ...(fieldName === "reportType" ? { crNumber: "", finNmber: "" } : {}),
+            ...(fieldName === "crNumber" ? { finNmber: "" } : {})
+        }));
     };
 
     useEffect(() => {
@@ -163,10 +168,10 @@ export const AuditScreen = () => {
     }, [filters, refetchGetAllAudit]);
 
     useEffect(() => {
-        if (filters?.crNumber && cslSource?.crNumber?.length > 0) {
+        if (cslSource?.crNumber?.length > 0) {
             refetchCRNumbers();
         }
-    }, [filters?.crNumber, cslSource?.crNumber?.length, refetchCRNumbers]);
+    }, [filters?.crNumber, filters?.reportType, cslSource?.crNumber?.length, refetchCRNumbers]);
 
     useEffect(() => {
         let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;
@@ -179,12 +184,25 @@ export const AuditScreen = () => {
                 <h3>Audit</h3> <UiCounterBatch primary >{auditSource?.length || 0}</UiCounterBatch>
             </div>
             <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <div className="status-wrapper">
+                    {colorStatus?.map((status, index) => (
+                        <div className="excel-title-box" key={index}>
+                            <div
+                                className="status-dot"
+                                style={{
+                                    border: `1px solid ${status?.color}`,
+                                    backgroundColor: status?.bgColor,
+                                }}
+                            />
+                            <p>{status?.label}</p>
+                        </div>
+                    ))}
+                </div>
                 <UiSelect
-                    allowClear={false}
                     options={reportTypeOptions}
                     isStyle={true}
                     style={{ width: "130px" }}
-                    placeholder="Report Type"
+                    placeholder="Audit status"
                     value={filters?.reportType || null}
                     onChange={(selectValue) => handleFiltersChange(selectValue, "reportType",)}
                 />
@@ -200,6 +218,7 @@ export const AuditScreen = () => {
                     isStyle={true}
                     options={cslSource?.finNmber || []}
                     style={{ width: "150px" }}
+                    placeholder={"Select fimNo"}
                     value={filters?.finNmber || null}
                     onChange={fileldalue => handleFiltersChange(fileldalue, "finNmber")}
                 />
@@ -211,7 +230,7 @@ export const AuditScreen = () => {
                 columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, })}
                 dataSource={auditSource}
                 rowClassName={(record) =>
-                    record?.isParentPart ? "parent-part-row" : ""
+                    record?.isParentPart ? (record?.status === "DISPATCH" ? "parent-part-row-comleted" : record?.status === "AUDIT" ? "parent-part-row-inprogross" : record?.status === "NOT_AUDIT" ? "parent-part-row" : "") : ""
                 }
                 pagination={false}
             />
