@@ -11,7 +11,7 @@ const UiButton = ({
     htmlType,
     ...restProps
 }) => {
-    
+
     let icon = null;
 
     if (add) { icon = <PlusOutlined /> }

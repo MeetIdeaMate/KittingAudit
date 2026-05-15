@@ -169,6 +169,7 @@ const KabanUpload = () => {
         <>
             <ExcelUploadLayout
                 title={"Kanban Upload"}
+                loading={isFetchUploadingExcel}
                 counter={barCodeKittingAllData?.totalElements}
                 dateFilter={dateFilter}
                 onDateChange={handleChangeDate}

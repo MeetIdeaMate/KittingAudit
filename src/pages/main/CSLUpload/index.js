@@ -186,6 +186,7 @@ const CSLUpload = () => {
                 handleClose={handleClose}
                 handleSubmit={handleSubmit}
                 isOpen={isOpen}
+                loading={isFetchUploadingExcel}
                 modalTitle={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.length > 1 ? "CR numbers" : "CR number"
                     } (${crExcelDetails?.existCrNumbers?.join(", ")})?`}
             />

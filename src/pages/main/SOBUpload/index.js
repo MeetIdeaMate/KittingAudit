@@ -169,6 +169,7 @@ const SOBUpload = () => {
         <>
             <ExcelUploadLayout
                 title={"SOB Upload"}
+                loading={isFetchUploadingExcel}
                 counter={barCodeKittingAllData?.totalElements}
                 dateFilter={dateFilter}
                 onDateChange={handleChangeDate}

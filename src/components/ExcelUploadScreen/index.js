@@ -21,7 +21,8 @@ const ExcelUploadLayout = ({
     expandedRowRender,
     isOpen,
     modalTitle,
-    handleSubmit
+    handleSubmit,
+    loading
 }) => {
     const expandedTable = (details) => {
         const weekNoDetailList = details?.weekNoDetailList?.flatMap(sobDetails => {
@@ -198,6 +199,7 @@ const ExcelUploadLayout = ({
 
                 <div className="excel-right">
                     <UiTable
+                        className="ChangeTablePadding"
                         columns={ExcelUploadTaleColumn({ handleDownloadFile, title })}
                         dataSource={tableData}
                         pagination={pagination}
@@ -216,7 +218,7 @@ const ExcelUploadLayout = ({
                     footer={
                         <div className="flexible-end">
                             <UiButton onClick={handleClose}>NO</UiButton>
-                            <UiButton type="primary" onClick={handleSubmit}>
+                            <UiButton loading={loading} type="primary" onClick={handleSubmit}>
                                 YES
                             </UiButton>
                         </div>

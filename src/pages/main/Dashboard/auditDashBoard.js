@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { UiDatePicker, UiRangePicker, } from "../../../components";
+import { UiDatePicker, } from "../../../components";
 import "./style.scss";
 import dayjs from "dayjs";
 import * as api from "../../../actions";
@@ -190,7 +190,6 @@ const Dashboard = () => {
         <div className="dashboard">
             <div className="dashboard__header">
                 <h1>Dashboard</h1>
-
                 <div className="dashboard__filters">
                     <UiDatePicker
                         value={filters?.year ? dayjs(filters?.year) : null}
@@ -202,7 +201,6 @@ const Dashboard = () => {
                     />
                 </div>
             </div>
-
             <div className="dashboard__cards">
                 {cardData(dashboardSource)?.map((item, index) => {
                     const data = {
@@ -216,7 +214,6 @@ const Dashboard = () => {
                             },
                         ],
                     };
-
                     return (
                         <div
                             key={index}
@@ -231,11 +228,9 @@ const Dashboard = () => {
                                     <p className="dashboard-card__title">
                                         {item.title}
                                     </p>
-
                                     <h2 className="dashboard-card__total">
                                         {item.total}
                                     </h2>
-
                                     <div className="dashboard-card__list">
                                         {item.labels.map((label, i) => (
                                             <div
@@ -249,10 +244,8 @@ const Dashboard = () => {
                                                             background: item.colors[i],
                                                         }}
                                                     />
-
                                                     {label}
                                                 </div>
-
                                                 <span className="dashboard-card__value">
                                                     {item.values[i].toLocaleString()}
                                                 </span>
@@ -260,7 +253,6 @@ const Dashboard = () => {
                                         ))}
                                     </div>
                                 </div>
-
                                 <div className="dashboard-card__chart">
                                     {item?.title !== "FILE DISTRIBUTION" && <Doughnut
                                         data={data}
@@ -282,7 +274,6 @@ const Dashboard = () => {
             </div>
             <div className="audit-chart-card">
                 <h3 className="chart-title">Audit Status</h3>
-
                 <div className="chart-wrapper">
                     <Bar data={data} options={options} />
                 </div>
