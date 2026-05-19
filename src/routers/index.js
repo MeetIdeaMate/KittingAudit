@@ -1,7 +1,7 @@
 import { ConfigProvider } from "antd";
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { Dashboard, Login } from "../pages";
+import { Login } from "../pages";
 import LayoutComponent from "../pages/main/layout";
 import { User } from "../pages/main/User";
 import CSLUpload from "../pages/main/CSLUpload";

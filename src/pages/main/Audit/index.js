@@ -11,7 +11,6 @@ import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
 import { reportTypeOptions } from "../reports/config";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
@@ -164,7 +163,7 @@ export const AuditScreen = () => {
         if (currentStatus === "AUDIT" && selectedRecord?.status !== "NOT_AUDIT") {
             handlePrint();
         }
-    }, [currentStatus, selectedRecord?.status]);
+    }, [currentStatus, selectedRecord?.status, handlePrint]);
 
     useEffect(() => {
         if (filters?.crNumber) {
