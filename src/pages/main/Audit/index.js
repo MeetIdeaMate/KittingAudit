@@ -6,17 +6,16 @@ import { useReactToPrint } from "react-to-print";
 import { DispatchModal } from "./dispatchModal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "../../../actions";
-import { CSLBASEURL } from "../../../apiservices/endpoints";
+import { CONFIG, CSLBASEURL } from "../../../apiservices/endpoints";
 import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
 import { reportTypeOptions } from "../reports/config";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
-        <AuditReport selectedRecord={props?.selectedRecord} />
+        <AuditReport selectedRecord={props?.selectedRecord} vendorName ={props?.vendorName}/>
     </div>
 ));
 
@@ -28,11 +27,13 @@ export const AuditScreen = () => {
     const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
 
     const [isOpenDispatch, setIsOpenDispatch] = useState(false);
+    const [isCallCRNumber, setIsCallCRNumber] = useState(false);
     const [filters, setFilters] = useState({ crNumber: "", finNmber: "", reportType: "" });
     const [cslSource, setCslSource] = useState({ crNumber: [], finNmber: [] });
     const [auditSource, setAuditSource] = useState([]);
     const [currentStatus, setCurrentStatus] = useState("");
     const [selectedRecord, setSelectedRecord] = useState({});
+    const [vendorName, setVendorName] = useState("");
 
     const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
@@ -46,6 +47,7 @@ export const AuditScreen = () => {
                 if (!filters?.crNumber) {
                     setFilters(prev => ({ ...prev, crNumber: cslDetails?.[0] }));
                 }
+                setIsCallCRNumber(false);
             } else {
                 showToast.error("Error", crNumberResponse?.response?.data?.error?.message);
             }
@@ -80,6 +82,15 @@ export const AuditScreen = () => {
         },
     });
 
+    useQuery(["FETCH_CONFIG", ""], () => api.get(`${CONFIG}/VENDORNAME`), {
+        onSuccess: (configResponse) => {
+            const vendorname = configResponse?.configuration?.[0];
+            setVendorName(vendorname);
+        },
+        enabled: true,
+        refetchOnWindowFocus: false
+    });
+
     const handlePrint = useReactToPrint({
         content: () => printRef.current,
         onAfterPrint: () => {
@@ -91,7 +102,7 @@ export const AuditScreen = () => {
         },
         pageStyle: `
     @page {
-      size: A4;
+      size: A4 landscape;
       margin: 3mm !important;
     }
 
@@ -153,25 +164,30 @@ export const AuditScreen = () => {
             ...(fieldName === "reportType" ? { crNumber: "", finNmber: "" } : {}),
             ...(fieldName === "crNumber" ? { finNmber: "" } : {})
         }));
+        if (fieldName === "reportType" || fieldName === "crNumber") {
+            setIsCallCRNumber(true);
+        }
     };
 
     useEffect(() => {
         if (currentStatus === "AUDIT" && selectedRecord?.status !== "NOT_AUDIT") {
             handlePrint();
         }
-    }, [currentStatus, selectedRecord?.status]);
+    }, [currentStatus, selectedRecord?.status, handlePrint]);
 
     useEffect(() => {
         if (filters?.crNumber) {
             refetchGetAllAudit();
+        } else {
+            setAuditSource([]);
         }
     }, [filters, refetchGetAllAudit]);
 
     useEffect(() => {
-        if (cslSource?.crNumber?.length > 0) {
+        if (isCallCRNumber) {
             refetchCRNumbers();
         }
-    }, [filters?.crNumber, filters?.reportType, cslSource?.crNumber?.length, refetchCRNumbers]);
+    }, [isCallCRNumber, refetchCRNumbers]);
 
     useEffect(() => {
         let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;
@@ -239,6 +255,7 @@ export const AuditScreen = () => {
             <PrintAuditPDF
                 selectedRecord={selectedRecord}
                 ref={printRef}
+                vendorName={vendorName}
             />
         </div>
         {isOpenDispatch && <DispatchModal isFetchingAuditUpdate={isFetchingAuditUpdate} open={isOpenDispatch} handleClose={(isCheck, date) => {

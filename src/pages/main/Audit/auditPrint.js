@@ -1,95 +1,132 @@
 import React from "react";
 import "./style.scss";
-import { tl_pdf_logo } from "../../../assets/images";
 import dayjs from "dayjs";
-const AuditReport = ({ selectedRecord }) => {
-    return (
-        <div className="audit-report">
-            <div className="report-header">
-                <div className="logo-section">
-                    <img src={tl_pdf_logo} alt="" />
-                </div>
-                <div>
-                    <h2>Contract - Wise Packed Audit Report</h2>
-                    <p>
-                        Contract No : <strong>{selectedRecord?.parentPartNumber || "-"}</strong>
-                    </p>
-                </div>
-            </div>
-            <div className="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th style={{ width: "40px" }}>S.No</th>
-                            <th>Bill of Material</th>
-                            <th>Week No</th>
-                            <th style={{ width: "90px" }}>Quantity</th>
-                            <th>Remarks</th>
-                            <th>Hardware Inspection Remarks</th>
-                            <th>Kitting Inspection Remarks</th>
-                            <th>Remarks</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {selectedRecord?.partDetails?.map((item, index) => (
-                            <tr key={index}>
-                                <td>{index + 1}</td>
-                                <td>{item?.partNumber}</td>
-                                <td>{selectedRecord?.weekNo}</td>
-                                <td>{item?.quantity}</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <div className="bottom-section">
-                <div className="info-box">
-                    <div className="info-row">
-                        <span>Contract Packed Date</span>
-                        <span>{selectedRecord?.date ? dayjs(selectedRecord?.date).format("DD-MM-YYYY") : dayjs().format("DD-MM-YYYY")}</span>
-                    </div>
-                    <div className="info-row">
-                        <span>No of Boxes</span>
-                        <span></span>
-                    </div>
-                    <div className="info-row">
-                        <span>Invoice No</span>
-                        <span></span>
-                    </div>
-                    <div className="info-row">
-                        <span>Dispatch Date</span>
-                        <span></span>
-                    </div>
-                    <div className="info-row large">
-                        <span>Material Condition</span>
-                    </div>
-                    <div className="info-row large">
-                        <span>Remarks</span>
-                    </div>
-                </div>
-                <div className="signature-section">
-                    <div className="signature-box">
-                        <div>
-                            Sign : ................................
+
+
+const TableHead = () => (
+    <thead>
+        <tr>
+            <th style={{ width: "8%" }}>SNo</th>
+            <th style={{ width: "16%" }}>Bill of Material</th>
+            <th style={{ width: "8%" }}>Qty as per VEW CSL</th>
+            <th style={{ width: "8%" }}>Week No</th>
+            <th style={{ width: "10%" }}>Gross Weight (in Kg)</th>
+            <th style={{ width: "10%" }}>Quantity as per OTIS CSL</th>
+            <th style={{ width: "10%" }}>Remark</th>
+            <th style={{ width: "15%" }}>Hardware Inspection Remark</th>
+            <th style={{ width: "15%" }}>Kitting Inspection Remark</th>
+            <th style={{ width: "8%" }}>Remark</th>
+        </tr>
+    </thead>
+);
+
+const BottomSection = ({ selectedRecord }) => (
+    <div style={{ width: "100%" }}>
+        <table className="bottom-layout-table">
+            <tbody>
+                <tr className="meta-row">
+                    <td className="col-label" style={{ padding: "0" }}>Contract Packed Date</td>
+                    <td className="col-value" style={{ padding: "0" }}>
+                        {selectedRecord?.date ? dayjs(selectedRecord?.date).format("DD Oct YYYY") : "-"}
+                    </td>
+                    <td className="signature-cell-container" rowSpan={6} >
+                        <div className="sig-flex-inner">
+                            <div className="sig-interactive-field">
+                                <span >Sign:</span>
+                                <span className="ink-faint-line"></span>
+                            </div>
+                            <div className="sig-interactive-field">
+                                <span>Date:</span>
+                                <span className="ink-faint-line"></span>
+                            </div>
                         </div>
-                        <div>
-                            Date : ................................
-                        </div>
-                    </div>
-                    <div className="note-box">
-                        <strong>Note :</strong>
-                    </div>
-                    <div className="footer-sign">
-                        <div>Checked By :</div>
-                        <div>Approved By :</div>
-                    </div>
-                </div>
+                    </td>
+                </tr>
+                <tr className="meta-row">
+                    <td className="col-label" style={{ padding: "0" }}>No of Boxes</td>
+                    <td className="col-value"></td>
+                </tr>
+                <tr className="meta-row">
+                    <td className="col-label" style={{ padding: "0" }}>Invoice No</td>
+                    <td className="col-value"></td>
+                </tr>
+                <tr className="meta-row">
+                    <td className="col-label" style={{ padding: "0" }}>Invoice Date</td>
+                    <td className="col-value">
+                    </td>
+                </tr>
+                <tr className="meta-row">
+                    <td className="col-label" style={{ padding: "0" }}>Dispatch Date</td>
+                    <td className="col-value">
+                    </td>
+                </tr>
+                <tr className="meta-row">
+                    <td className="col-label" >Material Condition</td>
+                    <td className="col-value"></td>
+                </tr>
+                <tr>
+                    <td className="remark-block-cell" colSpan={2}>
+                        Remark: <span></span>
+                    </td>
+                    <td className="note-block-cell">
+                        Note: <span></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div className="outside-approvals-row">
+            <div className="approval-signature-line">
+                <span>Checked By:</span>
+                <span className="">____________________</span>
+            </div>
+            <div className="approval-signature-line">
+                <span>Approved By:</span>
+                <span className="">_____________________</span>
             </div>
         </div>
+    </div>
+);
+
+const AuditReport = ({ selectedRecord, vendorName }) => {
+    const partDetails = selectedRecord?.partDetail ?? [];
+    return (
+        <>
+            <div className="audit-report">
+                <div className="report-header">
+                    <h3 style={{ padding: 0, margin: 0 }}>{vendorName}</h3>
+                    <p style={{ padding: 0, margin: 0 }}>Contract-Wise Packed Audit Report</p>
+                    <h4 style={{ padding: 0, margin: 0 }}>
+                        Contract No : {selectedRecord?.parentPartNumber || ""}
+                    </h4>
+                </div>
+                <div className="table-wrapper">
+                    <table>
+                        <TableHead />
+                        <tbody>
+                            {partDetails?.map((details, index) => (
+                                <tr key={`data-${index}`}>
+                                    <td>{index + 1}</td>
+                                    <td className="left">{details?.partNumber ?? ""}</td>
+                                    <td>{details?.qtyVEWCSL ?? details?.quantity ?? ""}</td>
+                                    <td>{selectedRecord?.weekNo ?? ""}</td>
+                                    <td>{details?.grossWeight ?? "-"}</td>
+                                    <td>{details?.qtyOTISCSL ?? details?.quantity ?? ""}</td>
+                                    <td>{details?.remark ?? ""}</td>
+                                    <td>{details?.hardwareInspectionRemark ?? ""}</td>
+                                    <td>{details?.kittingInspectionRemark ?? ""}</td>
+                                    <td>{details?.finalRemark ?? ""}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+                <div
+                >
+                    <BottomSection selectedRecord={selectedRecord} />
+                </div>
+            </div>
+        </>
     );
 };
 
