@@ -6,7 +6,7 @@ import { useReactToPrint } from "react-to-print";
 import { DispatchModal } from "./dispatchModal";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import * as api from "../../../actions";
-import { CSLBASEURL } from "../../../apiservices/endpoints";
+import { CONFIG, CSLBASEURL } from "../../../apiservices/endpoints";
 import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
@@ -16,7 +16,7 @@ import { reportTypeOptions } from "../reports/config";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
-        <AuditReport selectedRecord={props?.selectedRecord} />
+        <AuditReport selectedRecord={props?.selectedRecord} vendorName ={props?.vendorName}/>
     </div>
 ));
 
@@ -33,6 +33,7 @@ export const AuditScreen = () => {
     const [auditSource, setAuditSource] = useState([]);
     const [currentStatus, setCurrentStatus] = useState("");
     const [selectedRecord, setSelectedRecord] = useState({});
+    const [vendorName, setVendorName] = useState("");
 
     const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
@@ -80,6 +81,16 @@ export const AuditScreen = () => {
         },
     });
 
+    useQuery(["FETCH_CONFIG", ""], () => api.get(`${CONFIG}/VENDORNAME`), {
+        onSuccess: (configResponse) => {
+            console.log("configResponse", configResponse);
+            const vendorname = configResponse?.configuration?.[0];
+            setVendorName(vendorname);
+        },
+        enabled: true,
+        refetchOnWindowFocus: false
+    });
+
     const handlePrint = useReactToPrint({
         content: () => printRef.current,
         onAfterPrint: () => {
@@ -91,7 +102,7 @@ export const AuditScreen = () => {
         },
         pageStyle: `
     @page {
-      size: A4;
+      size: A4 landscape;
       margin: 3mm !important;
     }
 
@@ -239,6 +250,7 @@ export const AuditScreen = () => {
             <PrintAuditPDF
                 selectedRecord={selectedRecord}
                 ref={printRef}
+                vendorName={vendorName}
             />
         </div>
         {isOpenDispatch && <DispatchModal isFetchingAuditUpdate={isFetchingAuditUpdate} open={isOpenDispatch} handleClose={(isCheck, date) => {
