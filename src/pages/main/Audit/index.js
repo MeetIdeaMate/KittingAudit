@@ -28,6 +28,7 @@ export const AuditScreen = () => {
     const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
 
     const [isOpenDispatch, setIsOpenDispatch] = useState(false);
+    const [isCallCRNumber, setIsCallCRNumber] = useState(false);
     const [filters, setFilters] = useState({ crNumber: "", finNmber: "", reportType: "" });
     const [cslSource, setCslSource] = useState({ crNumber: [], finNmber: [] });
     const [auditSource, setAuditSource] = useState([]);
@@ -46,6 +47,7 @@ export const AuditScreen = () => {
                 if (!filters?.crNumber) {
                     setFilters(prev => ({ ...prev, crNumber: cslDetails?.[0] }));
                 }
+                setIsCallCRNumber(false);
             } else {
                 showToast.error("Error", crNumberResponse?.response?.data?.error?.message);
             }
@@ -153,6 +155,9 @@ export const AuditScreen = () => {
             ...(fieldName === "reportType" ? { crNumber: "", finNmber: "" } : {}),
             ...(fieldName === "crNumber" ? { finNmber: "" } : {})
         }));
+        if (fieldName === "reportType" || fieldName === "crNumber") {
+            setIsCallCRNumber(true);
+        }
     };
 
     useEffect(() => {
@@ -164,14 +169,16 @@ export const AuditScreen = () => {
     useEffect(() => {
         if (filters?.crNumber) {
             refetchGetAllAudit();
+        } else {
+            setAuditSource([]);
         }
     }, [filters, refetchGetAllAudit]);
 
     useEffect(() => {
-        if (cslSource?.crNumber?.length > 0) {
+        if (isCallCRNumber) {
             refetchCRNumbers();
         }
-    }, [filters?.crNumber, filters?.reportType, cslSource?.crNumber?.length, refetchCRNumbers]);
+    }, [isCallCRNumber, refetchCRNumbers]);
 
     useEffect(() => {
         let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;
