@@ -39,39 +39,6 @@
         }
     }
 
-    .table-wrapper {
-        margin-bottom: 14px;
-        border: 1px solid #000;
-        overflow: hidden;
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-
-            thead {
-                background: #f3f3f3;
-            }
-
-            th,
-            td {
-                border: 1px solid #000;
-                font-size: 12px;
-                word-break: break-word;
-                vertical-align: middle;
-                text-align: center;
-            }
-
-            th {
-                font-weight: 700;
-                text-align: center;
-            }
-
-            tbody tr {
-                page-break-inside: avoid;
-            }
-        }
-    }
 
     .bottom-section {
         display: flex;
@@ -253,58 +220,62 @@
 .report-header {
     text-align: center;
     margin-bottom: 20px;
-}
 
-.report-header h3 {
-    margin: 0 0 4px 0;
-    font-size: 18px;
-    font-weight: bold;
-    letter-spacing: 0.5px;
-}
+    h3 {
+        margin: 0 0 4px 0;
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0.5px;
+    }
 
-.report-header p {
-    margin: 0 0 4px 0;
-    font-size: 13px;
-    font-weight: 500;
-}
+    p {
+        margin: 0 0 4px 0;
+        font-size: 13px;
+        font-weight: 500;
+    }
 
-.report-header h4 {
-    margin: 0;
-    font-size: 15px;
-    font-weight: bold;
+    h4 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: bold;
+    }
 }
 
 .table-wrapper {
     width: 100%;
     margin-bottom: 20px;
-}
 
-.table-wrapper table {
-    width: 100%;
-    border-collapse: collapse;
-}
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
 
-.table-wrapper th,
-.table-wrapper td {
-    border: 1px solid #000000;
-    padding: 6px 4px;
-    text-align: center;
-    vertical-align: middle;
-    font-size: 11px;
-}
+    th,
+    td {
+        border: 1px solid #000000;
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: center;
+        font-size: 12px;
+    }
 
-.table-wrapper th {
-    background-color: #ffffff;
-    font-weight: bold;
-}
+    th {
+        background-color: #ffffff;
+        font-weight: bold;
+        height: 20px;
+        line-height: 20px;
+    }
 
-.table-wrapper td {
-    height: 28px;
-}
+    td {
+        height: 20px;
+        line-height: 20px;
 
-.table-wrapper td.left {
-    text-align: left;
-    padding-left: 6px;
+        &.left {
+            text-align: left;
+            text-indent: 4px;
+        }
+    }
 }
 
 .bottom-layout-table {
@@ -312,42 +283,46 @@
     border-collapse: collapse;
     border: 1px solid #000000;
     table-layout: fixed;
-}
 
-.bottom-layout-table td {
-    border: 1px solid #000000;
-    vertical-align: middle;
-    font-size: 11px;
-    padding: 0;
-    margin: 0;
+    td {
+        border: 1px solid #000000;
+        font-size: 11px;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
 }
 
 .col-label {
     width: 160px;
-    padding: 6px !important;
+    text-align: left;
+    text-indent: 4px;
 }
 
 .col-value {
     width: 280px;
-    padding: 6px !important;
-    font-weight: normal;
+    text-align: left;
+    text-indent: 4px;
 }
 
 .meta-row {
-    height: 28px;
+    height: 17px;
+
+    td {
+        height: 17px;
+        line-height: 17px;
+    }
 }
 
 .signature-cell-container {
     vertical-align: top;
     position: relative;
-    padding: 0;
 }
 
 .sig-flex-inner {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 196px;
+    height: 168px;
     padding: 0 20px;
 }
 
@@ -366,15 +341,21 @@
 }
 
 .remark-block-cell {
-    height: 48px;
-    vertical-align: top;
-    padding: 6px !important;
+    height: 30px;
+    text-align: left;
+    text-indent: 4px;
+    line-height: 1.6;
+    padding-top: 4px !important;
+    box-sizing: border-box;
 }
 
 .note-block-cell {
-    height: 48px;
-    vertical-align: top;
-    padding: 6px !important;
+    height: 30px;
+    text-align: left;
+    text-indent: 4px;
+    line-height: 1.6;
+    padding-top: 4px !important;
+    box-sizing: border-box;
 }
 
 .outside-approvals-row {
@@ -390,19 +371,11 @@
     display: flex;
     align-items: flex-end;
     font-size: 12px;
-}
 
-.approval-signature-line span:last-child {
-    margin-left: 6px;
-    color: #a0a0a0;
-}
-
-.faint-underline-space {
-    flex: 1;
-    border-bottom: 1px solid #cccccc;
-    margin-left: 6px;
-    display: inline-block;
-    height: 10px;
+    span:last-child {
+        margin-left: 6px;
+        color: #000000;
+    }
 }
 
 .page-break {
