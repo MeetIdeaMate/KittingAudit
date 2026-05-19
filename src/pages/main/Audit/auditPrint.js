@@ -89,7 +89,7 @@ const BottomSection = ({ selectedRecord }) => (
 );
 
 const AuditReport = ({ selectedRecord, vendorName }) => {
-    const partDetails = selectedRecord?.partDetail ?? [];
+    const partDetails = selectedRecord?.partDetails ?? [];
     return (
         <>
             <div className="audit-report">
