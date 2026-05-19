@@ -1,8 +1,8 @@
 import { DownloadOutlined, EllipsisOutlined, } from "@ant-design/icons";
-import { Dropdown, Pagination, Select, Space, Table } from "antd";
+import { Dropdown, Pagination, Space, Table } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import { UiButton, UiCounterBatch, UiRangePicker, UiSelect, UiTextBox, } from "../../../components";
+import { UiButton, UiCounterBatch, UiRangePicker, UiSelect } from "../../../components";
 
 import { DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeDateOptions, reportTypeOptions } from "./config";
 import { DispatchPrint } from "./reportPdf";
@@ -16,7 +16,7 @@ import { showToast } from "../../../components/UiToastNotification";
 
 const PrintDispatchPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
-        <DispatchPrint tableData={props?.tableData} filters={props?.filters} />
+        <DispatchPrint tableData={props?.tableData} filters={props?.filters} cumulativeData={props?.cumulativeData} />
     </div>
 ));
 
@@ -24,9 +24,6 @@ export const ReportScreen = () => {
 
     const tableRef = useRef(null);
     const dispatch = useDispatch();
-    const defaultDatePicker = {
-        NOT_AUDIT: "NOT_AUDIT",
-    }
 
     const [filters, setFilters] = useState({
         reportType: "NOT_AUDIT",
@@ -43,6 +40,7 @@ export const ReportScreen = () => {
     const [tableData, setTableData] = useState({});
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [pdfSource, setPdfSource] = useState({});
+    const [cumulativeData, setCumulativeData] = useState({});
     const [dropDownSource, setDropDownSource] = useState({ crNumbers: [], fimNumbers: [], partNos: [], weekNos: [] });
     const [selectDownloadOption, setSelectDownloadOption] = useState({ key: "1", content: "EXL" });
 
@@ -68,8 +66,9 @@ export const ReportScreen = () => {
         refetchOnWindowFocus: false,
         onSuccess: getAllReportsResponse => {
             if (getAllReportsResponse?.statusCode === 200) {
-                const reportSource = getAllReportsResponse?.result?.report || [];
-                setTableData(reportSource);
+                const reportSource = getAllReportsResponse?.result?.report || {};
+                setTableData(reportSource?.cslDetailInfoResponsePage);
+                setCumulativeData(reportSource?.cumulativeData || {});
             } else {
                 showToast.error("Error", getAllReportsResponse?.response?.data?.error);
             }
@@ -93,7 +92,8 @@ export const ReportScreen = () => {
         onSuccess: getAllReportsResponse => {
             if (getAllReportsResponse?.statusCode === 200) {
                 const reportSource = getAllReportsResponse?.result?.report || [];
-                setPdfSource(reportSource);
+                setPdfSource(reportSource?.cslDetailInfoResponsePage);
+                setCumulativeData(reportSource?.cumulativeData || {});
             } else {
                 showToast.error("Error", getAllReportsResponse?.response?.data?.error);
             }
@@ -188,7 +188,7 @@ export const ReportScreen = () => {
                 handlePrint();
             }
         }
-    }, [pdfSource?.content?.length]);
+    }, [pdfSource?.content?.length, handlePrint, selectDownloadOption, pdfSource]);
 
     useEffect(() => {
         if (!isFetchApiCall) return;
@@ -208,13 +208,36 @@ export const ReportScreen = () => {
     return (
         <div className="report-page">
             <div className="report-header">
-                <div className="flexible-start" style={{ padding: 0, margin: 0 }}>
-                    <h3 style={{ padding: 0, margin: 0 }}>
-                        Reports
-                    </h3>
-                    <UiCounterBatch primary>
-                        {tableData?.totalElements || 0}
-                    </UiCounterBatch>
+                <div className="flexible" style={{ padding: 0, margin: 0 }}>
+                    <div className="flexible-start" style={{ padding: 0, margin: 0 }}>
+                        <h3 style={{ padding: 0, margin: 0 }}>
+                            Reports
+                        </h3>
+                        <UiCounterBatch primary>
+                            {tableData?.totalElements || 0}
+                        </UiCounterBatch>
+                    </div>
+                    <div className="info-container">
+                        <div className="info-box">
+                            <p className="title">Total CR:</p>
+                            <p className="value">{cumulativeData?.totalCrNumbers ?? 0}</p>
+                        </div>
+
+                        <div className="info-box">
+                            <p className="title">Total FIM:</p>
+                            <p className="value">{cumulativeData?.totalParentNumbers ?? 0}</p>
+                        </div>
+
+                        <div className="info-box">
+                            <p className="title">Total SubParts:</p>
+                            <p className="value">{cumulativeData?.totalSubPartNumbers ?? 0}</p>
+                        </div>
+
+                        <div className="info-box">
+                            <p className="title">Total Quantity:</p>
+                            <p className="value">{cumulativeData?.totalQty ?? 0}</p>
+                        </div>
+                    </div>
                 </div>
                 <div style={{ display: "flex", justifyContent: "end", marginTop: "10px", marginBottom: "10px", }} >
                     <div style={{ display: "flex", alignItems: "center", gap: "2px", flexWrap: "wrap", justifyContent: "flex-end" }}>
@@ -342,6 +365,7 @@ export const ReportScreen = () => {
                 <PrintDispatchPDF
                     ref={tableRef}
                     tableData={pdfSource}
+                    cumulativeData={cumulativeData}
                     filters={filters}
                 />
             </div>
