@@ -24,6 +24,9 @@ export const ReportScreen = () => {
 
     const tableRef = useRef(null);
     const dispatch = useDispatch();
+    const defaultDatePicker = {
+        NOT_AUDIT: "NOT_AUDIT",
+    }
 
     const [filters, setFilters] = useState({
         reportType: "NOT_AUDIT",
@@ -133,7 +136,7 @@ export const ReportScreen = () => {
         setFilters(prev => ({
             ...prev,
             [fieldName]: fieldValue,
-            ...(fieldName === "reportType" ? { crNo: "", finNo: "", partNo: "", weekNo: null } : {}),
+            ...(fieldName === "reportType" ? { crNo: "", finNo: "", partNo: "", weekNo: null, datePickerStatus: fieldValue } : {}),
             ...(fieldName === "dateRange" ? { crNo: "", finNo: "", partNo: "", weekNo: null } : {}),
             ...(fieldName === "crNo" ? { finNo: "", partNo: "", weekNo: null } : {}),
             ...(fieldName === "finNo" ? { partNo: "", weekNo: null } : {}),
@@ -151,6 +154,12 @@ export const ReportScreen = () => {
     const handlePagination = (pages, size) => {
         setFilters(prev => ({ ...prev, page: pages - 1, size: size, }));
         setIsFetchApiCall(true);
+    };
+
+    const filterDatePickerDropdownSource = status => {
+        if (status === "NOT_AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
+        if (status === "AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key !== "DISPATCH");
+        return reportTypeDateOptions;
     };
 
     const handlePrint = useReactToPrint({
@@ -220,7 +229,7 @@ export const ReportScreen = () => {
                         />
                         <UiSelect
                             allowClear={false}
-                            options={reportTypeDateOptions}
+                            options={filterDatePickerDropdownSource(filters?.datePickerStatus)}
                             isStyle={true}
                             style={{ width: "130px" }}
                             placeholder="Report Type"
