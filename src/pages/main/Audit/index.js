@@ -85,7 +85,6 @@ export const AuditScreen = () => {
 
     useQuery(["FETCH_CONFIG", ""], () => api.get(`${CONFIG}/VENDORNAME`), {
         onSuccess: (configResponse) => {
-            console.log("configResponse", configResponse);
             const vendorname = configResponse?.configuration?.[0];
             setVendorName(vendorname);
         },

@@ -27,7 +27,7 @@ const BottomSection = ({ selectedRecord }) => (
                 <tr className="meta-row">
                     <td className="col-label" style={{ padding: "0" }}>Contract Packed Date</td>
                     <td className="col-value" style={{ padding: "0" }}>
-                        {selectedRecord?.date ? dayjs(selectedRecord.date).format("DD Oct YYYY") : "04 Oct 2025"}
+                        {selectedRecord?.date ? dayjs(selectedRecord?.date).format("DD Oct YYYY") : "-"}
                     </td>
                     <td className="signature-cell-container" rowSpan={6} >
                         <div className="sig-flex-inner">
@@ -88,7 +88,7 @@ const BottomSection = ({ selectedRecord }) => (
     </div>
 );
 
-const AuditReport = ({ selectedRecord, vendorName = "Vijay Engineering Works" }) => {
+const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetail ?? [];
     return (
         <>
