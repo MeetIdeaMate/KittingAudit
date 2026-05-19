@@ -9,10 +9,12 @@ const AuditReport = ({ selectedRecord }) => {
                 <div className="logo-section">
                     <img src={tl_pdf_logo} alt="" />
                 </div>
-                <h2>Contract - Wise Packed Audit Report</h2>
-                <p>
-                    Contract No : <strong>{selectedRecord?.parentPartNumber || "-"}</strong>
-                </p>
+                <div>
+                    <h2>Contract - Wise Packed Audit Report</h2>
+                    <p>
+                        Contract No : <strong>{selectedRecord?.parentPartNumber || "-"}</strong>
+                    </p>
+                </div>
             </div>
             <div className="table-wrapper">
                 <table>
