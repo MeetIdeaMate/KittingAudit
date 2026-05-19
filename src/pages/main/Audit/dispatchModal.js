@@ -27,7 +27,7 @@ export const DispatchModal = ({ open, handleClose, isFetchingAuditUpdate }) => {
                 <div>
                     <label style={{ fontSize: "16px", }}>Select the dispatch date</label>
                     <UiDatePicker
-                        disabledDate={(current) => current && current.isBefore(dayjs().startOf("day"))}
+                        disabledDate={(current) => current && current.isAfter(dayjs().startOf("day"))}
                         style={{ width: "200px" }}
                         value={dayjs(dispatchDate).isValid() ? dayjs(dispatchDate) : null}
                         onChange={date => setDispatchDate(date ? date : null)}

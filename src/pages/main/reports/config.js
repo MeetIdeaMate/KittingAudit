@@ -118,7 +118,7 @@ export const reportTypeDateOptions = [
     {
         key: "NOT_AUDIT",
         value: "NOT_AUDIT",
-        label: "Not Audit Date",
+        label: "Contract Date",
     },
     {
         key: "AUDIT",

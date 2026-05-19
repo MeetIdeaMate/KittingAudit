@@ -40,7 +40,7 @@ export const DispatchPrint = ({ tableData = [], filters = {} }) => {
                             <tr key={item?.key || index}>
                                 <td>{index + 1}</td>
                                 <td>{item?.date ? dayjs(item?.date).format("DD-MM-YYYY") : "-"}</td>
-                                <td>{item?.dispatchDate || "-"}</td>
+                                <td>{item?.dispatchDate ? dayjs(item?.dispatchDate).format('DD-MM-YYYY'):"-" }</td>
                                 <td>{item?.kanbanDate || "-"}</td>
                                 <td>{item?.crNumber || "-"}</td>
                                 <td>{item?.parentPartNumber || "-"}</td>

@@ -37,14 +37,14 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
         dataIndex: "audit",
         key: "audit",
         width: 70,
-        render: (_, auditRecord) => auditRecord?.isParentPart ? <img style={{ cursor: "pointer" }} src={audit_print_icon} onClick={() => handlePrintAudit(auditRecord, "AUDIT")} alt="" /> : "-",
+        render: (_, auditRecord) => auditRecord?.isParentPart && auditRecord?.weekNo ? <img style={{ cursor: "pointer" }} src={audit_print_icon} onClick={() => handlePrintAudit(auditRecord, "AUDIT")} alt="" /> : "-",
     },
     {
         title: "Dispatch",
         dataIndex: "dispatch",
         key: "dispatch",
         width: 90,
-        render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
+        render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" && dispatchRecord?.weekNo ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
     {
         title: "CR Date",
