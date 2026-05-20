@@ -19,7 +19,7 @@ export const User = () => {
     const [isOpenCreateUser, setIsOpenCreateUser] = useState(false);
     const [userDetails, setUserDetails] = useState({
         name: "",
-        passWord: "",
+        password: "",
         userName: "",
         role: "",
         designation: "",
@@ -87,9 +87,9 @@ export const User = () => {
                 refetchUsers();
             }
             else {
-                showToast.error("Error", `${userResponse?.message}`);
+                showToast.error("Error", `${userResponse?.response?.data?.error?.message}`);
             }
-        }
+        },
     });
 
     const debounceSearch = (searchValue) => {
@@ -173,7 +173,7 @@ export const User = () => {
     };
 
     useEffect(() => {
-        let enable = Boolean(userDetails?.name && userDetails?.designation && userDetails?.role && userDetails?.userName && userDetails?.passWord);
+        let enable = Boolean(userDetails?.name && userDetails?.designation && userDetails?.role && userDetails?.userName && userDetails?.password);
         setButtonEnabled(enable);
     }, [userDetails]);
 

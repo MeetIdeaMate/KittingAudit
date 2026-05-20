@@ -20,8 +20,8 @@ apiServices.interceptors.response.use(
     (response) => {
         return response;
     },
-    (error) => {
-        return error;
+     (error) => {
+        return error?.response?.data?.statusCode ? Promise.reject(error) : error;
     }
 );
 
