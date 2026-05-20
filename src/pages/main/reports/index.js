@@ -324,7 +324,6 @@ export const ReportScreen = () => {
                     columns={REPORTS_TABLE_COLUMNS}
                     dataSource={tableData?.content}
                     pagination={false}
-                    sticky={{ offsetHeader: 0 }}
                     rowKey={"cslDetailInfoId"}
                     expandable={{
                         expandedRowKeys,
