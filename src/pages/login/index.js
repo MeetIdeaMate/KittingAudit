@@ -97,7 +97,7 @@ export const Login = () => {
                     // );
                 }
             } else {
-                showToast.error("Error", loginData?.response?.data?.message);
+                showToast.error("Error", loginData?.response?.data?.error?.message);
                 dispatch(loaderReducer(false));
             }
         },

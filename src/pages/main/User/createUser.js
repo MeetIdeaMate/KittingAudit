@@ -39,7 +39,7 @@ const CreateUser = ({
                     <label>Username <span style={{ color: "red" }}>*</span></label>
                     <UiTextBox placeholder="Username" name="username" onChange={(event) => handleChange(event?.target?.value, "userName")} />
                     <label>Password <span style={{ color: "red" }}>*</span></label>
-                    <UiTextBox placeholder="Password" name="password" onChange={(event) => handleChange(event?.target?.value, "passWord")} />
+                    <UiTextBox placeholder="Password" name="password" onChange={(event) => handleChange(event?.target?.value, "password")} />
                 </div>
             </UiDrawer>
         </div>
