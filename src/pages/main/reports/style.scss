@@ -151,15 +151,15 @@
 }
 
 .title {
-    font-size: 15px;
+    font-size: 15px !important;
     color: #777;
     margin: 0;
-    font-weight: 600;
+    font-weight: bold !important;
 }
 
 .value {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 20px !important;
+    font-weight: bold !important;
     margin: 0;
     color: #111827;
 }
