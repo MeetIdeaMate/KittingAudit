@@ -135,18 +135,50 @@ export const reportTypeDateOptions = [
 export const DownloadOptions = [{ key: '1', label: 'EXL', }, { key: '2', label: 'Print', }];
 
 export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }) => {
-    const excelData = tableData?.content?.map((item, index) => ({
-        "S.No": index + 1,
-        "CR Date": item?.date ? dayjs(item?.date).format("DD-MM-YYYY") : "-",
-        "Dispatch Date": item?.dispatchDate ? dayjs(item?.dispatchDate).format("DD-MM-YYYY") : "-",
-        "Kanban Date": item?.kanbanDate ? dayjs(item?.kanbanDate).format("DD-MM-YYYY") : "-",
-        "Contract No": item?.crNumber || "-",
-        "Part Number": item?.parentPartNumber || "-",
-        "Week No": item?.weekNo || "-",
-        "BOM Qty": item?.bomQty || "-",
-        "Total Qty": item?.totalQty || "-",
-        "Description": item?.description || "-",
-    }));
+    let excelData = [];
+
+    tableData?.content?.forEach((item, index) => {
+        excelData.push({
+            "S.No": index + 1,
+            "CR Date": item?.date ? dayjs(item?.date).format("DD-MM-YYYY") : "-",
+            "Dispatch Date": item?.dispatchDate ? dayjs(item?.dispatchDate).format("DD-MM-YYYY") : "-",
+            "Kanban Date": item?.kanbanDate ? dayjs(item?.kanbanDate).format("DD-MM-YYYY") : "-",
+            "Contract No": item?.crNumber || "-",
+            "Part Number": item?.parentPartNumber || "-",
+            "Week No": item?.weekNo || "-",
+            "BOM Qty": item?.bomQty || "-",
+            "Total Qty": item?.totalQty || "-",
+            "Description": item?.description || "-",
+        });
+
+        item?.partDetails?.forEach((part) => {
+            excelData.push({
+                "S.No": "",
+                "CR Date": item?.date ? dayjs(item?.date).format("DD-MM-YYYY") : "-",
+                "Dispatch Date": item?.dispatchDate ? dayjs(item?.dispatchDate).format("DD-MM-YYYY") : "-",
+                "Kanban Date": item?.kanbanDate ? dayjs(item?.kanbanDate).format("DD-MM-YYYY") : "-",
+                "Contract No": item?.crNumber || "-",
+                "Part Number": part?.partNumber || "-",
+                "Week No": item?.weekNo || "-",
+                "BOM Qty": part?.quantity || "-",
+                "Total Qty": "",
+                "Description": part?.description || "-",
+            });
+        });
+
+        excelData.push({
+            "S.No": "",
+            "CR Date": "",
+            "Dispatch Date": "",
+            "Kanban Date": "",
+            "Contract No": "",
+            "Part Number": "",
+            "Week No": "",
+            "BOM Qty": "",
+            "Total Qty": "",
+            "Description": "",
+        });
+    });
     const worksheet = XLSX.utils.json_to_sheet(excelData);
     worksheet["!cols"] = [{ wch: 10 }, { wch: 15 }, { wch: 18 }, { wch: 18 }, { wch: 20 }, { wch: 25 }, { wch: 12 }, { wch: 12 }, { wch: 12 }, { wch: 40 },];
     const range = XLSX.utils.decode_range(worksheet["!ref"]);
