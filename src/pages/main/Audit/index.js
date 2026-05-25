@@ -15,7 +15,7 @@ import { reportTypeOptions } from "../reports/config";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
-        <AuditReport selectedRecord={props?.selectedRecord} vendorName ={props?.vendorName}/>
+        <AuditReport selectedRecord={props?.selectedRecord} vendorName={props?.vendorName} />
     </div>
 ));
 
@@ -41,13 +41,14 @@ export const AuditScreen = () => {
         refetchOnWindowFocus: false,
         onSuccess: crNumberResponse => {
             if (crNumberResponse?.statusCode === 200) {
+                setIsCallCRNumber(false);
                 const cslDetails = crNumberResponse?.result?.cslDetails || [];
                 const source = cslDetails?.map(csl => ({ key: csl, value: csl }));
                 setCslSource(prev => ({ crNumber: !filters?.crNumber ? source : prev?.crNumber, finNmber: filters?.crNumber ? source : [] }));
                 if (!filters?.crNumber) {
                     setFilters(prev => ({ ...prev, crNumber: cslDetails?.[0] }));
+                    setIsCallCRNumber(true);
                 }
-                setIsCallCRNumber(false);
             } else {
                 showToast.error("Error", crNumberResponse?.response?.data?.error?.message);
             }
