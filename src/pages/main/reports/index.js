@@ -209,7 +209,7 @@ export const ReportScreen = () => {
         <div className="report-page">
             <div className="report-header">
                 <div className="flexible" style={{ padding: 0, margin: 0 }}>
-                    <div className="flexible-start" style={{ padding: 0, margin: 0, width:"20%" }}>
+                    <div className="flexible-start" style={{ padding: 0, margin: 0, width: "20%" }}>
                         <h3 style={{ padding: 0, margin: 0 }}>
                             Reports
                         </h3>
@@ -252,7 +252,7 @@ export const ReportScreen = () => {
                         />
                         <UiSelect
                             allowClear={false}
-                            options={filterDatePickerDropdownSource(filters?.datePickerStatus)}
+                            options={filterDatePickerDropdownSource(filters?.reportType)}
                             isStyle={true}
                             style={{ width: "130px" }}
                             placeholder="Report Type"
