@@ -193,7 +193,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (!isFetchApiCall) return;
         refetchGetAllDropdown();
-    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.dateRange?.length]);
+    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.dateRange?.[0], filters?.dateRange?.[1]]);
 
     useEffect(() => {
         if (!isFetchApiCall) return;
