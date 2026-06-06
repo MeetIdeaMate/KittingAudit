@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
-import { audit_print_icon, disatch_icon } from "../../../assets/images";
+import { audit_print_icon, disatch_icon, printer } from "../../../assets/images";
 
-export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
+export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
     {
         title: "S.No",
         dataIndex: "sNo",
@@ -45,6 +45,11 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, }) => [
         key: "dispatch",
         width: 90,
         render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" && dispatchRecord?.weekNo ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
+    },
+    {
+        title:"label Print",
+        key:"labelPrint",
+        render:(record) => record?.isParentPart && <img style={{cursor:"pointer"}} src={printer} alt="label" onClick={()=>handlePrintLabel(record)}/>
     },
     {
         title: "CR Date",

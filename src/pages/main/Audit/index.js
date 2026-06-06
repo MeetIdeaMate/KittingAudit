@@ -12,6 +12,7 @@ import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
 import dayjs from "dayjs";
 import { reportTypeOptions } from "../reports/config";
+import { LabelPrint } from "./labelPrint";
 
 const PrintAuditPDF = React.forwardRef((props, ref) => (
     <div ref={ref}>
@@ -19,9 +20,16 @@ const PrintAuditPDF = React.forwardRef((props, ref) => (
     </div>
 ));
 
+const PrintManualLabel = React.forwardRef((props, ref) => (
+    <div ref={ref}>
+        <LabelPrint stickers={props?.selectedRecord} />
+    </div>
+));
+
 export const AuditScreen = () => {
 
     const printRef = useRef();
+    const labelPrintRef = useRef();
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
@@ -34,6 +42,8 @@ export const AuditScreen = () => {
     const [currentStatus, setCurrentStatus] = useState("");
     const [selectedRecord, setSelectedRecord] = useState({});
     const [vendorName, setVendorName] = useState("");
+    const [isOpenLabel, setIsOpenLabel] = useState(false);
+    const [printType, setPrintType] = useState("");
 
     const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
@@ -93,15 +103,25 @@ export const AuditScreen = () => {
     });
 
     const handlePrint = useReactToPrint({
-        content: () => printRef.current,
+        content: () => printType === "LABEL" ? labelPrintRef.current : printRef.current,
         onAfterPrint: () => {
             if (selectedRecord?.status === "NOT_AUDIT") {
                 refetchGetAllAudit();
             }
             setSelectedRecord({});
             setCurrentStatus("");
+            setIsOpenLabel(false);
         },
-        pageStyle: `
+        pageStyle: printType === "LABEL" ? `
+         @page {
+      size: 4in 6in !important ;
+      margin:  0 ;
+       html, body {
+      background: white !important;
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+        `: `
     @page {
       size: A4 landscape;
       margin: 3mm !important;
@@ -158,6 +178,12 @@ export const AuditScreen = () => {
         }
     };
 
+    const handlePrintLabel = (labelDetails) => {
+        setSelectedRecord(labelDetails);
+        setPrintType("LABEL");
+        setIsOpenLabel(true);
+    };
+
     const handleFiltersChange = (fileldalue, fieldName) => {
         setFilters(prev => ({
             ...prev,
@@ -189,6 +215,12 @@ export const AuditScreen = () => {
             refetchCRNumbers();
         }
     }, [isCallCRNumber, refetchCRNumbers]);
+
+    useEffect(() => {
+        if (isOpenLabel && printType === "LABEL") {
+            handlePrint();
+        }
+    }, [isOpenLabel, printType]);
 
     useEffect(() => {
         let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;
@@ -244,7 +276,7 @@ export const AuditScreen = () => {
         <div className="audit-body">
             <UiTable
                 className="ChangeTablePadding"
-                columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, })}
+                columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, handlePrintLabel })}
                 dataSource={auditSource}
                 rowClassName={(record) =>
                     record?.isParentPart ? (record?.status === "DISPATCH" ? "parent-part-row-comleted" : record?.status === "AUDIT" ? "parent-part-row-inprogross" : record?.status === "NOT_AUDIT" ? "parent-part-row" : "") : ""
@@ -266,5 +298,8 @@ export const AuditScreen = () => {
                 setIsOpenDispatch(false);
             }
         }} />}
+        <div style={{ display: "none", width: "100%" }}>
+            <PrintManualLabel ref={labelPrintRef} selectedRecord={selectedRecord} />
+        </div>
     </div>
 }
