@@ -30,6 +30,11 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile, title }) => [
                 </div>
             }
         },
+        {
+            title: "Type",
+            dataIndex: "type",
+            width: 80
+        }
     ] : []),
     {
         title: "Download",

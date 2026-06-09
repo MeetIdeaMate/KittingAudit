@@ -1,5 +1,5 @@
 import React from "react";
-import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSearchBox, UiTable } from "../../components";
+import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSearchBox, UiSelect, UiTable } from "../../components";
 import "./style.scss";
 import { colorStatus, ExcelUploadTaleColumn } from "./config";
 import dayjs from "dayjs";
@@ -22,7 +22,14 @@ const ExcelUploadLayout = ({
     isOpen,
     modalTitle,
     handleSubmit,
-    loading
+    loading,
+    isDropDown,
+    dropDownList,
+    handleDropDownChange,
+    dropDownValue,
+    dropDownPlaceholder,
+    handleDropDownFilter,
+    dropDownFiltervalue
 }) => {
     const expandedTable = (details) => {
         const weekNoDetailList = details?.weekNoDetailList?.flatMap(sobDetails => {
@@ -157,6 +164,11 @@ const ExcelUploadLayout = ({
                     <UiCounterBatch primary>{counter ?? 0}</UiCounterBatch>
                 </div>
                 <div className="excel-header-controls">
+                    <div style={{ paddingTop: "22px" }}>
+                        {
+                            isDropDown && <UiSelect options={dropDownList} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
+                        }
+                    </div>
                     <UiRangePicker value={dateFilter} onChange={onDateChange} />
                     <UiSearchBox
                         placeholder={"Search Excel Name/Contract Number"}
@@ -165,22 +177,27 @@ const ExcelUploadLayout = ({
                     />
                 </div>
             </div>
-
-            {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">
-                {colorStatus?.map((status, index) => (
-                    <div className="excel-title-box" key={index}>
-                        <div
-                            className="status-dot"
-                            style={{
-                                border: `1px solid ${status?.color}`,
-                                backgroundColor: status?.bgColor,
-                            }}
-                        />
-                        <p>{status?.label}</p>
-                    </div>
-                ))}
-            </div>}
-
+            <div className="excel-type-section">
+                <div style={{ width: "30%" }}>
+                    {
+                        isDropDown && <UiSelect options={dropDownList} onChange={(value) => handleDropDownChange(value)} value={dropDownValue} placeholder={dropDownPlaceholder} />
+                    }
+                </div>
+                {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">
+                    {colorStatus?.map((status, index) => (
+                        <div className="excel-title-box" key={index}>
+                            <div
+                                className="status-dot"
+                                style={{
+                                    border: `1px solid ${status?.color}`,
+                                    backgroundColor: status?.bgColor,
+                                }}
+                            />
+                            <p>{status?.label}</p>
+                        </div>
+                    ))}
+                </div>}
+            </div>
             <div className="excel-container">
                 <div className="excel-left">
                     <UiFileUploader localFileName={fileName} onFileSelect={onFileSelect} />

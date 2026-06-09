@@ -1,6 +1,6 @@
 import { ExcelUploadLayout } from "../../../components";
 import * as api from "../../../actions"
-import { CSLBASEURL } from "../../../apiservices/endpoints";
+import { CONFIG, CSLBASEURL } from "../../../apiservices/endpoints";
 import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -14,20 +14,21 @@ const CSLUpload = () => {
     const debounceTimeOut = useRef(null);
 
     const [crExcelDetails, setCrExcelDetails] = useState({});
-    const [filterValue, setFilterValue] = useState({ page: 0, size: 25, searchValue: "", fromDate: "", toDate: "" });
+    const [filterValue, setFilterValue] = useState({ page: 0, size: 25, searchValue: "", fromDate: "", toDate: "", uploadExcelValue: "", filterExcelvalue: "" });
     const [dateFilter, setDateFilter] = useState(null);
     const [isValidate, setIsValidate] = useState(false);
     const [barCodeKittingAllData, setBarCodeKittingAllData] = useState({});
     const [selectedDetails, setSelectedDetails] = useState({});
     const [isOpen, setIsOpen] = useState({ isOpenFindExistCr: false });
+    const [excelTypeList, setExcelTypeList] = useState([]);
 
-    const getAllCrExcels = (details) => api.get(`${CSLBASEURL}/page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&crNumberSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&startDate=${details?.fromDate}&endDate=${details?.toDate}` : ""}`);
-    const uploadExcel = (file) => api.post(`${CSLBASEURL}/file-upload`, file);
+    const getAllCrExcels = (details) => api.get(`${CSLBASEURL}/page?page=${details?.page}&size=${details?.size}${details?.searchValue ? `&crNumberSearch=${details?.searchValue}` : ""}${details?.fromDate && details?.toDate ? `&startDate=${details?.fromDate}&endDate=${details?.toDate}` : ""}${details?.filterExcelvalue ? `&type=${details?.filterExcelvalue}` : ""}`);
+    const uploadExcel = (file, type) => api.post(`${CSLBASEURL}/file-upload?type=${type}`, file);
     const getExcelDownload = (id) => api.get(`${CSLBASEURL}/download-file/${id}`);
     const alreadyCrUploaded = (file) => api.post(`${CSLBASEURL}/validateCrNumber`, file);
 
-    const { isFetching: isFetchCrExcel, refetch: fetchAllCrExcels } = useQuery(["", filterValue?.page, filterValue?.size, filterValue?.searchValue, filterValue?.fromDate, filterValue?.toDate], () => getAllCrExcels(filterValue), {
-        enabled: Boolean(filterValue?.page || filterValue?.size || filterValue?.searchValue || (filterValue?.fromDate && filterValue?.toDate)),
+    const { isFetching: isFetchCrExcel, refetch: fetchAllCrExcels } = useQuery(["", filterValue?.page, filterValue?.size, filterValue?.searchValue, filterValue?.fromDate, filterValue?.toDate, filterValue?.filterExcelvalue], () => getAllCrExcels(filterValue), {
+        enabled: Boolean(filterValue?.page || filterValue?.size || filterValue?.searchValue || (filterValue?.fromDate && filterValue?.toDate) || filterValue?.filterExcelvalue),
         onSuccess: (crResponse) => {
             if (crResponse?.statusCode) {
                 setBarCodeKittingAllData(crResponse?.result?.cslDetailResponsePage);
@@ -90,6 +91,19 @@ const CSLUpload = () => {
         refetchOnWindowFocus: false,
     });
 
+    useQuery(["FETCH_CONFIG", ""], () => api.get(`${CONFIG}/ExcelType`), {
+        onSuccess: (configResponse) => {
+            console.log("configResponse", configResponse);
+            const options = configResponse?.configuration?.map((type) => ({
+                key: type,
+                value: type
+            }));
+            setExcelTypeList(options);
+        },
+        enabled: true,
+        refetchOnWindowFocus: false
+    });
+
     const handleChangeDate = (date) => {
         setDateFilter(date);
         if (date) {
@@ -119,7 +133,16 @@ const CSLUpload = () => {
 
     const handleSearch = (searchvalue) => {
         debounceSearch(searchvalue);
-    }
+    };
+
+    const handleTypeChange = (value) => {
+        console.log("TypeChange", value);
+        setFilterValue((prev) => ({ ...prev, uploadExcelValue: value }));
+    };
+
+    const handleFilterType = (value) => {
+        setFilterValue((prev) => ({ ...prev, filterExcelvalue: value }));
+    };
 
     const handleChangeFieldValue = (fieldValue, fieldName) => {
         setCrExcelDetails((prev) => ({
@@ -139,6 +162,7 @@ const CSLUpload = () => {
 
     const handleUploadExcel = async () => {
         const payload = new FormData();
+        console.log("uploadPayload", payload);
         payload.append("file", crExcelDetails?.excel);
         queryClient.prefetchQuery(["FIND_EXIST_CR", ""], () => alreadyCrUploaded(payload));
     };
@@ -150,15 +174,19 @@ const CSLUpload = () => {
 
     const handleSubmit = () => {
         const payload = new FormData();
+        console.log("payload", payload);
         payload.append("file", crExcelDetails?.excel);
-        queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload));
+        queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload, filterValue?.uploadExcelValue));
     };
 
 
     useEffect(() => {
         let isValid = crExcelDetails?.excel?.name;
-        setIsValidate(Boolean(isValid));
-    }, [crExcelDetails]);
+        console.log("isValid", isValid);
+        const isButtonEnable = Boolean(crExcelDetails?.excel?.name && filterValue?.uploadExcelValue);
+        console.log("isButtonEnable", isButtonEnable);
+        setIsValidate(isButtonEnable);
+    }, [crExcelDetails, filterValue?.uploadExcelValue]);
 
     useEffect(() => {
         let isLoading = isFetchCrExcel || isFetchExcelDownload || isFetchUploadingExcel || isFetchExistCr;
@@ -186,6 +214,13 @@ const CSLUpload = () => {
                 handleClose={handleClose}
                 handleSubmit={handleSubmit}
                 isOpen={isOpen}
+                isDropDown={true}
+                dropDownList={excelTypeList}
+                handleDropDownChange={handleTypeChange}
+                dropDownValue={filterValue?.uploadExcelValue}
+                dropDownPlaceholder={"Select Type"}
+                handleDropDownFilter={handleFilterType}
+                dropDownFiltervalue={filterValue?.filterExcelvalue}
                 loading={isFetchUploadingExcel}
                 modalTitle={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.length > 1 ? "CR numbers" : "CR number"
                     } (${crExcelDetails?.existCrNumbers?.join(", ")})?`}

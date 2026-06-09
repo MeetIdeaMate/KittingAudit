@@ -56,6 +56,12 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    width: 70%;
+}
+
+.excel-type-section{
+    display: flex;
+    justify-content: space-between;
 }
 
 .excel-title-box {
