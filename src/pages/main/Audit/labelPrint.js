@@ -57,13 +57,13 @@ export const LabelPrint = ({ stickers }) => {
         totalQty: part?.totalQty ?? part?.quantity ?? "",
     }));
 
-    const gridRows = createGridRows(parts);
     const labelDetails = splitPartsIntoLabels(parts, stickers?.bomQty);
 
     return (
         <>
             {
                 labelDetails?.map((parts, labelIndex) => {
+                     const gridRows = createGridRows(parts);
                     return (
                         <div style={{ ...pageStyle, pageBreakAfter: labelIndex < labelDetails?.length - 1 ? "always" : "auto", breakAfter: labelIndex < labelDetails?.length - 1 ? "always" : "auto" }}>
                             <div style={rotateContainer}>
