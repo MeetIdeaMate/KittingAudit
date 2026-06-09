@@ -43,7 +43,6 @@ export const AuditScreen = () => {
     const [selectedRecord, setSelectedRecord] = useState({});
     const [vendorName, setVendorName] = useState("");
     const [isOpenLabel, setIsOpenLabel] = useState(false);
-    const [printType, setPrintType] = useState("");
 
     const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
@@ -103,25 +102,15 @@ export const AuditScreen = () => {
     });
 
     const handlePrint = useReactToPrint({
-        content: () => printType === "LABEL" ? labelPrintRef.current : printRef.current,
+        content: () => isOpenLabel ? labelPrintRef.current : printRef.current,
         onAfterPrint: () => {
             if (selectedRecord?.status === "NOT_AUDIT") {
                 refetchGetAllAudit();
             }
             setSelectedRecord({});
             setCurrentStatus("");
-            setIsOpenLabel(false);
         },
-        pageStyle: printType === "LABEL" ? `
-         @page {
-      size: 4in 6in !important ;
-      margin:  0 ;
-       html, body {
-      background: white !important;
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-        `: `
+        pageStyle: `
     @page {
       size: A4 landscape;
       margin: 3mm !important;
@@ -141,6 +130,19 @@ export const AuditScreen = () => {
       border: 1px solid #000 !important;
     }
   `,
+    });
+
+    const handleLabelPrint = useReactToPrint({
+        content: () => labelPrintRef.current,
+        onAfterPrint: () => {
+            setSelectedRecord({});
+            setCurrentStatus("");
+            setIsOpenLabel(false);
+        },
+        pageStyle: `
+        @page { size: 4in 6in !important; margin: 0; }
+        html, body { background: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    `,
     });
 
     const { isFetching: isFetchingAuditUpdate } = useQuery(["UPDATE_AUDIT_STATUS", ""], changeAuditStatus, {
@@ -180,7 +182,6 @@ export const AuditScreen = () => {
 
     const handlePrintLabel = (labelDetails) => {
         setSelectedRecord(labelDetails);
-        setPrintType("LABEL");
         setIsOpenLabel(true);
     };
 
@@ -197,10 +198,16 @@ export const AuditScreen = () => {
     };
 
     useEffect(() => {
-        if (currentStatus === "AUDIT" && selectedRecord?.status !== "NOT_AUDIT") {
+        if ((currentStatus === "AUDIT" && selectedRecord?.status !== "NOT_AUDIT")) {
             handlePrint();
         }
-    }, [currentStatus, selectedRecord?.status, handlePrint]);
+    }, [currentStatus, selectedRecord?.status, isOpenLabel, handlePrint]);
+
+    useEffect(() => {
+        if (isOpenLabel) {
+            handleLabelPrint();
+        }
+    }, [isOpenLabel, handleLabelPrint]);
 
     useEffect(() => {
         if (filters?.crNumber) {
@@ -215,12 +222,6 @@ export const AuditScreen = () => {
             refetchCRNumbers();
         }
     }, [isCallCRNumber, refetchCRNumbers]);
-
-    useEffect(() => {
-        if (isOpenLabel && printType === "LABEL") {
-            handlePrint();
-        }
-    }, [isOpenLabel, printType]);
 
     useEffect(() => {
         let isLoading = isFetchingCRNumbers || isFetchingGetAllAudit || isFetchingAuditUpdate;

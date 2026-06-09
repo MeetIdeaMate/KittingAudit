@@ -47,7 +47,7 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
         render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" && dispatchRecord?.weekNo ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
     {
-        title:"label Print",
+        title:"Manual Label",
         key:"labelPrint",
         render:(record) => record?.isParentPart && <img style={{cursor:"pointer"}} src={printer} alt="label" onClick={()=>handlePrintLabel(record)}/>
     },

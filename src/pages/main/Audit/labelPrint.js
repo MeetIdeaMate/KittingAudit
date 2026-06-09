@@ -2,13 +2,14 @@ import dayjs from "dayjs";
 import React from "react";
 
 export const LabelPrint = ({ stickers }) => {
+    const grossWeight = stickers?.grossWeight ?? 0;
     const MAX_ROWS = 12;
     const GROUPS = 2;
     const splitByBomQty = (parts, bomQty) => {
         if (bomQty < 2) return null;
         if (parts?.length <= 1) return [parts];
         const labels = Array.from({ length: bomQty }, () => []);
-        parts.forEach((part, i) => {
+        parts?.forEach((part, i) => {
             labels[i % bomQty].push(part);
         });
         return labels;
@@ -57,8 +58,6 @@ export const LabelPrint = ({ stickers }) => {
     }));
 
     const gridRows = createGridRows(parts);
-    const grossWeight = stickers?.grossWeight ?? 0;
-
     const labelDetails = splitPartsIntoLabels(parts, stickers?.bomQty);
 
     return (
@@ -84,14 +83,12 @@ export const LabelPrint = ({ stickers }) => {
                                             </div>
                                         </div>
                                     </div>
-
                                     <div style={{ width: "100%", display: "flex" }}>
                                         <h6 style={{ width: "25%", padding: 0, margin: 0, borderRight: "1px solid #000" }}>
                                             GROSS WEIGHT:
                                         </h6>
                                         <h6 style={{ padding: 0, margin: 0 }}>{grossWeight > 0 ? `${grossWeight} KGS` : ""}</h6>
                                     </div>
-
                                     <table style={table}>
                                         <thead>
                                             <tr>
