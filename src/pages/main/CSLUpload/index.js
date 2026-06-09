@@ -93,7 +93,6 @@ const CSLUpload = () => {
 
     useQuery(["FETCH_CONFIG", ""], () => api.get(`${CONFIG}/ExcelType`), {
         onSuccess: (configResponse) => {
-            console.log("configResponse", configResponse);
             const options = configResponse?.configuration?.map((type) => ({
                 key: type,
                 value: type
@@ -136,7 +135,6 @@ const CSLUpload = () => {
     };
 
     const handleTypeChange = (value) => {
-        console.log("TypeChange", value);
         setFilterValue((prev) => ({ ...prev, uploadExcelValue: value }));
     };
 
@@ -162,7 +160,6 @@ const CSLUpload = () => {
 
     const handleUploadExcel = async () => {
         const payload = new FormData();
-        console.log("uploadPayload", payload);
         payload.append("file", crExcelDetails?.excel);
         queryClient.prefetchQuery(["FIND_EXIST_CR", ""], () => alreadyCrUploaded(payload));
     };
@@ -174,7 +171,6 @@ const CSLUpload = () => {
 
     const handleSubmit = () => {
         const payload = new FormData();
-        console.log("payload", payload);
         payload.append("file", crExcelDetails?.excel);
         queryClient.prefetchQuery(["UPLOAD_EXCEL", ""], () => uploadExcel(payload, filterValue?.uploadExcelValue));
     };
@@ -182,9 +178,7 @@ const CSLUpload = () => {
 
     useEffect(() => {
         let isValid = crExcelDetails?.excel?.name;
-        console.log("isValid", isValid);
         const isButtonEnable = Boolean(crExcelDetails?.excel?.name && filterValue?.uploadExcelValue);
-        console.log("isButtonEnable", isButtonEnable);
         setIsValidate(isButtonEnable);
     }, [crExcelDetails, filterValue?.uploadExcelValue]);
 
