@@ -49,3 +49,8 @@ export const colorStatus = [
     { label: "In Progresss", color: "#1890ff", bgColor: "#e6f7ff" },
     { label: "Completed", color: "#52c41a", bgColor: "#f6ffed" },
 ];
+
+export const segmentOptions = [
+    { label: "CSL", value: "CSL" },
+    { label: "MANUAL", value: "MANUAL" },
+];

@@ -72,6 +72,22 @@
     white-space: nowrap;
 }
 
+.custom-segment {
+    width: 100% !important;
+    display: flex !important;
+}
+
+.custom-segment .ant-segmented-group {
+    width: 100% !important;
+    display: flex !important;
+}
+
+.custom-segment .ant-segmented-item {
+    flex: 1 !important;
+    text-align: center !important;
+}
+
+
 .status-dot {
     width: 20px;
     height: 20px;

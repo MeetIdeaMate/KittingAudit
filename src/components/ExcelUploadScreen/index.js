@@ -1,8 +1,9 @@
 import React from "react";
 import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSearchBox, UiSelect, UiTable } from "../../components";
 import "./style.scss";
-import { colorStatus, ExcelUploadTaleColumn } from "./config";
+import { colorStatus, ExcelUploadTaleColumn, segmentOptions } from "./config";
 import dayjs from "dayjs";
+import { Segmented } from "antd";
 const ExcelUploadLayout = ({
     title,
     counter,
@@ -29,7 +30,8 @@ const ExcelUploadLayout = ({
     dropDownValue,
     dropDownPlaceholder,
     handleDropDownFilter,
-    dropDownFiltervalue
+    dropDownFiltervalue,
+    dropDownFilterOptions
 }) => {
     const expandedTable = (details) => {
         const weekNoDetailList = details?.weekNoDetailList?.flatMap(sobDetails => {
@@ -166,7 +168,7 @@ const ExcelUploadLayout = ({
                 <div className="excel-header-controls">
                     <div style={{ paddingTop: "22px" }}>
                         {
-                            isDropDown && <UiSelect options={dropDownList} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
+                            isDropDown && <UiSelect style={{ width: "150px" }} options={dropDownFilterOptions} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
                         }
                     </div>
                     <UiRangePicker value={dateFilter} onChange={onDateChange} />
@@ -180,7 +182,13 @@ const ExcelUploadLayout = ({
             <div className="excel-type-section">
                 <div style={{ width: "30%" }}>
                     {
-                        isDropDown && <UiSelect options={dropDownList} onChange={(value) => handleDropDownChange(value)} value={dropDownValue} placeholder={dropDownPlaceholder} />
+                        isDropDown && <Segmented
+                            value={dropDownValue ?? ""}
+                            options={dropDownList}
+                            style={{ backgroundColor: "orange", width: "100%", padding: "3px" }}
+                            onChange={handleDropDownChange}
+                            className="custom-segment"
+                        />
                     }
                 </div>
                 {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">

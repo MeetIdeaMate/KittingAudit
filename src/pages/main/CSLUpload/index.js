@@ -8,13 +8,14 @@ import { showToast } from "../../../components/UiToastNotification";
 import dayjs from "dayjs";
 import { handleDownload, searchInitiateDelayTime } from "../../../utils/appUtils";
 import { loaderReducer } from "../../../reducers/loader.reducer";
+import { segmentOptions } from "../../../components/ExcelUploadScreen/config";
 const CSLUpload = () => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const debounceTimeOut = useRef(null);
 
     const [crExcelDetails, setCrExcelDetails] = useState({});
-    const [filterValue, setFilterValue] = useState({ page: 0, size: 25, searchValue: "", fromDate: "", toDate: "", uploadExcelValue: "", filterExcelvalue: "" });
+    const [filterValue, setFilterValue] = useState({ page: 0, size: 25, searchValue: "", fromDate: "", toDate: "", uploadExcelValue: null, filterExcelvalue: "" });
     const [dateFilter, setDateFilter] = useState(null);
     const [isValidate, setIsValidate] = useState(false);
     const [barCodeKittingAllData, setBarCodeKittingAllData] = useState({});
@@ -208,12 +209,13 @@ const CSLUpload = () => {
                 handleSubmit={handleSubmit}
                 isOpen={isOpen}
                 isDropDown={true}
-                dropDownList={excelTypeList}
+                dropDownList={segmentOptions}
                 handleDropDownChange={handleTypeChange}
                 dropDownValue={filterValue?.uploadExcelValue}
                 dropDownPlaceholder={"Select Type"}
                 handleDropDownFilter={handleFilterType}
                 dropDownFiltervalue={filterValue?.filterExcelvalue}
+                dropDownFilterOptions={excelTypeList}
                 loading={isFetchUploadingExcel}
                 modalTitle={`Are you sure you want to proceed with this Excel file and replace the existing ${crExcelDetails?.existCrNumbers?.length > 1 ? "CR numbers" : "CR number"
                     } (${crExcelDetails?.existCrNumbers?.join(", ")})?`}
