@@ -177,7 +177,6 @@ const CSLUpload = () => {
 
 
     useEffect(() => {
-        let isValid = crExcelDetails?.excel?.name;
         const isButtonEnable = Boolean(crExcelDetails?.excel?.name && filterValue?.uploadExcelValue);
         setIsValidate(isButtonEnable);
     }, [crExcelDetails, filterValue?.uploadExcelValue]);
