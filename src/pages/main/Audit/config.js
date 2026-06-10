@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 import { audit_print_icon, disatch_icon, printer } from "../../../assets/images";
 
-export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
+export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handlePrintLabel }) => [
     {
         title: "S.No",
         dataIndex: "sNo",
@@ -31,7 +31,7 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
         title: "Description",
         dataIndex: "description",
         key: "description",
-        width:150
+        width: 150
     },
     {
         title: "Audit",
@@ -48,10 +48,10 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
         render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" && dispatchRecord?.weekNo ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
     {
-        title:"Manual Label",
-        key:"labelPrint",
-        width:100,
-        render:(record) => record?.isParentPart && <img style={{cursor:"pointer"}} src={printer} alt="label" onClick={()=>handlePrintLabel(record)}/>
+        title: "Manual Label",
+        key: "labelPrint",
+        width: 100,
+        render: (record) => (record?.isParentPart && record?.type === "MANUAL") ? <img style={{ cursor: "pointer" }} src={printer} alt="label" onClick={() => handlePrintLabel(record)} /> : "-"
     },
     {
         title: "CR Date",
