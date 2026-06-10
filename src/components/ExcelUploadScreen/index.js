@@ -1,7 +1,7 @@
 import React from "react";
 import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSearchBox, UiSelect, UiTable } from "../../components";
 import "./style.scss";
-import { colorStatus, ExcelUploadTaleColumn, segmentOptions } from "./config";
+import { colorStatus, ExcelUploadTaleColumn } from "./config";
 import dayjs from "dayjs";
 import { Segmented } from "antd";
 const ExcelUploadLayout = ({
@@ -31,7 +31,8 @@ const ExcelUploadLayout = ({
     dropDownPlaceholder,
     handleDropDownFilter,
     dropDownFiltervalue,
-    dropDownFilterOptions
+    dropDownFilterOptions,
+    dropDownLabel
 }) => {
     const expandedTable = (details) => {
         const weekNoDetailList = details?.weekNoDetailList?.flatMap(sobDetails => {
@@ -182,13 +183,16 @@ const ExcelUploadLayout = ({
             <div className="excel-type-section">
                 <div style={{ width: "30%" }}>
                     {
-                        isDropDown && <Segmented
-                            value={dropDownValue ?? ""}
-                            options={dropDownList}
-                            style={{ backgroundColor: "orange", width: "100%", padding: "3px" }}
-                            onChange={handleDropDownChange}
-                            className="custom-segment"
-                        />
+                        isDropDown && <div style={{padding:"10px"}}>
+                            <label style={{padding:"10px"}}>{dropDownLabel} <span style={{ color: "red" }}>*</span></label>
+                            <Segmented
+                                value={dropDownValue ?? ""}
+                                options={dropDownList}
+                                style={{ backgroundColor: "orange", width: "100%" ,margin:"10px 0px"}}
+                                onChange={handleDropDownChange}
+                                className="custom-segment"
+                            />
+                        </div>
                     }
                 </div>
                 {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">

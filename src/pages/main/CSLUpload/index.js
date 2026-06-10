@@ -210,6 +210,7 @@ const CSLUpload = () => {
                 isOpen={isOpen}
                 isDropDown={true}
                 dropDownList={segmentOptions}
+                dropDownLabel={"Select Type"}
                 handleDropDownChange={handleTypeChange}
                 dropDownValue={filterValue?.uploadExcelValue}
                 dropDownPlaceholder={"Select Type"}

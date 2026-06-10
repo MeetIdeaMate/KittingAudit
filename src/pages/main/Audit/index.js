@@ -44,7 +44,7 @@ export const AuditScreen = () => {
     const [vendorName, setVendorName] = useState("");
     const [isOpenLabel, setIsOpenLabel] = useState(false);
 
-    const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
+    const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", filters?.crNumber, filters?.reportType],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
         enabled: true,
         refetchOnWindowFocus: false,
