@@ -31,6 +31,7 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
         title: "Description",
         dataIndex: "description",
         key: "description",
+        width:150
     },
     {
         title: "Audit",
@@ -49,6 +50,7 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit,handlePrintLabel }) => [
     {
         title:"Manual Label",
         key:"labelPrint",
+        width:100,
         render:(record) => record?.isParentPart && <img style={{cursor:"pointer"}} src={printer} alt="label" onClick={()=>handlePrintLabel(record)}/>
     },
     {
