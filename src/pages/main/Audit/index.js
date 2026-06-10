@@ -44,7 +44,7 @@ export const AuditScreen = () => {
     const [vendorName, setVendorName] = useState("");
     const [isOpenLabel, setIsOpenLabel] = useState(false);
 
-    const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", ""],
+    const { isFetching: isFetchingCRNumbers, refetch: refetchCRNumbers } = useQuery(["GET_CR_NUMBERS_DETAILS", filters?.crNumber, filters?.reportType],
         () => api.get(`${CSLBASEURL}/get_csl_details?${filters?.crNumber ? `&crNumber=${filters?.crNumber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
         enabled: true,
         refetchOnWindowFocus: false,
@@ -64,9 +64,9 @@ export const AuditScreen = () => {
         },
     });
 
-    const { isFetching: isFetchingGetAllAudit, refetch: refetchGetAllAudit } = useQuery(["GET_ALL_AUDIT_DETAILS", ""],
+    const { isFetching: isFetchingGetAllAudit, refetch: refetchGetAllAudit } = useQuery(["GET_ALL_AUDIT_DETAILS", filters?.crNumber, filters?.finNmber, filters?.reportType],
         () => api.get(`${CSLBASEURL}/audit_details?crNumber=${filters?.crNumber}${filters?.finNmber ? `&fimNumber=${filters?.finNmber}` : ""}${filters?.reportType ? `&status=${filters?.reportType}` : ""}`), {
-        enabled: false,
+        enabled: Boolean(filters?.crNumber || filters?.finNmber || filters?.reportType),
         refetchOnWindowFocus: false,
         onSuccess: getAllAuditResponse => {
             if (getAllAuditResponse?.statusCode === 200) {
@@ -86,6 +86,7 @@ export const AuditScreen = () => {
                     }))
                 ]);
                 setAuditSource(auditMap || []);
+                setIsCallCRNumber(false);
             } else {
                 showToast.error("Error", getAllAuditResponse?.response?.data?.error?.message);
             }
@@ -278,7 +279,7 @@ export const AuditScreen = () => {
             <UiTable
                 className="ChangeTablePadding"
                 columns={AUDIT_TABLE_COLUMN({ handlePrintAudit, handlePrintLabel })}
-                dataSource={auditSource}
+                dataSource={auditSource || []}
                 rowClassName={(record) =>
                     record?.isParentPart ? (record?.status === "DISPATCH" ? "parent-part-row-comleted" : record?.status === "AUDIT" ? "parent-part-row-inprogross" : record?.status === "NOT_AUDIT" ? "parent-part-row" : "") : ""
                 }

@@ -30,6 +30,11 @@ export const ExcelUploadTaleColumn = ({ handleDownloadFile, title }) => [
                 </div>
             }
         },
+        {
+            title: "Type",
+            dataIndex: "type",
+            width: 80
+        }
     ] : []),
     {
         title: "Download",
@@ -43,4 +48,9 @@ export const colorStatus = [
     { label: "Not Yet Started", color: "#f6822b", bgColor: "#fff2e8" },
     { label: "In Progresss", color: "#1890ff", bgColor: "#e6f7ff" },
     { label: "Completed", color: "#52c41a", bgColor: "#f6ffed" },
+];
+
+export const segmentOptions = [
+    { label: "CSL", value: "CSL" },
+    { label: "MANUAL", value: "MANUAL" },
 ];
