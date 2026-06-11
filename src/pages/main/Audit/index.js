@@ -33,6 +33,7 @@ export const AuditScreen = () => {
     const dispatch = useDispatch();
     const queryClient = useQueryClient();
     const changeAuditStatus = (partNo, auditPayload) => api.put(`${CSLBASEURL}/update_csl_details_status/${encodeURIComponent(partNo)}`, auditPayload);
+    const markPacking=(id,payload)=>api.patch(`${CSLBASEURL}/mark_packing/${id}`,payload);
 
     const [isOpenDispatch, setIsOpenDispatch] = useState(false);
     const [isCallCRNumber, setIsCallCRNumber] = useState(false);
@@ -166,6 +167,19 @@ export const AuditScreen = () => {
         },
     });
 
+    const {isFetching:isFecthingManualPacking}=useQuery(["UPDATE_MANUAL_PACKING",""],markPacking,{
+        onSuccess:(markPackingResponse)=>{
+            console.log("markPackingResponse",markPackingResponse);
+            if(markPackingResponse?.status === 200){
+                showToast.success("Success",markPackingResponse?.data?.result?.isPacking);
+                setIsOpenLabel(true);
+                refetchGetAllAudit();
+            }
+        },
+        enabled:false,
+        refetchOnWindowFocus:false
+    });
+
     const handlePrintAudit = (auditRec, status, date) => {
         setCurrentStatus(status);
         setSelectedRecord(auditRec);
@@ -183,7 +197,12 @@ export const AuditScreen = () => {
 
     const handlePrintLabel = (labelDetails) => {
         setSelectedRecord(labelDetails);
-        setIsOpenLabel(true);
+        if(!labelDetails?.packingDate){
+             queryClient.prefetchQuery(["UPDATE_MANUAL_PACKING",""],()=>markPacking(labelDetails?.cslDetailInfoId,{date: new Date().toISOString()}));
+        }
+        else{
+            setIsOpenLabel(true);
+        }
     };
 
     const handleFiltersChange = (fileldalue, fieldName) => {

@@ -28,6 +28,7 @@ export const KbMenus = () => [
     { MenuName: 'Download', subMenu: [] },
     { MenuName: 'Audit', subMenu: [] },
     { MenuName: 'Reports', subMenu: [] },
+    { MenuName: 'Invoice', subMenu: []},
     { MenuName: 'User', subMenu: [] },
     {
         MenuName: 'Master', subMenu: [

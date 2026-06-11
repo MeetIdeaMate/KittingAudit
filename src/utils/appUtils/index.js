@@ -50,3 +50,18 @@ export const handleDownload = async (file) => {
         console.error("Download failed", error);
     }
 };
+
+export const tablePageSizeOptions = [25, 50, 75, 100];
+
+export const clientInformation = () => {
+    let clientLogo = "";
+    let isShowDownloadButton = false;
+    let isSearchBoxLarge = false;
+    let isFontLarge = true;
+    return {
+        clientLogo,
+        isShowDownloadButton,
+        isSearchBoxLarge,
+        isFontLarge,
+    }
+};
