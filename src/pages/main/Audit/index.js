@@ -169,7 +169,6 @@ export const AuditScreen = () => {
 
     const {isFetching:isFecthingManualPacking}=useQuery(["UPDATE_MANUAL_PACKING",""],markPacking,{
         onSuccess:(markPackingResponse)=>{
-            console.log("markPackingResponse",markPackingResponse);
             if(markPackingResponse?.status === 200){
                 showToast.success("Success",markPackingResponse?.data?.result?.isPacking);
                 setIsOpenLabel(true);
