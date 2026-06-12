@@ -56,6 +56,12 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
+    width: 70%;
+}
+
+.excel-type-section{
+    display: flex;
+    justify-content: space-between;
 }
 
 .excel-title-box {
@@ -65,6 +71,22 @@
     font-size: 14px;
     white-space: nowrap;
 }
+
+.custom-segment {
+    width: 100% !important;
+    display: flex !important;
+}
+
+.custom-segment .ant-segmented-group {
+    width: 100% !important;
+    display: flex !important;
+}
+
+.custom-segment .ant-segmented-item {
+    flex: 1 !important;
+    text-align: center !important;
+}
+
 
 .status-dot {
     width: 20px;
