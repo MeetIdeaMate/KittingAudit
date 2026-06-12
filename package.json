@@ -1,6 +1,6 @@
 {
-  "name": "barcodekitting",
-  "version": "1.0.0",
+  "name": "processaudit",
+  "version": "v1.0.0.1",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^6.1.0",
