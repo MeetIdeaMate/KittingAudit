@@ -47,12 +47,12 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handlePrintLabel }) => [
         width: 90,
         render: (_, dispatchRecord) => dispatchRecord?.isParentPart && dispatchRecord?.status !== "NOT_AUDIT" && dispatchRecord?.weekNo ? <img style={{ cursor: "pointer" }} onClick={() => handlePrintAudit(dispatchRecord, "DISPATCH")} src={disatch_icon} alt="" /> : "-",
     },
-    {
-        title: "Manual Label",
-        key: "labelPrint",
-        width: 100,
-        render: (record) => (record?.isParentPart && record?.type === "MANUAL") ? <img style={{ cursor: "pointer" }} src={printer} alt="label" onClick={() => handlePrintLabel(record)} /> : "-"
-    },
+    // {
+    //     title: "Manual Label",
+    //     key: "labelPrint",
+    //     width: 100,
+    //     render: (record) => (record?.isParentPart && record?.type === "MANUAL") ? <img style={{ cursor: "pointer" }} src={printer} alt="label" onClick={() => handlePrintLabel(record)} /> : "-"
+    // },
     {
         title: "CR Date",
         dataIndex: "date",
