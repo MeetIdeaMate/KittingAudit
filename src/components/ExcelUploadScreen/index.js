@@ -168,9 +168,9 @@ const ExcelUploadLayout = ({
                 </div>
                 <div className="excel-header-controls">
                     <div style={{ paddingTop: "22px" }}>
-                        {/* {
+                        {
                             isDropDown && <UiSelect style={{ width: "150px" }} options={dropDownFilterOptions} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
-                        } */}
+                        }
                     </div>
                     <UiRangePicker value={dateFilter} onChange={onDateChange} />
                     <UiSearchBox
@@ -182,7 +182,7 @@ const ExcelUploadLayout = ({
             </div>
             <div className="excel-type-section">
                 <div style={{ width: "30%" }}>
-                    {/* {
+                    {
                         isDropDown && <div style={{padding:"10px"}}>
                             <label style={{padding:"10px"}}>{dropDownLabel} <span style={{ color: "red" }}>*</span></label>
                             <Segmented
@@ -193,7 +193,7 @@ const ExcelUploadLayout = ({
                                 className="custom-segment"
                             />
                         </div>
-                    } */}
+                    }
                 </div>
                 {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">
                     {colorStatus?.map((status, index) => (
