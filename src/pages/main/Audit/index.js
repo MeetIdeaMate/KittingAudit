@@ -170,7 +170,7 @@ export const AuditScreen = () => {
         setCurrentStatus(status);
         setSelectedRecord(auditRec);
         let payload = {
-            date: date ? dayjs(date).toISOString() : dayjs().toISOString(),
+            date: date ? dayjs(date).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]') : dayjs().format('YYYY-MM-DDTHH:mm:ss.SSS[Z]'),
             userId: sessionStorage.getItem("userId"),
         }
         if ((status === "AUDIT" && !auditRec?.auditDate) || (status === "DISPATCH" && date)) {
