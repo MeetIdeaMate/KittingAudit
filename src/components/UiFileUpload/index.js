@@ -9,7 +9,10 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
 
     const allowedTypes = [
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "application/vnd.ms-excel"
+        "application/vnd.ms-excel",
+        "application/zip",
+        "application/x-zip-compressed",
+        "multipart/x-zip"
     ];
 
     useEffect(() => {
@@ -20,7 +23,7 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
         if (!file) return;
 
         if (!allowedTypes.includes(file.type)) {
-            showToast.warning("Warning", "Only Excel (.xlsx / .xls) files allowed!")
+            showToast.warning("Warning", "Only Excel (.xlsx / .xls) and ZIP (.zip) files allowed!")
             return;
         }
         setFileName(file.name);
