@@ -1,142 +1,77 @@
-.excel-header {
+.excel-page {
+    height: calc(100vh - 50px);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    margin: 10px 0;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-.excel-title-box {
-    display: flex;
-    align-items: center;
+.excel-top {
+    flex-shrink: 0;
 }
 
-.excel-header h3 {
-    margin: 0;
-}
-
-.excel-header-controls {
+.excel-body {
+    flex: 1;
     display: flex;
     gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.excel-container {
-    display: flex;
-    gap: 10px;
-    height: calc(100vh - 200px) !important;
+    overflow: hidden;
 }
 
 .excel-left {
     width: 30%;
-    border-right: 1px solid #ccc;
-    padding-right: 10px;
     display: flex;
     flex-direction: column;
-    gap: 3px;
-    height: calc(100vh - 160px);
+    overflow: hidden;
+}
+
+.excel-upload {
+    flex: 1;
+    overflow-y: auto;
 }
 
 .submit-area {
-    margin-top: auto;
-    position: sticky;
-    bottom: 0;
-    padding: 5px 0;
+    flex-shrink: 0;
+    // padding: 10px;
 }
 
 .excel-right {
     width: 70%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.excel-table {
+    flex: 1;
+    overflow: hidden;
+}
+
+.excel-pagination {
+    flex-shrink: 0;
+    padding: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.ChangeTablePadding {
     height: 100%;
 }
 
-.status-wrapper {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    width: 70%;
+.ChangeTablePadding .ant-spin-nested-loading,
+.ChangeTablePadding .ant-spin-container,
+.ChangeTablePadding .ant-table,
+.ChangeTablePadding .ant-table-container,
+.ChangeTablePadding .ant-table-content {
+    height: 100%;
 }
 
-.excel-type-section{
-    display: flex;
-    justify-content: space-between;
+.ChangeTablePadding .ant-table-body {
+    height: 100%;
+    overflow-y: auto !important;
 }
 
-.excel-title-box {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-.custom-segment {
-    width: 100% !important;
-    display: flex !important;
-}
-
-.custom-segment .ant-segmented-group {
-    width: 100% !important;
-    display: flex !important;
-}
-
-.custom-segment .ant-segmented-item {
-    flex: 1 !important;
-    text-align: center !important;
-}
-
-
-.status-dot {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-}
-
-.excel-container,
-.excel-header-controls,
-.status-wrapper {
-    transition: all 0.2s ease;
-}
-
-.ant-table-expanded-row>td {
-    padding: 0 !important;
-}
-
-@media (max-width: 1024px) {
-    .excel-container {
-        flex-direction: column;
-    }
-
-    .excel-left,
-    .excel-right {
-        width: 100%;
-        height: auto;
-    }
-}
-
-@media (max-width: 600px) {
-    .excel-header-controls {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .excel-header h3 {
-        margin-bottom: 10px;
-    }
-
-    .status-wrapper {
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .excel-title-box {
-        font-size: 13px;
-    }
-
-    .status-dot {
-        width: 16px;
-        height: 16px;
-    }
+.ChangeTablePadding .ant-table-thead>tr>th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: #fff;
 }
