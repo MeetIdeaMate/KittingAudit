@@ -205,8 +205,10 @@ const CSLUpload = () => {
                 tableData={barCodeKittingAllData?.content || []}
                 pagination={{
                     current: filterValue?.page + 1,
+                    pageSize: filterValue?.size,
+                    total: barCodeKittingAllData?.totalElements,
+                    onChange: (page, size) => handlePagination(page, size),
                 }}
-                handlePagination={handlePagination}
                 handleClose={handleClose}
                 handleSubmit={handleSubmit}
                 isOpen={isOpen}

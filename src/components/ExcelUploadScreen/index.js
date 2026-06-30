@@ -3,7 +3,7 @@ import { UiButton, UiCounterBatch, UiFileUploader, UiModal, UiRangePicker, UiSea
 import "./style.scss";
 import { colorStatus, ExcelUploadTaleColumn } from "./config";
 import dayjs from "dayjs";
-import { Segmented } from "antd";
+import { Pagination, Segmented } from "antd";
 const ExcelUploadLayout = ({
     title,
     counter,
@@ -11,7 +11,6 @@ const ExcelUploadLayout = ({
     onDateChange,
     onSearch,
     handleDownloadFile,
-    handlePagination,
     handleClose,
     fileName,
     onFileSelect,
@@ -161,28 +160,30 @@ const ExcelUploadLayout = ({
     };
     return (
         <>
-            <div className="excel-header">
-                <div className="excel-title-box">
-                    <h3>{title}</h3>
-                    <UiCounterBatch primary>{counter ?? 0}</UiCounterBatch>
-                </div>
-                <div className="excel-header-controls">
-                    <div style={{ paddingTop: "22px" }}>
-                        {/* {
-                            isDropDown && <UiSelect style={{ width: "150px" }} options={dropDownFilterOptions} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
-                        } */}
+            <div className="excel-page">
+                <div className="excel-top">
+                    <div className="excel-header">
+                        <div className="excel-title-box">
+                            <h3>{title}</h3>
+                            <UiCounterBatch primary>{counter ?? 0}</UiCounterBatch>
+                        </div>
+                        <div className="excel-header-controls">
+                            <div style={{ paddingTop: "22px" }}>
+                                {/* {
+                                    isDropDown && <UiSelect style={{ width: "150px" }} options={dropDownFilterOptions} onChange={(value) => handleDropDownFilter(value)} value={dropDownFiltervalue} placeholder={dropDownPlaceholder} />
+                                } */}
+                            </div>
+                            <UiRangePicker value={dateFilter} onChange={onDateChange} />
+                            <UiSearchBox
+                                placeholder="Search Excel Name/Contract Number"
+                                style={{ width: "300px" }}
+                                handleSearch={onSearch}
+                            />
+                        </div>
                     </div>
-                    <UiRangePicker value={dateFilter} onChange={onDateChange} />
-                    <UiSearchBox
-                        placeholder={"Search Excel Name/Contract Number"}
-                        style={{ width: "300px" }}
-                        handleSearch={onSearch}
-                    />
-                </div>
-            </div>
-            <div className="excel-type-section">
-                <div style={{ width: "30%" }}>
-                    {/* {
+                    <div className="excel-type-section">
+                        <div style={{ width: "30%" }}>
+                            {/* {
                         isDropDown && <div style={{padding:"10px"}}>
                             <label style={{padding:"10px"}}>{dropDownLabel} <span style={{ color: "red" }}>*</span></label>
                             <Segmented
@@ -194,51 +195,87 @@ const ExcelUploadLayout = ({
                             />
                         </div>
                     } */}
-                </div>
-                {colorStatus?.length > 0 && title === "CSL Upload" && <div className="status-wrapper">
-                    {colorStatus?.map((status, index) => (
-                        <div className="excel-title-box" key={index}>
-                            <div
-                                className="status-dot"
-                                style={{
-                                    border: `1px solid ${status?.color}`,
-                                    backgroundColor: status?.bgColor,
-                                }}
-                            />
-                            <p>{status?.label}</p>
                         </div>
-                    ))}
-                </div>}
-            </div>
-            <div className="excel-container">
-                <div className="excel-left">
-                    <UiFileUploader localFileName={fileName} onFileSelect={onFileSelect} />
-                    <div className="submit-area">
-                        <UiButton
-                            disabled={isSubmitDisabled}
-                            style={{ width: "100%" }}
-                            size="large"
-                            type="primary"
-                            onClick={onSubmit}
-                        >
-                            Submit
-                        </UiButton>
+                        {colorStatus?.length > 0 &&
+                            title === "CSL Upload" && (
+                                <div className="status-wrapper">
+                                    {colorStatus.map((status, index) => (
+                                        <div
+                                            className="excel-title-box"
+                                            key={index}
+                                        >
+                                            <div
+                                                className="status-dot"
+                                                style={{
+                                                    border: `1px solid ${status.color}`,
+                                                    backgroundColor: status.bgColor
+                                                }}
+                                            />
+
+                                            <p>{status.label}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                     </div>
                 </div>
-
-                <div className="excel-right">
-                    <UiTable
-                        className="ChangeTablePadding"
-                        columns={ExcelUploadTaleColumn({ handleDownloadFile, title })}
-                        dataSource={tableData}
-                        pagination={pagination}
-                        expandable={{ expandedRowRender: expandedTable }}
-                        rowKey={(item) => title === "CSL Upload" ? item?.cslDetailId : title === "SOB Upload" ? item?.sobDetailId : item?.kanbanDetailId}
-                        scroll={{ y: "calc(100vh - 230px)" }}
-                    />
+                <div className="excel-body">
+                    <div className="excel-left">
+                        <div className="excel-upload">
+                            <UiFileUploader
+                                localFileName={fileName}
+                                onFileSelect={onFileSelect}
+                                title={title}
+                            />
+                        </div>
+                        <div className="submit-area">
+                            <UiButton
+                                disabled={isSubmitDisabled}
+                                style={{ width: "100%" }}
+                                size="large"
+                                type="primary"
+                                onClick={onSubmit}
+                            >
+                                Submit
+                            </UiButton>
+                        </div>
+                    </div>
+                    <div className="excel-right">
+                        <div className="excel-table">
+                            <UiTable
+                                className="ChangeTablePadding"
+                                columns={ExcelUploadTaleColumn({
+                                    handleDownloadFile,
+                                    title
+                                })}
+                                dataSource={tableData}
+                                pagination={false}
+                                expandable={{
+                                    expandedRowRender: expandedTable
+                                }}
+                                rowKey={(item) =>
+                                    title === "CSL Upload"
+                                        ? item?.cslDetailId
+                                        : title === "SOB Upload"
+                                            ? item?.sobDetailId
+                                            : item?.kanbanDetailId
+                                }
+                                scroll={{ y: "calc(100vh - 250px)" }}
+                            />
+                        </div>
+                        <div className="excel-pagination">
+                            <Pagination
+                                current={pagination?.current}
+                                total={pagination?.total || 0}
+                                pageSize={pagination?.pageSize}
+                                onChange={pagination?.onChange}
+                                pageSizeOptions={[10, 25, 50, 100]}
+                                showSizeChanger
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
-
             {isOpen?.isOpenFindExistCr && (
                 <UiModal
                     open={isOpen?.isOpenFindExistCr}

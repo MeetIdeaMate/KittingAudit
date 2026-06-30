@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { excelFileUpload } from "../../assets/images";
 import { showToast } from "../UiToastNotification";
 
-export default function UiFileUploader({ onFileSelect, localFileName }) {
+export default function UiFileUploader({ onFileSelect, localFileName, title }) {
     const fileRef = useRef(null);
     const [isDragging, setIsDragging] = useState(false);
     const [fileName, setFileName] = useState("");
@@ -10,9 +10,11 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
     const allowedTypes = [
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "application/vnd.ms-excel",
-        "application/zip",
-        "application/x-zip-compressed",
-        "multipart/x-zip"
+        ...(title === "CSL Upload" ? [
+            "application/zip",
+            "application/x-zip-compressed",
+            "multipart/x-zip"
+        ] : []),
     ];
 
     useEffect(() => {
@@ -23,17 +25,17 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
         if (!file) return;
 
         if (!allowedTypes.includes(file.type)) {
-            showToast.warning("Warning", "Only Excel (.xlsx / .xls) and ZIP (.zip) files allowed!")
+            showToast.warning("Warning", `Only Excel (.xlsx / .xls) ${title === "CSL Upload" ? "and ZIP (.zip)" : ""} files allowed!`)
             return;
         }
-        setFileName(file.name);
+        setFileName(file?.name);
         if (onFileSelect) onFileSelect(file);
     };
 
     const handleDrop = (e) => {
         e.preventDefault();
         setIsDragging(false);
-        handleFile(e.dataTransfer.files[0]);
+        handleFile(e?.dataTransfer?.files[0]);
     };
 
     const removeFile = () => {
@@ -46,10 +48,10 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
         <div>
             <input
                 type="file"
-                accept=".xlsx,.xls"
+                accept={title === "CSL Upload" ? ".xlsx,.xls,.zip" : ".xlsx,.xls"}
                 ref={fileRef}
                 style={{ display: "none" }}
-                onChange={(e) => handleFile(e.target.files[0])}
+                onChange={(e) => handleFile(e?.target?.files[0])}
             />
 
             <div
@@ -72,10 +74,10 @@ export default function UiFileUploader({ onFileSelect, localFileName }) {
             >
                 <h3 style={{ textAlign: "center", margin: 0 }}><img src={excelFileUpload} alt="" /></h3>
                 <p style={{ margin: 0, fontWeight: 400 }}>
-                    {"Click or drag file to this area to upload your Excel"}
+                    {`Click or drag file to this area to upload your Excel ${title === "CSL Upload" ? "or Zip" : ""}`}
                 </p>
                 <p style={{ margin: 0, opacity: 0.3 }}>
-                    Only .xlsx / .xls supported
+                    {`Only .xlsx / .xls ${title === "CSL Upload" ? "/ .zip" : ""} supported`}
                 </p>
             </div>
 
