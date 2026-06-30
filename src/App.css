@@ -41,6 +41,7 @@
 .ChangeTablePadding .ant-table-row,
 .employeeRequestTable .ant-table-row {
     padding: 0 !important;
+    margin: 0 !important;
 }
 
 .ChangeTablePadding .ant-table-cell,
