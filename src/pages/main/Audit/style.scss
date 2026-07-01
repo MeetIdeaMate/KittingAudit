@@ -143,8 +143,8 @@
     }
 
     td {
-        height: 20px;
-        line-height: 20px;
+        height: 16px;
+        line-height: 17px;
 
         &.left {
             text-align: left;
@@ -197,7 +197,7 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    height: 168px;
+    height: 100px;
     padding: 0 20px;
 }
 
@@ -235,10 +235,10 @@
 
 .outside-approvals-row {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 60px;
     width: 100%;
-    padding: 16px 20px 4px 20px;
+    padding-bottom: 20px;
     box-sizing: border-box;
 }
 
@@ -315,7 +315,7 @@
 
     .bottom-section-break {
         page-break-inside: avoid !important;
-            break-inside: avoid !important;
+        break-inside: avoid !important;
     }
 
     * {
