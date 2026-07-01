@@ -40,6 +40,16 @@ const BottomSection = ({ selectedRecord }) => (
                                 <span className="ink-faint-line"></span>
                             </div>
                         </div>
+                        <div className="outside-approvals-row">
+                            <div className="approval-signature-line">
+                                <span>Checked By:</span>
+                                <span className="">____________________</span>
+                            </div>
+                            <div className="approval-signature-line">
+                                <span>Approved By:</span>
+                                <span className="">_____________________</span>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 <tr className="meta-row">
@@ -74,22 +84,25 @@ const BottomSection = ({ selectedRecord }) => (
                 </tr>
             </tbody>
         </table>
-
-        <div className="outside-approvals-row">
-            <div className="approval-signature-line">
-                <span>Checked By:</span>
-                <span className="">____________________</span>
-            </div>
-            <div className="approval-signature-line">
-                <span>Approved By:</span>
-                <span className="">_____________________</span>
-            </div>
-        </div>
     </div>
 );
 
 const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetails ?? [];
+    const combinedParts = Object.values(
+        partDetails?.reduce((acc, item) => {
+            if (acc[item?.partNumber]) {
+                acc[item?.partNumber].quantity += item?.quantity;
+            } else {
+                acc[item?.partNumber] = { ...item };
+            }
+            return acc;
+        }, {})
+    );
+
+    const totalRowCount = combinedParts?.length;
+    const shouldBreakBeforeBottom = totalRowCount > 18;
+
     return (
         <>
             <div className="audit-report">
@@ -104,7 +117,7 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                     <table>
                         <TableHead />
                         <tbody>
-                            {partDetails?.map((details, index) => (
+                            {combinedParts?.map((details, index) => (
                                 <tr key={`data-${index}`}>
                                     <td>{index + 1}</td>
                                     <td className="left">{details?.partNumber ?? ""}</td>
@@ -121,8 +134,7 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                         </tbody>
                     </table>
                 </div>
-                <div
-                >
+                <div className={shouldBreakBeforeBottom ? "bottom-section-break" : ""}>
                     <BottomSection selectedRecord={selectedRecord} />
                 </div>
             </div>
