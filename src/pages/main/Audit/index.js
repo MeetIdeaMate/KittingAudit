@@ -114,7 +114,7 @@ export const AuditScreen = () => {
         pageStyle: `
     @page {
       size: A4 landscape;
-      margin: 3mm !important;
+      margin: 0mm 0mm !important;
     }
 
     html, body {
