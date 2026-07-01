@@ -90,7 +90,7 @@ const BottomSection = ({ selectedRecord }) => (
 
 const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetails ?? [];
-    const filledRows = [...partDetails, ...partDetails, ...partDetails, { partNumber: "" },];
+    const filledRows = partDetails;
     const totalRowCount = filledRows?.length;
     const shouldBreakBeforeBottom = totalRowCount > 18;
 
