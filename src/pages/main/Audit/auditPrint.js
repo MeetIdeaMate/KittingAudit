@@ -90,6 +90,10 @@ const BottomSection = ({ selectedRecord }) => (
 
 const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetails ?? [];
+    const filledRows = [...partDetails, ...partDetails, ...partDetails, { partNumber: "" },];
+    const totalRowCount = filledRows?.length;
+    const shouldBreakBeforeBottom = totalRowCount > 18;
+
     return (
         <>
             <div className="audit-report">
@@ -104,7 +108,7 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                     <table>
                         <TableHead />
                         <tbody>
-                            {partDetails?.map((details, index) => (
+                            {filledRows?.map((details, index) => (
                                 <tr key={`data-${index}`}>
                                     <td>{index + 1}</td>
                                     <td className="left">{details?.partNumber ?? ""}</td>
@@ -121,8 +125,7 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                         </tbody>
                     </table>
                 </div>
-                <div
-                >
+                <div className={shouldBreakBeforeBottom ? "bottom-section-break" : ""}>
                     <BottomSection selectedRecord={selectedRecord} />
                 </div>
             </div>

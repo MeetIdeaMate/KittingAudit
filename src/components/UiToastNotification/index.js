@@ -5,7 +5,7 @@ import './style.scss';
 const UiToastNotification = () => {
   return (
     <ToastContainer
-      position="top-right"
+      position="top-center"
       autoClose={3000}
       hideProgressBar={false}
       newestOnTop
