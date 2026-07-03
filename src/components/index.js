@@ -21,6 +21,7 @@ import UiAccordian from "./UiAccordian";
 import UiDoughnutChart from "./UiDoughnutChart";
 import UiDecimalNumber from "./UiDecimalNumber";
 import ExcelUploadLayout from "./ExcelUploadScreen";
+import { UiFetchProgress } from "./UiFetchProgress";
 export {
     UiTextBox,
     UiFormWrapper,
@@ -44,5 +45,6 @@ export {
     UiAccordian,
     UiDoughnutChart,
     UiDecimalNumber,
-    ExcelUploadLayout
+    ExcelUploadLayout,
+    UiFetchProgress,
 };
