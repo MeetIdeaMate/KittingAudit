@@ -1,4 +1,4 @@
-import { ExcelUploadLayout } from "../../../components";
+import { ExcelUploadLayout, UiFetchProgress } from "../../../components";
 import * as api from "../../../actions"
 import { KANBANBASEURL } from "../../../apiservices/endpoints";
 import { useEffect, useRef, useState } from "react";
@@ -161,12 +161,13 @@ const KabanUpload = () => {
     }, [crExcelDetails]);
 
     useEffect(() => {
-        let isLoading = isFetchCrExcel || isFetchExcelDownload || isFetchUploadingExcel || isFetchExistCr;
+        let isLoading = isFetchCrExcel || isFetchExcelDownload;
         dispatch(loaderReducer(isLoading));
-    }, [dispatch, isFetchCrExcel, isFetchExcelDownload, isFetchUploadingExcel, isFetchExistCr]);
+    }, [dispatch, isFetchCrExcel, isFetchExcelDownload]);
 
     return (
         <>
+            {(isFetchExistCr || isFetchUploadingExcel )&& <UiFetchProgress loading={isFetchExistCr || isFetchUploadingExcel} text={isFetchUploadingExcel ? "Uploading Your File..." : "Verifying Your File..."} />}
             <ExcelUploadLayout
                 title={"Kanban Upload"}
                 loading={isFetchUploadingExcel}
