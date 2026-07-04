@@ -4,10 +4,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import classNames from "classnames";
 import { Collapse } from "antd";
 import "./style.scss";
-// import { clientInformation } from "utils/appUtils";
-// import { AccessPerforming } from "utils/appUtils/appAccessControl";
-// import {  sideMenuIcon, userProfile } from "assets/images";
-// import { reftchNotification } from "pages/login/firebase/notification";
 import packageJson from '../../../../../package.json';
 import { headerReducer } from "../../../../reducers/header.reducer";
 import { phone, questionCircle, sideMenuIcon, TechLambdasLogo, userProfile } from "../../../../assets/images";
@@ -20,17 +16,13 @@ const SideBar = () => {
     const dispatch = useDispatch();
     const location = useLocation();
     const { visibleMenus, filteredMenus, subMenuArray, subMenuReportArray } = AccessPerforming();
-    // const client = clientInformation();
-    // const isAdhie = isAdhieClient();
     const isKb = true;
     const role = sessionStorage.getItem('role');
     const designation = sessionStorage.getItem("designation");
-    // const userId = sessionStorage.getItem("userId");
 
     const [currentMenu, setCurrentMenu] = useState("");
     const [collapsed, setCollapsed] = useState(false);
     const [collapsedReport, setCollapsedReport] = useState(false);
-    // const [approveCount, setApproveCount] = useState(sessionStorage.getItem("approveCount") || 0);
 
     const handleMenus = useCallback(
         (menuItem) => {
@@ -65,20 +57,6 @@ const SideBar = () => {
             }
         }
     }, [location.pathname, navigate, visibleMenus, filteredMenus, handleMenus]);
-
-    // useEffect(() => {
-    //     reftchNotification(userId, (notifications, approvals) => {
-    //         setApproveCount(approvals?.result?.approvalList?.length);
-    //     });
-    // }, [userId]);
-
-    // const handleNavigateApprove = () => {
-    //     dispatch(headerReducer("Approval"));
-    //     setCurrentMenu("Approval");
-    //     sessionStorage.setItem("currentMenu", "Approval");
-    //     localStorage.setItem("headerTitle", "Approval");
-    //     navigate("/Approval");
-    // };
 
     const visibleMenuList = filteredMenus
         ?.filter(menu => !menu.isHide && (menu.name !== "AccessController" || role === "User"))
@@ -125,16 +103,6 @@ const SideBar = () => {
                                     <p className="text-xs">{sessionStorage.getItem("name")}</p>
                                     <p className="text-xs">{designation}</p>
                                 </div>
-                                {/* {(designation === "HOD" || designation === "Chief Operating Officer" || designation === "Proprietor") && (
-                                <Tooltip title="Approval" placement="right" color={"orange"}>
-                                    <div onClick={() => handleNavigateApprove()} style={{ cursor: "pointer", position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                                        <img src={approveIcon} alt="Approve Icon" />
-                                        <p style={{ backgroundColor: "orange", width: "18px", height: "18px", textAlign: "center", color: "#fff", display: "flex", justifyContent: "center", alignItems: "center", fontSize: "10px", borderRadius: "50%", margin: "0", position: "absolute", top: "20%", right: -5 }} className="absolute top-1 right-[-5px] bg-orange-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                            { sessionStorage.getItem("approveCount") || approveCount}
-                                        </p>
-                                    </div>
-                                </Tooltip>
-                            )} */}
                             </div>
                         </div>
                     )}
@@ -153,7 +121,7 @@ const SideBar = () => {
                                             .map((subMenu, idx) => {
                                                 const subMenuPath = subMenu?.name;
                                                 return (
-                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0",listStyleType:"none" }} className="list">
+                                                    <li key={idx} style={{ width: "100%", padding: "0", margin: "0", border: "0", listStyleType: "none" }} className="list">
                                                         <Link
                                                             style={{ width: "100%", paddingRight: "0", border: "0" }}
                                                             className={classNames(
