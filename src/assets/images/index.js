@@ -36,6 +36,7 @@ import audit_print_icon from "./audit_print_icon.svg";
 import disatch_icon from "./disatch_icon.svg";
 import tl_pdf_logo from "./tl_pdf_logo.svg";
 import icn_Reports from "./icn_Reports.svg";
+import icn_Invoice from "./icn_invoice.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
     tl_pdf_logo,
@@ -80,5 +81,6 @@ export const sideMenuIcon = {
     icn_SOBUpload,
     icn_KanbanUpload,
     icn_Audit,
-    icn_Reports
+    icn_Reports,
+    icn_Invoice
 };

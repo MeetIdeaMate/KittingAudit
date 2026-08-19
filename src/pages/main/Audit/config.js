@@ -82,6 +82,11 @@ export const AUDIT_TABLE_COLUMN = ({ handlePrintAudit, handlePrintLabel }) => [
         render: (_, auditRecord) => <p>{auditRecord?.dispatchDate ? dayjs(auditRecord?.dispatchDate).format("DD-MM-YYYY") : "-"}</p>
     },
     {
+        title: "Packing Date",
+        key: "packingDate",
+        render: (auditRecord) => <p>{auditRecord?.packingDate ? dayjs(auditRecord?.packingDate).format("DD-MM-YYYY") : "-"}</p>
+    },
+    {
         title: "BOM Qty",
         dataIndex: "bomQty",
         key: "bomQty",
