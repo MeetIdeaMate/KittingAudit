@@ -67,7 +67,7 @@ const Dashboard = () => {
             border: "#e2d8f3",
         },
         {
-            title: "INVOICE COUNT",
+            title: "DISPATCH COUNT",
             total: source?.dispatchDetails?.totalDispatchCount || 0,
             labels: ["Invoiced Count  ", "Not Invoiced Count"],
             values: [(source?.dispatchDetails?.invoicedDispatchCount || 0), (source?.dispatchDetails?.noInvoicedDispatchCount || 0)],
