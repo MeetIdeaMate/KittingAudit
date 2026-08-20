@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 
-export const REPORTS_TABLE_COLUMNS = [
+export const REPORTS_TABLE_COLUMNS = ({ filters }) => [
     {
         title: "S.No",
         dataIndex: "sNo",
@@ -49,6 +49,21 @@ export const REPORTS_TABLE_COLUMNS = [
         key: "weekNo",
         width: 120,
     },
+    ...(filters?.reportType === 'INVOICE' ? [
+        {
+            title: "Invoice Number",
+            dataIndex: "invoiceNo",
+            key: "invoiceNo",
+            width: 100,
+        },
+        {
+            title: "Invoice Date",
+            dataIndex: "invoiceDate",
+            key: "invoiceDate",
+            width: 100,
+            render: (_, tableRecord,) => tableRecord?.invoiceDate ? dayjs(tableRecord?.invoiceDate).format("DD-MM-YYYY") : "-"
+        },
+    ] : []),
     {
         title: "BOM Qty",
         dataIndex: "bomQty",
@@ -111,6 +126,11 @@ export const reportTypeOptions = [
         key: "DISPATCH",
         value: "DISPATCH",
         label: "Dispatch",
+    },
+    {
+        key: "INVOICE",
+        value: "INVOICE",
+        label: "Invoice",
     }
 ];
 
@@ -129,7 +149,25 @@ export const reportTypeDateOptions = [
         key: "DISPATCH",
         value: "DISPATCH",
         label: "Dispatch Date",
+    },
+    {
+        key: "INVOICE",
+        value: "INVOICE",
+        label: "Invoice Date",
     }
+];
+
+export const dispatchStatus = [
+    {
+        key: "ON-TIME ",
+        value: "ON-TIME ",
+        label: "On Time",
+    },
+    {
+        key: "DELAYED",
+        value: "DELAYED",
+        label: "Delayed",
+    },
 ];
 
 export const DownloadOptions = [{ key: '1', label: 'EXL', }, { key: '2', label: 'Print', }];
