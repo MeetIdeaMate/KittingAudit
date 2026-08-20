@@ -1,0 +1,32 @@
+.invoice-title {
+    padding: 10px;
+}
+
+.invoice-filter {
+    display: flex;
+    gap: 20px;
+    padding: 10px 0px;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.invoice-footer {
+    padding: 10px;
+    display: flex;
+    border-top: 1px solid #EAEAEA;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.ivoice-floting-button {
+    position: absolute;
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 10;
+    cursor: pointer;
+}

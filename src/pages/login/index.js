@@ -63,6 +63,7 @@ export const Login = () => {
                         // { menuName: "Kitting", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         { menuName: "Audit", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         { menuName: "Reports", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        { menuName: "Invoice", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"]},
                         { menuName: "User", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                     ];
                     sessionStorage.setItem("access", JSON.stringify(accessData));
