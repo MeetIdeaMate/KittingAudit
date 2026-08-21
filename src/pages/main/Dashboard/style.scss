@@ -142,3 +142,19 @@
         height: 320px;
     }
 }
+
+.dispatch-details {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0px;
+}
+
+.dispatch-details p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.dispatch-details span {
+    font-size: 12px;
+}

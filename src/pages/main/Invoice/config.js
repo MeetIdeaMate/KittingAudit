@@ -46,10 +46,6 @@ export const INVOICE_COLUMN_HEADER = ({ activeTab }) => [
         title: "BOM Qty",
         dataIndex: "bomQty"
     },
-    {
-        title: "Type",
-        dataIndex: "type"
-    },
     ...(activeTab === "COMPLETED" ? [
         {
             title: "Invoice No",

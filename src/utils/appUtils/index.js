@@ -65,3 +65,5 @@ export const clientInformation = () => {
         isFontLarge,
     }
 };
+
+export const getRole = () => sessionStorage.getItem("role");
