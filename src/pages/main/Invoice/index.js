@@ -13,6 +13,7 @@ import { isEmptyArray } from "formik";
 import { flotButton } from "../../../assets/images";
 import dayjs from "dayjs";
 import { showToast } from "../../../components/UiToastNotification";
+import { REPORT_CHILD_COLUMN } from "../reports/config";
 const Invoice = () => {
 
     const dispatch = useDispatch();
@@ -202,58 +203,70 @@ const Invoice = () => {
     }, [dispatch, isFetchingAllInvoice]);
 
     return <>
-        <div>
+        <div className="invoice-page">
             <div className="invoice-header">
-                <div className="invoice-title">
-                    <h2 style={{ padding: 0, margin: 0 }}>Invoice</h2>
-                </div>
-                <div style={{ display: "flex", gap: "10px" }}>
-                    <div className="invoice-filter">
-                        <UiSelect options={excelTypeList} placeholder={"Select Type"} style={{ width: "150px" }} onChange={(value) => handleChangeExcelType(value)} value={filteredData?.typeValue} />
+                <div style={{ display: "flex", justifyContent: 'space-between' }}>
+                    <div className="invoice-title">
+                        <h2 style={{ padding: 0, margin: 0 }}>Invoice</h2>
                     </div>
-                    {filteredData?.activeTab === "PENDING" && (
-                        <div className="invoice-filter">
-                            <UiSelect
-                                style={{ width: "150px" }}
-                                options={filterDataList?.crNumber}
-                                placeholder="Select CR Number"
-                                value={filteredData?.crNumber}
-                                onChange={handleCrNumberChange}
-                                mode="multiple"
-                                allowClear
-
-                            />
-                            <UiSelect
-                                style={{ width: "150px" }}
-                                options={filterDataList?.fimNumber}
-                                placeholder="Select FIM Number"
-                                value={filteredData?.fimNumber}
-                                onChange={handleFimNumberChange}
-                                allowClear
-                                disabled={filteredData?.crNumber?.length === 0}
-                            />
-                        </div>
-                    )}
-                    {
-                        filteredData?.activeTab === "COMPLETED" && <div className="invoice-filter">
-                            <UiRangePicker onChange={handleRangeChange}
-                                value={[
-                                    filteredData?.fromDate ? dayjs(filteredData?.fromDate) : null,
-                                    filteredData?.toDate ? dayjs(filteredData?.toDate) : null,
-                                ]} />
-                            <UiSearchBox placeholder={"Search Invoice No"} handleSearch={handlSearch} value={filteredData?.searchFiltervalue} />
-                        </div>
-                    }
+                    <div style={{ display: "flex", gap: "5px" }}>
+                        {filteredData?.activeTab === "PENDING" && (
+                            <div className="invoice-filter">
+                                <UiSelect
+                                    style={{ width: "150px" }}
+                                    options={filterDataList?.crNumber}
+                                    placeholder="Select CR Number"
+                                    value={filteredData?.crNumber}
+                                    onChange={handleCrNumberChange}
+                                    mode="multiple"
+                                    allowClear
+                                    isStyle={true}
+                                />
+                                <UiSelect
+                                    style={{ width: "150px" }}
+                                    options={filterDataList?.fimNumber}
+                                    placeholder="Select FIM Number"
+                                    value={filteredData?.fimNumber}
+                                    onChange={handleFimNumberChange}
+                                    allowClear
+                                    isStyle={true}
+                                    disabled={filteredData?.crNumber?.length === 0}
+                                />
+                            </div>
+                        )}
+                        {
+                            filteredData?.activeTab === "COMPLETED" && <div className="invoice-filter">
+                                <UiRangePicker onChange={handleRangeChange}
+                                    value={[
+                                        filteredData?.fromDate ? dayjs(filteredData?.fromDate) : null,
+                                        filteredData?.toDate ? dayjs(filteredData?.toDate) : null,
+                                    ]} />
+                                <UiSearchBox placeholder={"Search Invoice No"} handleSearch={handlSearch} value={filteredData?.searchFiltervalue} />
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
-            <div>
                 <UiTab count={invoiceDetails?.totalElements} tabs={tabData} activeTabKey={filteredData?.activeKey} onChange={handleTabChange} />
+            </div>
+            <div className="invoice-body">
                 <UiTable
+                    className='ChangeTableInvoicePadding'
                     dataSource={invoiceDetails?.content || []}
                     columns={INVOICE_COLUMN_HEADER({ activeTab: filteredData?.activeTab })}
                     rowSelection={filteredData?.activeTab === "PENDING" ? rowSelection : null}
                     pagination={false}
                     rowKey="cslDetailInfoId"
+                    expandable={{
+                        expandedRowRender: (record) => {
+                            return (
+                                <UiTable
+                                    dataSource={record?.partDetails || []}
+                                    pagination={false}
+                                    columns={REPORT_CHILD_COLUMN}
+                                />)
+                        },
+                        rowExpandable: (record) => record.cslDetailInfoId != null,
+                    }}
                 />
             </div>
             <div className="invoice-footer">
