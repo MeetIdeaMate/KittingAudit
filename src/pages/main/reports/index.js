@@ -165,7 +165,7 @@ export const ReportScreen = () => {
 
     const filterDatePickerDropdownSource = status => {
         if (status === "NOT_AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
-        if (status === "AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key !== "DISPATCH");
+        if (status === "AUDIT") return reportTypeDateOptions?.filter(dateKey => !["DISPATCH", "INVOICE"].includes(dateKey?.key));
         return reportTypeDateOptions;
     };
 
@@ -351,7 +351,7 @@ export const ReportScreen = () => {
                     </div>
                 </div>
             </div>
-            <div className="report-body ">
+            <div className="report-body">
                 <Table
                     className="ChangeTablePadding"
                     rowClassName={(record) => {

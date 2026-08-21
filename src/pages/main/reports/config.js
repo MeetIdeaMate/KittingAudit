@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { getRole } from "../../../utils/appUtils";
 
 export const REPORTS_TABLE_COLUMNS = ({ filters }) => [
     {
@@ -127,11 +128,11 @@ export const reportTypeOptions = [
         value: "DISPATCH",
         label: "Dispatch",
     },
-    {
+    ...(getRole() === "ADMIN" ? [{
         key: "INVOICE",
         value: "INVOICE",
         label: "Invoice",
-    }
+    }] : []),
 ];
 
 export const reportTypeDateOptions = [
@@ -150,11 +151,11 @@ export const reportTypeDateOptions = [
         value: "DISPATCH",
         label: "Dispatch Date",
     },
-    {
+    ...(getRole() === "ADMIN" ? [{
         key: "INVOICE",
         value: "INVOICE",
         label: "Invoice Date",
-    }
+    }] : []),
 ];
 
 export const dispatchStatus = [
