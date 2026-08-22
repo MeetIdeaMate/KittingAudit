@@ -90,8 +90,19 @@ export const ReportScreen = () => {
             const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
             const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
             const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
-            const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
-            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
+            const invoiceNo = filters?.invoiceNo ? `&invoiceNo=${filters?.invoiceNo}` : "";
+            const dispatchType = filters?.dispatchType ? `&dispatchType=${filters?.dispatchType}` : "";
+            let startAndEndDate = "";
+            if (filters?.datePickerStatus === "NOT_AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "DISPATCH") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "INVOICE") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&invoiceFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&invoiceToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            }
+            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${invoiceNo}${partNo}${weekNo}${dispatchType}${status}${startAndEndDate}`)
         }, {
         enabled: false,
         refetchOnWindowFocus: false,
@@ -113,8 +124,19 @@ export const ReportScreen = () => {
         const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
         const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
         const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
-        const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
-        return api.get(`${CSLBASEURL}/report_filter_details?${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
+        const invoiceNo = filters?.invoiceNo ? `&invoiceNo=${filters?.invoiceNo}` : "";
+        const dispatchType = filters?.dispatchType ? `&dispatchType=${filters?.dispatchType}` : "";
+        let startAndEndDate = "";
+        if (filters?.datePickerStatus === "NOT_AUDIT") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "AUDIT") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "DISPATCH") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "INVOICE") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&invoiceFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&invoiceToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        }
+        return api.get(`${CSLBASEURL}/report_filter_details?${crNumber}${fimNumber}${dispatchType}${invoiceNo}${partNo}${weekNo}${status}${startAndEndDate}`)
     }, {
         enabled: true,
         refetchOnWindowFocus: false,
@@ -200,7 +222,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (!isFetchApiCall) return;
         refetchGetAllDropdown();
-    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.dateRange?.[0], filters?.dateRange?.[1]]);
+    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.datePickerStatus, filters?.dateRange?.[0], filters?.dateRange?.[1]]);
 
     useEffect(() => {
         if (!isFetchApiCall) return;
