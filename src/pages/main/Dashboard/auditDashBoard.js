@@ -70,7 +70,7 @@ const Dashboard = () => {
         ...(getRole() === 'ADMIN' ? [
             {
                 title: "INVOICE STATUS",
-                total: source?.dispatchDetails?.totalDispatchCount || 0,
+                total: source?.dispatchDetails?.completedDispatchCount || 0,
                 labels: ["Invoiced Count  ", "Not Invoiced Count"],
                 values: [(source?.dispatchDetails?.invoicedDispatchCount || 0), (source?.dispatchDetails?.noInvoicedDispatchCount || 0)],
                 colors: ["#10b981", "#ef4444"],
