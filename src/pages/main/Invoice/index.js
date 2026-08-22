@@ -2,7 +2,7 @@ import { UiButton, UiDatePicker, UiModal, UiRangePicker, UiSearchBox, UiSelect, 
 import "./style.scss";
 import * as api from "../../../actions";
 import { CONFIG, CSLBASEURL } from "../../../apiservices/endpoints";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { INVOICE_COLUMN_HEADER, tabData } from "./config";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { searchInitiateDelayTime, tablePageSizeOptions } from "../../../utils/appUtils";
@@ -14,6 +14,7 @@ import { flotButton } from "../../../assets/images";
 import dayjs from "dayjs";
 import { showToast } from "../../../components/UiToastNotification";
 import { REPORT_CHILD_COLUMN } from "../reports/config";
+import { useMergeSemantic } from "antd/es/_util/hooks";
 const Invoice = () => {
 
     const dispatch = useDispatch();
@@ -139,12 +140,16 @@ const Invoice = () => {
     const handleSubmit = () => {
         const payload = {
             invoiceNo: invoiceInformation?.invoiceNo,
-            date: invoiceInformation?.date,
+            date: invoiceInformation?.date ? dayjs(invoiceInformation?.date).format('YYYY-MM-DDTHH:mm:ss.SSS[Z]') : null,
             invoiceAmount: parseFloat(invoiceInformation?.invoiceAmount),
             cslDetailInfoIds: newSelectedRowKey,
         };
         queryClient.prefetchQuery(["UPDATE_INVOICE_DETAIL", ""], () => updateInvoiceDetails(payload));
     };
+
+    const invoiceBtnValidation = useMemo(() => {
+        return !!invoiceInformation?.invoiceNo && !!invoiceInformation?.date && (parseFloat(invoiceInformation?.invoiceAmount) > 0)
+    }, [invoiceInformation]);
 
     const debounceSearch = (searchvalue) => {
         if (debounceTimeOut.current) {
@@ -295,7 +300,7 @@ const Invoice = () => {
                     maskClosable={false}
                     footer={<div style={{ display: "flex", justifyContent: "right", gap: "10px" }}>
                         <UiButton size="large" onClick={handlCloseInvoiveModel}>Cancel</UiButton>
-                        <UiButton size="large" type="primary" isLoading={isFetchingUpdateInvoice} onClick={handleSubmit}>Submit</UiButton>
+                        <UiButton size="large" type="primary" disabled={!invoiceBtnValidation} isLoading={isFetchingUpdateInvoice} onClick={handleSubmit}>Submit</UiButton>
                     </div>}
                 >
                     <div style={{ padding: "10px" }}>
@@ -306,12 +311,12 @@ const Invoice = () => {
                             </div>
                             <div>
                                 <label> Select Invoice Date <span style={{ color: "red" }}>*</span></label>
-                                <UiDatePicker name="date" onChange={(date) => handleChange(dayjs(date).toISOString(), "date")} />
+                                <UiDatePicker name="date" onChange={(date) => handleChange(date ? dayjs(date).toISOString() : null, "date")} />
                             </div>
                         </div>
                         <div>
                             <label>Invoice Amount <span style={{ color: "red" }}>*</span></label>
-                            <UiTextBox placeholder={"Enter the Invoice Amount"} name="invoiceAmount" onChange={(event) => handleChange(event?.target?.value, "invoiceAmount")} />
+                            <UiTextBox type={'number'} placeholder={"Enter the Invoice Amount"} name="invoiceAmount" onChange={(event) => handleChange(event?.target?.value, "invoiceAmount")} />
                         </div>
                     </div>
                 </UiModal>

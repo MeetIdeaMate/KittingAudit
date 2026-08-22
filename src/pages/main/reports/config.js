@@ -106,13 +106,13 @@ export const REPORT_CHILD_COLUMN = [
         width: 80,
     },
     {
-        title: "Disciption",
+        title: "Description",
         dataIndex: "description",
         key: "description",
     },
 ];
 
-export const reportTypeOptions = [
+export const reportTypeOptions = () => [
     {
         key: "NOT_AUDIT",
         value: "NOT_AUDIT",
@@ -135,7 +135,7 @@ export const reportTypeOptions = [
     }] : []),
 ];
 
-export const reportTypeDateOptions = [
+export const reportTypeDateOptions = () => [
     {
         key: "NOT_AUDIT",
         value: "NOT_AUDIT",
@@ -173,7 +173,7 @@ export const dispatchStatus = [
 
 export const DownloadOptions = [{ key: '1', label: 'EXL', }, { key: '2', label: 'Print', }];
 
-export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }) => {
+export const handleDownloadExcel = ({ tableData = [], setTableData = () => { }, filters = '' }) => {
     let excelData = [];
 
     tableData?.content?.forEach((item, index) => {
@@ -185,6 +185,7 @@ export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }
             "Contract No": item?.crNumber || "-",
             "Part Number": item?.parentPartNumber || "-",
             "Week No": item?.weekNo || "-",
+            ...(filters?.reportType === 'INVOICE' ? { "Invoice Number": item?.invoiceNo, 'Invoice Date': item?.invoiceDate ? dayjs(item?.invoiceDate).format("DD-MM-YYYY") : "-", } : {}),
             "BOM Qty": item?.bomQty || "-",
             "Total Qty": item?.totalQty || "-",
             "Description": item?.description || "-",
