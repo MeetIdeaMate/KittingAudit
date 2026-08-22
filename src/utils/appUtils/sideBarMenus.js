@@ -6,6 +6,7 @@ export const KbMenus = () => [
     // { MenuName: 'Kitting', subMenu: [] },
     { MenuName: 'Download', subMenu: [] },
     { MenuName: 'Audit', subMenu: [] },
+    { MenuName: 'Invoice', subMenu: [] },
     { MenuName: 'Reports', subMenu: [] },
     { MenuName: 'User', subMenu: [] },
     {

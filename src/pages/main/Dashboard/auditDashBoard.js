@@ -11,6 +11,7 @@ import { DASHBOARDBASEURL } from "../../../apiservices/endpoints";
 import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
+import { getRole } from "../../../utils/appUtils";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -49,7 +50,7 @@ const Dashboard = () => {
             border: "#f3d9b1",
         },
         {
-            title: "TOTAL CR NUMBER",
+            title: "AUDIT STATUS",
             total: source?.auditDetails?.totalAuditCount || 0,
             labels: ["Completed Audit", "Pending Audit"],
             values: [(source?.auditDetails?.completedAuditCount || 0), (source?.auditDetails?.pendingAuditCount || 0)],
@@ -58,14 +59,25 @@ const Dashboard = () => {
             border: "#d9e6f5",
         },
         {
-            title: "AUDIT COUNT",
-            total: source?.dispatchDetails?.totalDispatchCount  || 0,
-            labels: ["Dispatched", "Not Dispatch"],
-            values: [(source?.dispatchDetails?.completedDispatchCount || 0), (source?.dispatchDetails?.pendingDispatchCount || 0)],
-            colors: ["#10b981", "#ef4444"],
+            title: "DISPATCH STATUS",
+            total: source?.dispatchDetails?.totalDispatchCount || 0,
+            labels: ["Not Dispatch", "Delayed Count", "On-Time Count "],
+            values: [(source?.dispatchDetails?.pendingDispatchCount || 0), (source?.dispatchDetails?.delayedDispatchCount || 0), (source?.dispatchDetails?.onTimeDispatchCount || 0),],
+            colors: ["#ef4444", "#e6ff02", "#10b981",],
             bg: "#f5f2fa",
             border: "#e2d8f3",
         },
+        ...(getRole() === 'ADMIN' ? [
+            {
+                title: "INVOICE STATUS",
+                total: source?.dispatchDetails?.totalDispatchCount || 0,
+                labels: ["Invoiced Count  ", "Not Invoiced Count"],
+                values: [(source?.dispatchDetails?.invoicedDispatchCount || 0), (source?.dispatchDetails?.noInvoicedDispatchCount || 0)],
+                colors: ["#10b981", "#ef4444"],
+                bg: "#f5f2fa",
+                border: "#e2d8f3",
+            },
+        ] : []),
     ];
 
     const data = {

@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { UiButton, UiCounterBatch, UiRangePicker, UiSelect } from "../../../components";
 
-import { DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeDateOptions, reportTypeOptions } from "./config";
+import { dispatchStatus, DownloadOptions, handleDownloadExcel, REPORT_CHILD_COLUMN, REPORTS_TABLE_COLUMNS, reportTypeDateOptions, reportTypeOptions } from "./config";
 import { DispatchPrint } from "./reportPdf";
 import { useQuery } from "@tanstack/react-query";
 import * as api from "../../../actions";
@@ -32,8 +32,10 @@ export const ReportScreen = () => {
         finNo: "",
         partNo: "",
         weekNo: null,
+        invoiceNo: null,
         page: 0,
         size: 25,
+        dispatchType: null,
         datePickerStatus: "NOT_AUDIT",
     });
     const [isFetchApiCall, setIsFetchApiCall] = useState(false);
@@ -41,7 +43,7 @@ export const ReportScreen = () => {
     const [expandedRowKeys, setExpandedRowKeys] = useState([]);
     const [pdfSource, setPdfSource] = useState({});
     const [cumulativeData, setCumulativeData] = useState({});
-    const [dropDownSource, setDropDownSource] = useState({ crNumbers: [], fimNumbers: [], partNos: [], weekNos: [] });
+    const [dropDownSource, setDropDownSource] = useState({ crNumbers: [], fimNumbers: [], partNos: [], weekNos: [], invoiceNos: [] });
     const [selectDownloadOption, setSelectDownloadOption] = useState({ key: "1", content: "EXL" });
 
     const { isFetching: isFetchingGetAllReportsPage, refetch: refetchAllReportsPage } = useQuery(["GET_ALL_REPORTS_PAGE", ""],
@@ -51,6 +53,8 @@ export const ReportScreen = () => {
             const fimNumber = filters?.finNo ? `&fimNumber=${filters?.finNo}` : "";
             const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
             const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
+            const invoiceNo = filters?.invoiceNo ? `&invoiceNo=${filters?.invoiceNo}` : "";
+            const dispatchType = filters?.dispatchType ? `&dispatchType=${filters?.dispatchType}` : "";
             const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
             let startAndEndDate = "";
             if (filters?.datePickerStatus === "NOT_AUDIT") {
@@ -59,8 +63,10 @@ export const ReportScreen = () => {
                 startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
             } else if (filters?.datePickerStatus === "DISPATCH") {
                 startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "INVOICE") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&invoiceFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&invoiceToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
             }
-            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
+            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${dispatchType}${fimNumber}${partNo}${weekNo}${invoiceNo}${status}${startAndEndDate}`)
         }, {
         enabled: true,
         refetchOnWindowFocus: false,
@@ -84,8 +90,19 @@ export const ReportScreen = () => {
             const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
             const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
             const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
-            const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
-            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
+            const invoiceNo = filters?.invoiceNo ? `&invoiceNo=${filters?.invoiceNo}` : "";
+            const dispatchType = filters?.dispatchType ? `&dispatchType=${filters?.dispatchType}` : "";
+            let startAndEndDate = "";
+            if (filters?.datePickerStatus === "NOT_AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "AUDIT") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "DISPATCH") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            } else if (filters?.datePickerStatus === "INVOICE") {
+                startAndEndDate = filters?.dateRange?.length > 0 ? `&invoiceFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&invoiceToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+            }
+            return api.get(`${REPORTBASEURL}${pageAndSize}${crNumber}${fimNumber}${invoiceNo}${partNo}${weekNo}${dispatchType}${status}${startAndEndDate}`)
         }, {
         enabled: false,
         refetchOnWindowFocus: false,
@@ -107,8 +124,19 @@ export const ReportScreen = () => {
         const partNo = filters?.partNo ? `&partNo=${filters?.partNo}` : "";
         const weekNo = filters?.weekNo ? `&weekNo=${filters?.weekNo}` : "";
         const status = filters?.reportType ? `&status=${filters?.reportType}` : "";
-        const startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
-        return api.get(`${CSLBASEURL}/report_filter_details?${crNumber}${fimNumber}${partNo}${weekNo}${status}${startAndEndDate}`)
+        const invoiceNo = filters?.invoiceNo ? `&invoiceNo=${filters?.invoiceNo}` : "";
+        const dispatchType = filters?.dispatchType ? `&dispatchType=${filters?.dispatchType}` : "";
+        let startAndEndDate = "";
+        if (filters?.datePickerStatus === "NOT_AUDIT") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&startDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&endDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "AUDIT") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&auditFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&auditToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "DISPATCH") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&dispatchFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&dispatchToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        } else if (filters?.datePickerStatus === "INVOICE") {
+            startAndEndDate = filters?.dateRange?.length > 0 ? `&invoiceFromDate=${dayjs(filters?.dateRange?.[0])?.format("YYYY-MM-DD")}&invoiceToDate=${dayjs(filters?.dateRange?.[1])?.format("YYYY-MM-DD")}` : "";
+        }
+        return api.get(`${CSLBASEURL}/report_filter_details?${crNumber}${fimNumber}${dispatchType}${invoiceNo}${partNo}${weekNo}${status}${startAndEndDate}`)
     }, {
         enabled: true,
         refetchOnWindowFocus: false,
@@ -125,6 +153,7 @@ export const ReportScreen = () => {
                     fimNumbers: !filters?.finNo ? convertOption(filterDetails?.fimNumbers || []) : prev?.fimNumbers,
                     partNos: !filters?.partNo ? convertOption(filterDetails?.partNos || []) : prev?.partNos,
                     weekNos: convertOption(filterDetails?.weekNos || []),
+                    invoiceNos: convertOption(filterDetails?.invoiceNos || []),
                 }));
             } else {
                 showToast.error("Error", getAllDropdownResponse?.response?.data?.error?.message || getAllDropdownResponse?.response?.data?.error);
@@ -136,8 +165,8 @@ export const ReportScreen = () => {
         setFilters(prev => ({
             ...prev,
             [fieldName]: fieldValue,
-            ...(fieldName === "reportType" ? { crNo: "", finNo: "", partNo: "", weekNo: null, datePickerStatus: fieldValue } : {}),
-            ...(fieldName === "dateRange" ? { crNo: "", finNo: "", partNo: "", weekNo: null } : {}),
+            ...(fieldName === "reportType" ? { crNo: "", finNo: "", partNo: "", weekNo: null, invoiceNo: null, dispatchType: null, datePickerStatus: fieldValue } : {}),
+            ...(fieldName === "dateRange" ? { crNo: "", finNo: "", partNo: "", weekNo: null, invoiceNo: null, } : {}),
             ...(fieldName === "crNo" ? { finNo: "", partNo: "", weekNo: null } : {}),
             ...(fieldName === "finNo" ? { partNo: "", weekNo: null } : {}),
             ...(fieldName === "partNo" ? { weekNo: null } : {}),
@@ -157,9 +186,9 @@ export const ReportScreen = () => {
     };
 
     const filterDatePickerDropdownSource = status => {
-        if (status === "NOT_AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
-        if (status === "AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key !== "DISPATCH");
-        return reportTypeDateOptions;
+        if (status === "NOT_AUDIT") return reportTypeDateOptions()?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
+        if (status === "AUDIT") return reportTypeDateOptions()?.filter(dateKey => !["DISPATCH", "INVOICE"].includes(dateKey?.key));
+        return reportTypeDateOptions();
     };
 
     const handlePrint = useReactToPrint({
@@ -183,7 +212,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (pdfSource?.content?.length > 0) {
             if (selectDownloadOption?.content === "EXL") {
-                handleDownloadExcel({ tableData: pdfSource, setTableData: setPdfSource });
+                handleDownloadExcel({ tableData: pdfSource, setTableData: setPdfSource, filters });
             } else {
                 handlePrint();
             }
@@ -193,7 +222,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (!isFetchApiCall) return;
         refetchGetAllDropdown();
-    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.dateRange?.[0], filters?.dateRange?.[1]]);
+    }, [refetchGetAllDropdown, isFetchApiCall, filters?.crNo, filters?.finNo, filters?.reportType, filters?.partNo, filters?.datePickerStatus, filters?.dateRange?.[0], filters?.dateRange?.[1]]);
 
     useEffect(() => {
         if (!isFetchApiCall) return;
@@ -239,13 +268,19 @@ export const ReportScreen = () => {
                         </div>
                     </div>
                 </div>
+                <div className="table-legend">
+                    <div className="legend-item">
+                        <span className="legend-color legend-yellow"></span>
+                        <span>Dispatch Date Delay</span>
+                    </div>
+                </div>
                 <div style={{ display: "flex", justifyContent: "end", marginTop: "10px", marginBottom: "10px", }} >
-                    <div style={{ display: "flex", alignItems: "center", gap: "2px", flexWrap: "wrap", justifyContent: "flex-end" }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "1px", flexWrap: "wrap", justifyContent: "flex-end", }}>
                         <UiSelect
                             allowClear={false}
-                            options={reportTypeOptions}
+                            options={reportTypeOptions()}
                             isStyle={true}
-                            style={{ width: "130px" }}
+                            style={{ width: "125px", }}
                             placeholder="Report Type"
                             value={filters?.reportType || null}
                             onChange={(selectValue) => handleFilter("reportType", selectValue)}
@@ -254,7 +289,7 @@ export const ReportScreen = () => {
                             allowClear={false}
                             options={filterDatePickerDropdownSource(filters?.reportType)}
                             isStyle={true}
-                            style={{ width: "130px" }}
+                            style={{ width: "125px" }}
                             placeholder="Report Type"
                             value={filters?.datePickerStatus || null}
                             onChange={(selectValue) => handleFilter("datePickerStatus", selectValue)}
@@ -263,10 +298,30 @@ export const ReportScreen = () => {
                             style={{ width: "170px" }}
                             value={filters?.dateRange?.length > 0 ? filters?.dateRange : []}
                             onChange={date => handleFilter("dateRange", (date?.length > 0 ? date : []))} />
+                        {filters?.reportType === 'INVOICE' && <UiSelect
+                            isStyle={true}
+                            options={dropDownSource?.invoiceNos}
+                            style={{ width: "130px" }}
+                            placeholder="Invoice No"
+                            value={filters?.invoiceNo || null}
+                            onChange={(fileldValue) =>
+                                handleFilter("invoiceNo", fileldValue)
+                            }
+                        />}
+                        {['DISPATCH', 'INVOICE'].includes(filters?.reportType) && <UiSelect
+                            isStyle={true}
+                            options={dispatchStatus}
+                            style={{ width: "130px" }}
+                            placeholder="Dispatch Type"
+                            value={filters?.dispatchType || null}
+                            onChange={(fileldValue) =>
+                                handleFilter("dispatchType", fileldValue)
+                            }
+                        />}
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.crNumbers}
-                            style={{ width: "130px" }}
+                            style={{ width: "125px" }}
                             placeholder="CR No"
                             value={filters?.crNo || ""}
                             onChange={(fileldValue) =>
@@ -276,7 +331,7 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.fimNumbers}
-                            style={{ width: "130px" }}
+                            style={{ width: "120px" }}
                             placeholder="FIM No"
                             value={filters?.finNo || ""}
                             onChange={(fileldValue) =>
@@ -286,7 +341,7 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.partNos}
-                            style={{ width: "130px" }}
+                            style={{ width: "120px" }}
                             placeholder="Part No"
                             value={filters?.partNo || ""}
                             onChange={(fileldValue) =>
@@ -296,7 +351,7 @@ export const ReportScreen = () => {
                         <UiSelect
                             isStyle={true}
                             options={dropDownSource?.weekNos}
-                            style={{ width: "130px" }}
+                            style={{ width: "120px" }}
                             placeholder="Week No"
                             value={filters?.weekNo || null}
                             onChange={(fileldValue) =>
@@ -318,10 +373,19 @@ export const ReportScreen = () => {
                     </div>
                 </div>
             </div>
-            <div className="report-body ">
+            <div className="report-body">
                 <Table
                     className="ChangeTablePadding"
-                    columns={REPORTS_TABLE_COLUMNS}
+                    rowClassName={(record) => {
+                        if (!record.dispatchDate || !record.kanbanDate) return "";
+                        const dispatchDate = dayjs(record.dispatchDate);
+                        const kanbanDate = dayjs(record.kanbanDate);
+                        if (dispatchDate.isAfter(kanbanDate, "day")) {
+                            return "dispatch-delay-row";
+                        }
+                        return "";
+                    }}
+                    columns={REPORTS_TABLE_COLUMNS({ filters })}
                     dataSource={tableData?.content}
                     pagination={false}
                     rowKey={"cslDetailInfoId"}

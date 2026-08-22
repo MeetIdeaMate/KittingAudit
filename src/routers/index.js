@@ -10,6 +10,7 @@ import KabanUpload from "../pages/main/KabanUpload";
 import { AuditScreen } from "../pages/main/Audit";
 import { ReportScreen } from "../pages/main/reports";
 import AuditDashboard from "../pages/main/Dashboard/auditDashBoard";
+import Invoice from "../pages/main/Invoice";
 
 export const RouterNavigation = () => {
 
@@ -52,6 +53,7 @@ export const RouterNavigation = () => {
                         <Route path="/User" element={<User />} />
                         <Route path="/Audit" element={<AuditScreen />} />
                         <Route path="/Reports" element={<ReportScreen />} />
+                        <Route path="/Invoice" element={<Invoice/>}/>
                     </Route>
                 </Routes>
             ) : (
