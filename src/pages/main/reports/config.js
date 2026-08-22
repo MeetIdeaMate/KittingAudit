@@ -160,8 +160,8 @@ export const reportTypeDateOptions = () => [
 
 export const dispatchStatus = [
     {
-        key: "ON-TIME ",
-        value: "ON-TIME ",
+        key: "ON-TIME",
+        value: "ON-TIME",
         label: "On Time",
     },
     {
