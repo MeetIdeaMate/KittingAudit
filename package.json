@@ -1,6 +1,6 @@
 {
   "name": "processaudit",
-  "version": "v1.0.2.3",
+  "version": "v1.0.2.4",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^6.1.0",

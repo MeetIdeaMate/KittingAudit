@@ -1,8 +1,9 @@
 import dayjs from "dayjs";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
+import { getRole } from "../../../utils/appUtils";
 
-export const REPORTS_TABLE_COLUMNS = [
+export const REPORTS_TABLE_COLUMNS = ({ filters }) => [
     {
         title: "S.No",
         dataIndex: "sNo",
@@ -49,6 +50,21 @@ export const REPORTS_TABLE_COLUMNS = [
         key: "weekNo",
         width: 120,
     },
+    ...(filters?.reportType === 'INVOICE' ? [
+        {
+            title: "Invoice Number",
+            dataIndex: "invoiceNo",
+            key: "invoiceNo",
+            width: 100,
+        },
+        {
+            title: "Invoice Date",
+            dataIndex: "invoiceDate",
+            key: "invoiceDate",
+            width: 100,
+            render: (_, tableRecord,) => tableRecord?.invoiceDate ? dayjs(tableRecord?.invoiceDate).format("DD-MM-YYYY") : "-"
+        },
+    ] : []),
     {
         title: "BOM Qty",
         dataIndex: "bomQty",
@@ -90,13 +106,13 @@ export const REPORT_CHILD_COLUMN = [
         width: 80,
     },
     {
-        title: "Disciption",
+        title: "Description",
         dataIndex: "description",
         key: "description",
     },
 ];
 
-export const reportTypeOptions = [
+export const reportTypeOptions = () => [
     {
         key: "NOT_AUDIT",
         value: "NOT_AUDIT",
@@ -111,10 +127,15 @@ export const reportTypeOptions = [
         key: "DISPATCH",
         value: "DISPATCH",
         label: "Dispatch",
-    }
+    },
+    ...(getRole() === "ADMIN" ? [{
+        key: "INVOICE",
+        value: "INVOICE",
+        label: "Invoice",
+    }] : []),
 ];
 
-export const reportTypeDateOptions = [
+export const reportTypeDateOptions = () => [
     {
         key: "NOT_AUDIT",
         value: "NOT_AUDIT",
@@ -129,12 +150,30 @@ export const reportTypeDateOptions = [
         key: "DISPATCH",
         value: "DISPATCH",
         label: "Dispatch Date",
-    }
+    },
+    ...(getRole() === "ADMIN" ? [{
+        key: "INVOICE",
+        value: "INVOICE",
+        label: "Invoice Date",
+    }] : []),
+];
+
+export const dispatchStatus = [
+    {
+        key: "ON-TIME",
+        value: "ON-TIME",
+        label: "On Time",
+    },
+    {
+        key: "DELAYED",
+        value: "DELAYED",
+        label: "Delayed",
+    },
 ];
 
 export const DownloadOptions = [{ key: '1', label: 'EXL', }, { key: '2', label: 'Print', }];
 
-export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }) => {
+export const handleDownloadExcel = ({ tableData = [], setTableData = () => { }, filters = '' }) => {
     let excelData = [];
 
     tableData?.content?.forEach((item, index) => {
@@ -146,6 +185,7 @@ export const handleDownloadExcel = ({ tableData = [], setTableData = () => { } }
             "Contract No": item?.crNumber || "-",
             "Part Number": item?.parentPartNumber || "-",
             "Week No": item?.weekNo || "-",
+            ...(filters?.reportType === 'INVOICE' ? { "Invoice Number": item?.invoiceNo, 'Invoice Date': item?.invoiceDate ? dayjs(item?.invoiceDate).format("DD-MM-YYYY") : "-", } : {}),
             "BOM Qty": item?.bomQty || "-",
             "Total Qty": item?.totalQty || "-",
             "Description": item?.description || "-",

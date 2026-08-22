@@ -52,6 +52,8 @@ export const DispatchPrint = ({ tableData = [], filters = {}, cumulativeData = {
                         <th>Contract No</th>
                         <th>Part Number</th>
                         <th>Week No</th>
+                        {filters?.reportType === 'INVOICE' && <th>Invoice Number</th>}
+                        {filters?.reportType === 'INVOICE' && <th>Invoice Date</th>}
                         <th style={{ width: "60px" }}>BOM Qty</th>
                         <th style={{ width: "60px" }}>Total Qty</th>
                         <th>Description</th>
@@ -68,6 +70,8 @@ export const DispatchPrint = ({ tableData = [], filters = {}, cumulativeData = {
                                 <td>{item?.crNumber || "-"}</td>
                                 <td>{item?.parentPartNumber || "-"}</td>
                                 <td>{item?.weekNo || "-"}</td>
+                                {filters?.reportType === 'INVOICE' && <th>{item?.invoiceNo || "-"}</th>}
+                                {filters?.reportType === 'INVOICE' && <th>{item?.invoiceDate ? dayjs(item?.invoiceDate).format("DD-MM-YYYY") : "-"}</th>}
                                 <td>{item?.bomQty || "-"}</td>
                                 <td>{item?.totalQty || "-"}</td>
                                 <td>{item?.description || "-"}</td>

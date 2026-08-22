@@ -35,8 +35,8 @@
 
     &__cards {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
 
         @media (max-width: 1200px) {
             grid-template-columns: repeat(2, 1fr);
@@ -141,4 +141,20 @@
         width: 100%;
         height: 320px;
     }
+}
+
+.dispatch-details {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 0px;
+}
+
+.dispatch-details p {
+    margin: 0;
+    font-weight: 600;
+}
+
+.dispatch-details span {
+    font-size: 12px;
 }
