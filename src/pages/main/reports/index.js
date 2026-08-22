@@ -308,7 +308,7 @@ export const ReportScreen = () => {
                                 handleFilter("invoiceNo", fileldValue)
                             }
                         />}
-                        {filters?.reportType === 'DISPATCH' && <UiSelect
+                        {['DISPATCH', 'INVOICE'].includes(filters?.reportType) && <UiSelect
                             isStyle={true}
                             options={dispatchStatus}
                             style={{ width: "130px" }}
@@ -380,7 +380,7 @@ export const ReportScreen = () => {
                         if (!record.dispatchDate || !record.kanbanDate) return "";
                         const dispatchDate = dayjs(record.dispatchDate);
                         const kanbanDate = dayjs(record.kanbanDate);
-                        if (dispatchDate > kanbanDate) {
+                        if (dispatchDate.isAfter(kanbanDate, "day")) {
                             return "dispatch-delay-row";
                         }
                         return "";
