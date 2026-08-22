@@ -164,9 +164,9 @@ export const ReportScreen = () => {
     };
 
     const filterDatePickerDropdownSource = status => {
-        if (status === "NOT_AUDIT") return reportTypeDateOptions?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
-        if (status === "AUDIT") return reportTypeDateOptions?.filter(dateKey => !["DISPATCH", "INVOICE"].includes(dateKey?.key));
-        return reportTypeDateOptions;
+        if (status === "NOT_AUDIT") return reportTypeDateOptions()?.filter(dateKey => dateKey?.key === "NOT_AUDIT");
+        if (status === "AUDIT") return reportTypeDateOptions()?.filter(dateKey => !["DISPATCH", "INVOICE"].includes(dateKey?.key));
+        return reportTypeDateOptions();
     };
 
     const handlePrint = useReactToPrint({
@@ -190,7 +190,7 @@ export const ReportScreen = () => {
     useEffect(() => {
         if (pdfSource?.content?.length > 0) {
             if (selectDownloadOption?.content === "EXL") {
-                handleDownloadExcel({ tableData: pdfSource, setTableData: setPdfSource });
+                handleDownloadExcel({ tableData: pdfSource, setTableData: setPdfSource, filters });
             } else {
                 handlePrint();
             }
@@ -256,7 +256,7 @@ export const ReportScreen = () => {
                     <div style={{ display: "flex", alignItems: "center", gap: "1px", flexWrap: "wrap", justifyContent: "flex-end", }}>
                         <UiSelect
                             allowClear={false}
-                            options={reportTypeOptions}
+                            options={reportTypeOptions()}
                             isStyle={true}
                             style={{ width: "125px", }}
                             placeholder="Report Type"
