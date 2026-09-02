@@ -24,6 +24,10 @@ export const CSLBASEURL = `${MASTER_DEV_BASE_URL}csl`;
 export const REPORTBASEURL = `${CSLBASEURL}/report`;
 export const DASHBOARDBASEURL = `${CSLBASEURL}/dashboard`;
 
+//Master Date
+export const MASTERDATA_URL = `${MASTER_DEV_BASE_URL}csl`;
+
+
 
 
 

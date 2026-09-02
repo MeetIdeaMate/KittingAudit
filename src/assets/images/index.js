@@ -37,8 +37,10 @@ import disatch_icon from "./disatch_icon.svg";
 import tl_pdf_logo from "./tl_pdf_logo.svg";
 import icn_Reports from "./icn_Reports.svg";
 import icn_Invoice from "./icn_invoice.svg";
+import icons_edit from "./icons_edit.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
+    icons_edit,
     tl_pdf_logo,
     disatch_icon,
     audit_print_icon,
