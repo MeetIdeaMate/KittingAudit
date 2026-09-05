@@ -38,8 +38,16 @@ import tl_pdf_logo from "./tl_pdf_logo.svg";
 import icn_Reports from "./icn_Reports.svg";
 import icn_Invoice from "./icn_invoice.svg";
 import icons_edit from "./icons_edit.svg";
+import user_icon from "./user_icon.svg";
+import pendingPartsIcon from "./pendingPartsIcon.svg";
+import totalPartsIcon from "./totalPartsIcon.svg";
+import verifyPartsIcon from "./verifyPartsIcon.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
+    verifyPartsIcon,
+    pendingPartsIcon,
+    totalPartsIcon,
+    user_icon,
     icons_edit,
     tl_pdf_logo,
     disatch_icon,

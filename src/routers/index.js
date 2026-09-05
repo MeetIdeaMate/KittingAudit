@@ -12,6 +12,7 @@ import { ReportScreen } from "../pages/main/reports";
 import AuditDashboard from "../pages/main/Dashboard/auditDashBoard";
 import Invoice from "../pages/main/Invoice";
 import { MasterData } from "../pages/main/masterData";
+import PartsVerification from "../pages/main/monitorScreen";
 
 export const RouterNavigation = () => {
 
@@ -51,7 +52,7 @@ export const RouterNavigation = () => {
                         <Route path="/KanbanUpload" element={<KabanUpload />} />
                         {/* <Route path="/Kitting" element={<Kitting />} /> */}
                         <Route path="/Dashboard" element={<AuditDashboard />} />
-                        <Route path="/User" element={<MasterData />} />
+                        <Route path="/User" element={<PartsVerification />} />
                         <Route path="/Audit" element={<AuditScreen />} />
                         <Route path="/Reports" element={<ReportScreen />} />
                         <Route path="/Invoice" element={<Invoice />} />
