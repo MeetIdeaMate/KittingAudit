@@ -1,5 +1,6 @@
 import { Image } from "antd";
 import { icons_edit } from "../../../assets/images";
+import { MASTERDATA_URL } from "../../../apiservices/endpoints";
 
 export const PART_COLUMN_HEADER = (handleViewPart) => [
     {
@@ -10,19 +11,19 @@ export const PART_COLUMN_HEADER = (handleViewPart) => [
     },
     {
         title: "Part No",
-        dataIndex: "partNo",
-        key: "partNo",
+        dataIndex: "partNumber",
+        key: "partNumber",
     },
     {
         title: "Description",
-        dataIndex: "description",
-        key: "description",
+        dataIndex: "partDescription",
+        key: "partDescription",
     },
     {
         title: "Part Image",
-        dataIndex: "partImage",
-        key: "partImage",
-        render: (image) => <Image src={image} alt="part" style={{ width: "50px", height: "50px" }} />,
+        dataIndex: "imageUrl",
+        key: "imageUrl",
+        render: (image) => <Image src={`${MASTERDATA_URL}/${image}`} alt="part" style={{ width: "50px", height: "50px" }} />,
     },
     {
         title: "Write Item",
