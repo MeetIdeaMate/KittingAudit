@@ -128,23 +128,7 @@ const PartDrawer = ({
             ) : (
                 isFormMode && (
                     <>
-                        <p style={{ color: "#F97316", fontWeight: 600, marginBottom: "10px" }}>MAIN IMAGE</p>
                         <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-                            <Upload
-                                listType="picture-card"
-                                maxCount={1}
-                                fileList={
-                                    partDetails?.partImage
-                                        ? [partDetails?.partImage]
-                                        : []
-                                }
-                                onChange={({ file }) => handleChange(file, "partImage")}
-                            >
-                                {!partDetails?.partImage && <div>
-                                    <PlusOutlined />
-                                    <div style={{ marginTop: 4, fontSize: "12px" }}>Upload</div>
-                                </div>}
-                            </Upload>
                             <div style={{ flex: 1 }}>
                                 <UiTextBox
                                     name="partDescription"
@@ -166,43 +150,10 @@ const PartDrawer = ({
                                 }
                             />
                         </div>
-
-                        <div
-                            style={{
-                                display: "grid",
-                                gridTemplateColumns: "1fr 1fr 1fr",
-                                gap: "3px",
-                            }}
-                        >
-                            <UiTextBox
-                                label="Width"
-                                name="width"
-                                placeholder="Width"
-                                value={partDetails?.width}
-                                onChange={(e) => handleChange(e.target.value, "width")}
-                            />
-
-                            <UiTextBox
-                                label="Height"
-                                name="height"
-                                placeholder="Height"
-                                value={partDetails?.height}
-                                onChange={(e) => handleChange(e.target.value, "height")}
-                            />
-
-                            <UiTextBox
-                                label="Length"
-                                name="length"
-                                placeholder="Length"
-                                value={partDetails?.length}
-                                onChange={(e) => handleChange(e.target.value, "length")}
-                            />
-                        </div>
-
                         <div >
                             <UiTextArea
-                                label="Description"
-                                placeholder="Why This Part Not Match"
+                                label="Position Description"
+                                placeholder="Position Description"
                                 value={partDetails?.description}
                                 onChange={(e) =>
                                     handleChange(e.target.value, "description")
