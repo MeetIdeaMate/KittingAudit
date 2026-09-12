@@ -21,9 +21,9 @@ export const PART_COLUMN_HEADER = (handleViewPart) => [
     },
     {
         title: "Part Image",
-        dataIndex: "imageUrl",
-        key: "imageUrl",
-        render: (image) => <Image src={`${MASTERDATA_URL}/${image}`} alt="part" style={{ width: "50px", height: "50px" }} />,
+        dataIndex: "partImageDetails",
+        key: "partImageDetails",
+        render: (image) => <Image src={`${MASTERDATA_URL}/get_image/${image?.imageUrl || image?.[0]?.imageUrl}`} alt="part" style={{ width: "50px", height: "50px" }} />,
     },
     {
         title: "Write Item",
