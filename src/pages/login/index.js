@@ -65,6 +65,7 @@ export const Login = () => {
                         { menuName: "Reports", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                         ...(data?.role === "ADMIN" ? [{ menuName: "Invoice", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },] : []),
                         { menuName: "User", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
+                        { menuName: "MasterData", accessLevels: ["ADD", "DELETE", "F_UPDATE", "P_UPDATE", "VIEW"] },
                     ];
                     sessionStorage.setItem("access", JSON.stringify(accessData));
 
