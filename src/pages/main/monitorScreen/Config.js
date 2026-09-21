@@ -39,16 +39,9 @@ export const PART_COLUMN_HEADER = (handleVerify) => [
         key: "status",
         width: "16%",
         align: "right",
-        // render: (status, record) => (
-        //     <UiStatusIcon
-        //         status={status}
-        //         onClick={() => handleVerify(record)}
-        //     />
-        // ),
     },
 ];
 
-// ---- Derives the total/verified/pending counts for a user's part list ----
 export const getPartStats = (parts = []) => {
     const total = parts.length;
     const verified = parts.filter((p) => p.status === "verified").length;

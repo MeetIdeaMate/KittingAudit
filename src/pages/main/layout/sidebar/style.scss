@@ -1,11 +1,16 @@
 @import 'src/scss/variables';
 @import 'src/scss/mixins';
 
+:root {
+    --sidebar-width: 180px;
+}
+
 .sidebar {
     @include position(fixed, $top: 0, $left: 0, $bottom: 0);
     background-color: var(--primary-color);
     padding: 33px 10px;
-    width: 180px;
+    width: var(--sidebar-width);
+    transition: width 0.25s ease, padding 0.25s ease;
     color: var(--white-color);
     overflow-y: auto;
     z-index: 10;
@@ -60,6 +65,34 @@
         animation: fadeInAnimation ease 1s;
         animation-iteration-count: 1;
         animation-fill-mode: forwards;
+    }
+
+    // Icon-only collapsed state
+    &.sidebar--collapsed {
+        padding: 33px 5px;
+
+        .sidebar__list {
+            justify-content: center;
+            margin-left: 0;
+            padding: 10px 0;
+            max-width: 40px;
+
+            img {
+                margin: 0;
+            }
+
+            .sidebar--active {
+                width: 40px;
+                padding: 8px 0;
+                display: flex;
+                justify-content: center;
+            }
+        }
+
+        .userProfile {
+            justify-content: center;
+            padding: 5px;
+        }
     }
 }
 
@@ -138,4 +171,76 @@ nav {
 
 .list {
     width: 100% !important;
+}
+
+// Apply this same variable to your main content wrapper so it shrinks/expands
+// in sync with the sidebar, e.g.:
+//
+// .main-content {
+//     margin-left: var(--sidebar-width);
+//     transition: margin-left 0.25s ease;
+// }
+
+
+.sidebar-collapse-btn {
+    position: fixed;
+    top: 50%;
+    left: calc(var(--sidebar-width, 180px) - 1px);
+    transform: translateY(-50%);
+    width: 32px;
+    height: 128px;
+    padding: 0;
+    border: 0;
+    outline: none;
+    background: #1a1a3d;
+    color: #fff;
+    cursor: pointer;
+    z-index: 1000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition:
+        left 0.25s ease,
+        background-color 0.25s ease;
+
+    /*
+     * Same shape as the design:
+     * straight left side + pointed right side
+     */
+    clip-path: polygon(
+        0 0,
+        0 100%,
+        0 100%,
+        100% 82%,
+        100% 18%
+    );
+
+    span {
+        position: absolute;
+        top: 50%;
+        left: 8px;
+        transform: translateY(-50%);
+        font-size: 32px;
+        font-weight: 300;
+        line-height: 1;
+        font-family: Arial, sans-serif;
+    }
+
+    &:hover {
+        background: #262653;
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 0 2px #fff;
+    }
+
+    &--collapsed {
+        left: calc(var(--sidebar-width, 64px) - 1px);
+
+        span {
+            left: 7px;
+        }
+    }
 }

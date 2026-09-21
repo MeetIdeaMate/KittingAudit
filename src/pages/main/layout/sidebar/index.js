@@ -5,9 +5,9 @@ import classNames from "classnames";
 import { Collapse } from "antd";
 import "./style.scss";
 import packageJson from '../../../../../package.json';
-import { headerReducer } from "../../../../reducers/header.reducer";
 import { phone, questionCircle, sideMenuIcon, TechLambdasLogo, userProfile } from "../../../../assets/images";
 import { AccessPerforming } from "../../../../utils/appUtils/appAccessControl";
+import { headerReducer } from "../../../../reducers/header.reducer";
 
 const { Panel } = Collapse;
 
@@ -23,6 +23,23 @@ const SideBar = () => {
     const [currentMenu, setCurrentMenu] = useState("");
     const [collapsed, setCollapsed] = useState(false);
     const [collapsedReport, setCollapsedReport] = useState(false);
+
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(
+        sessionStorage.getItem("sidebarCollapsed") === "true"
+    );
+
+    const toggleSidebar = useCallback(() => {
+        setIsSidebarCollapsed(prev => {
+            const next = !prev;
+            sessionStorage.setItem("sidebarCollapsed", next);
+            document.documentElement.style.setProperty("--sidebar-width", next ? "64px" : "180px");
+            return next;
+        });
+    }, []);
+
+    useEffect(() => {
+        document.documentElement.style.setProperty("--sidebar-width", isSidebarCollapsed ? "64px" : "180px");
+    }, [isSidebarCollapsed]);
 
     const handleMenus = useCallback(
         (menuItem) => {
@@ -73,13 +90,16 @@ const SideBar = () => {
                 })}
                 onClick={() => handleMenus(menu)}
                 to={`/${menu?.name}`}
+                title={isSidebarCollapsed ? menu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2') : undefined}
             >
-                <div style={{ display: 'flex', alignItems: 'center', maxWidth: '200px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: isSidebarCollapsed ? 'center' : 'flex-start', maxWidth: isSidebarCollapsed ? '40px' : '200px' }}>
                     <figure style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
-                        <img src={sideMenuIcon[`icn_${menu?.name}`]} alt={`${menu?.name} icon`} style={{ width: '20px', marginRight: '8px' }} />
-                        <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
-                            {menu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
-                        </span>
+                        <img src={sideMenuIcon[`icn_${menu?.name}`]} alt={`${menu?.name} icon`} style={{ width: '20px', marginRight: isSidebarCollapsed ? 0 : '8px' }} />
+                        {!isSidebarCollapsed && (
+                            <span style={{ whiteSpace: 'normal', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '150px' }}>
+                                {menu?.name?.replace(/([a-z])([A-Z])/g, '$1 $2')}
+                            </span>
+                        )}
                     </figure>
                 </div>
             </Link>
@@ -88,21 +108,38 @@ const SideBar = () => {
 
     return (
         <>
-            <aside className="sidebar scrollbar">
+            <aside className={classNames("sidebar", "scrollbar", { "sidebar--collapsed": isSidebarCollapsed })}>
+                <button
+                    type="button"
+                    className={classNames("sidebar-collapse-btn", {
+                        "sidebar-collapse-btn--collapsed": isSidebarCollapsed,
+                    })}
+                    onClick={toggleSidebar}
+                    aria-label={isSidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                >
+                    <span>{isSidebarCollapsed ? "›" : "‹"}</span>
+                </button>
+
                 <div style={{ height: "78vh", overflowY: "scroll", scrollbarWidth: "none" }}>
-                    <h3 style={{ fontSize: "9px", position: "absolute", top: "2px", left: "5px", transform: "rotate(-45deg)" }}>{`${packageJson?.version}`}</h3>
-                    <div style={{ display: "flex", padding: 0, margin: 0, justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-                        <img src={TechLambdasLogo} alt="" style={{ width: "25%" }} />
-                        <h3 style={{ width: "75%", padding: 0, margin: 0, textAlign: "center" }}><span style={{ color: "#FF7A00" }}>Tech</span>Lambdas</h3>
+                    {!isSidebarCollapsed && (
+                        <h3 style={{ fontSize: "9px", position: "absolute", top: "2px", left: "5px", transform: "rotate(-45deg)" }}>{`${packageJson?.version}`}</h3>
+                    )}
+                    <div style={{ display: "flex", padding: 0, margin: 0, justifyContent: isSidebarCollapsed ? "center" : "space-between", alignItems: "center", width: "100%" }}>
+                        <img src={TechLambdasLogo} alt="" style={{ width: isSidebarCollapsed ? "60%" : "25%" }} />
+                        {!isSidebarCollapsed && (
+                            <h3 style={{ width: "75%", padding: 0, margin: 0, textAlign: "center" }}><span style={{ color: "#FF7A00" }}>Tech</span>Lambdas</h3>
+                        )}
                     </div>
                     {isKb && (
                         <div style={{ paddingBottom: "5px" }}>
-                            <div className="flex items-center space-x-2" style={{ backgroundColor: "#262653", borderRadius: "5px", display: "flex", justifyContent: "space-around", padding: "3px" }}>
-                                <img src={userProfile} alt="User profile" className="w-10 h-10 rounded-full" />
-                                <div style={{ textAlign: "center", fontSize: "10px" }}>
-                                    <p className="text-xs">{sessionStorage.getItem("name")}</p>
-                                    <p className="text-xs">{designation}</p>
-                                </div>
+                            <div className="flex items-center space-x-2" style={{ backgroundColor: "#262653", borderRadius: "5px", display: "flex", justifyContent: "center", padding: "3px" }}>
+                                <img src={userProfile} alt="User profile" className="w-10 h-10 rounded-full" title={isSidebarCollapsed ? sessionStorage.getItem("name") : undefined} />
+                                {!isSidebarCollapsed && (
+                                    <div style={{ textAlign: "center", fontSize: "10px" }}>
+                                        <p className="text-xs">{sessionStorage.getItem("name")}</p>
+                                        <p className="text-xs">{designation}</p>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )}
@@ -110,7 +147,7 @@ const SideBar = () => {
                         <ul style={{ width: "100%", border: 'none', listStyleType: "none", padding: '2px 0', margin: 0 }}>
                             {renderMenuList}
                         </ul>
-                        {!subMenuArray.every(subMenu => subMenu.isHide) && (
+                        {!subMenuArray.every(subMenu => subMenu.isHide) && !isSidebarCollapsed && (
                             <Collapse
                                 activeKey={collapsed ? ["1"] : []}
                                 onChange={() => setCollapsed(!collapsed)}>
@@ -152,7 +189,7 @@ const SideBar = () => {
                                 </Panel>
                             </Collapse>
                         )}
-                        {(!subMenuReportArray?.every((menu) => menu?.isHide)) && (
+                        {(!subMenuReportArray?.every((menu) => menu?.isHide)) && !isSidebarCollapsed && (
                             <Collapse
                                 activeKey={collapsedReport ? ["2"] : []}
                                 onChange={() => setCollapsedReport(!collapsedReport)}>
@@ -196,7 +233,7 @@ const SideBar = () => {
                         )}
                     </nav>
                 </div>
-                <div style={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}>
+                {!isSidebarCollapsed && <div style={{ height: "10vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", gap: "10px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <img src={questionCircle} alt="" style={{ width: "20px" }} />
                         <p style={{ padding: 0, margin: 0 }}><b>For Inquiry</b></p>
@@ -205,7 +242,7 @@ const SideBar = () => {
                         <img src={phone} alt="Phone" style={{ width: "20px" }} />
                         <p style={{ padding: 0, margin: 0 }}>+91 9791191380</p>
                     </div>
-                </div>
+                </div>}
             </aside>
         </>
     );
