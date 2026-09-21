@@ -88,6 +88,111 @@ const toSessionMap = (list) =>
         return map;
     }, {});
 
+const DUMMY_SESSIONS = [
+    {
+        userId: "DUMMY-U1",
+        userName: "User 1",
+        cslDetailInfoId: "dummy-csl-1",
+        crNumber: "78K4D915",
+        fimNumber: "ELEV08.24",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d1-1", partNumber: "GAA24350BD11", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d1-2", partNumber: "KM51004000V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d1-3", partNumber: "FAA40SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d1-4", partNumber: "DAA26800AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d1-5", partNumber: "GCA21240D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+    {
+        userId: "DUMMY-U2",
+        userName: "User 2",
+        cslDetailInfoId: "dummy-csl-2",
+        crNumber: "31M7H221",
+        fimNumber: "HOIST03.19",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d2-1", partNumber: "KM811500", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d2-2", partNumber: "AAA20220V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d2-3", partNumber: "A21310SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "IN_PROGRESS" },
+            { partId: "d2-4", partNumber: "FAA435AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d2-5", partNumber: "KM5002D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+    {
+        userId: "DUMMY-U3",
+        userName: "User 3",
+        cslDetailInfoId: "dummy-csl-3",
+        crNumber: "78K4D915",
+        fimNumber: "ELEV08.24",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d3-1", partNumber: "GAA24350BD11", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-2", partNumber: "KM51004000V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-3", partNumber: "FAA40SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-4", partNumber: "DAA26800AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d3-5", partNumber: "GCA21240D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+    {
+        userId: "DUMMY-U4",
+        userName: "User 4",
+        cslDetailInfoId: "dummy-csl-3",
+        crNumber: "78K4D915",
+        fimNumber: "ELEV08.24",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d3-1", partNumber: "GAA24350BD11", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-2", partNumber: "KM51004000V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-3", partNumber: "FAA40SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-4", partNumber: "DAA26800AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d3-5", partNumber: "GCA21240D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+    {
+        userId: "DUMMY-U5",
+        userName: "User 5",
+        cslDetailInfoId: "dummy-csl-3",
+        crNumber: "78K4D915",
+        fimNumber: "ELEV08.24",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d3-1", partNumber: "GAA24350BD11", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-2", partNumber: "KM51004000V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-3", partNumber: "FAA40SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-4", partNumber: "DAA26800AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d3-5", partNumber: "GCA21240D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+    {
+        userId: "DUMMY-U6",
+        userName: "User 6",
+        cslDetailInfoId: "dummy-csl-3",
+        crNumber: "78K4D915",
+        fimNumber: "ELEV08.24",
+        totalQty: 11,
+        verifiedQty: 4,
+        pendingQty: 7,
+        partDetails: [
+            { partId: "d3-1", partNumber: "GAA24350BD11", description: "Cabin Door Operator Assembly", quantity: 2, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-2", partNumber: "KM51004000V002", description: "Door Lock Roller Guide Shoe Set", quantity: 1, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-3", partNumber: "FAA40SAV1", description: "Landing Door Hanger Bracket", quantity: 4, verifiedQty: 0, capturedImageUrls: null, referenceImageUrl: null, status: "PENDING" },
+            { partId: "d3-4", partNumber: "DAA26800AL", description: "Elevator Control Board PCB Module", quantity: 3, verifiedQty: 3, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+            { partId: "d3-5", partNumber: "GCA21240D1", description: "Safety Gear Trigger Mechanism", quantity: 1, verifiedQty: 1, capturedImageUrls: null, referenceImageUrl: null, status: "VERIFIED" },
+        ],
+    },
+];
+
 export const PartsVerification = () => {
     const scrollRef = useRef(null);
     const eventSourceRef = useRef(null);
@@ -95,6 +200,27 @@ export const PartsVerification = () => {
     const [connectionError, setConnectionError] = useState(false);
     const [selectedUsers, setSelectedUsers] = useState(null);
     const [pinnedUserIds, setPinnedUserIds] = useState([]);
+
+    const CARD_WIDTH = 620;
+    const CARD_GAP = 8;
+
+    const scrollBoard = (direction) => {
+        if (!scrollRef.current) return;
+        scrollRef.current.scrollBy({ left: direction * (CARD_WIDTH + CARD_GAP), behavior: "smooth" });
+    };
+
+    useEffect(() => {
+        const handleRemoteKeyDown = (event) => {
+            if (event.key === "1") {
+                scrollBoard(-1);
+            } else if (event.key === "2") {
+                scrollBoard(1);
+            }
+        };
+
+        window.addEventListener("keydown", handleRemoteKeyDown);
+        return () => window.removeEventListener("keydown", handleRemoteKeyDown);
+    }, []);
 
     const getAllSessions = () => api.get(PARTS_VERIFICATION_GET_ALL_URL);
 
@@ -156,7 +282,8 @@ export const PartsVerification = () => {
         };
     }, []);
 
-    const allUsers = useMemo(() => Object.values(sessions), [sessions]);
+    const liveUsers = useMemo(() => Object.values(sessions), [sessions]);
+    const allUsers = liveUsers.length ? liveUsers : DUMMY_SESSIONS;
     const userFilterOptions = useMemo(
         () => allUsers.map((u) => ({ label: u.userName, value: u.userId })),
         [allUsers]
@@ -209,14 +336,6 @@ export const PartsVerification = () => {
         setPinnedUserIds((prev) =>
             prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
         );
-    };
-
-    const CARD_WIDTH = 620;
-    const CARD_GAP = 8;
-
-    const scrollBoard = (direction) => {
-        if (!scrollRef.current) return;
-        scrollRef.current.scrollBy({ left: direction * (CARD_WIDTH + CARD_GAP), behavior: "smooth" });
     };
 
     const orderedUsers = pinnedUserIds.length
