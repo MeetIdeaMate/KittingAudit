@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import { UiButton, UiSearchBox, UiTable, UiDatePicker, UiSelect } from "../../../components";
-import { PART_COLUMN_HEADER, getPartStats } from "./Config";
 import * as api from "../../../actions";
 import { PARTS_VERIFICATION_URL } from "../../../apiservices/endpoints";
 import { useQuery } from "@tanstack/react-query";
@@ -8,8 +7,15 @@ import { useDispatch } from "react-redux";
 import { loaderReducer } from "../../../reducers/loader.reducer";
 import { showToast } from "../../../components/UiToastNotification";
 import { searchInitiateDelayTime } from "../../../utils/appUtils";
-import './Styles.scss'
-import { ArrowLeftOutlined, ArrowRightOutlined, PushpinFilled } from "@ant-design/icons";
+import "./Styles.scss";
+import {
+    ArrowLeftOutlined,
+    ArrowRightOutlined,
+    PushpinFilled,
+    PushpinOutlined,
+    CheckCircleFilled,
+    ExclamationCircleFilled,
+} from "@ant-design/icons";
 import { pendingPartsIcon, totalPartsIcon, user_icon, verifyPartsIcon } from "../../../assets/images";
 
 const DUMMY_USERS = [
@@ -89,6 +95,67 @@ const USER_FILTER_OPTIONS = [
     { label: "User 5", value: "U-005" },
 ];
 
+const getPartStats = (parts) => {
+    const total = parts?.reduce((sum, p) => sum + (p?.partQty || 0), 0) || 0;
+    const verified =
+        parts?.filter((p) => p?.status === "verified")?.reduce((sum, p) => sum + (p?.partQty || 0), 0) || 0;
+    return { total, verified, pending: total - verified };
+};
+
+const getPartColumns = (onVerifyClick) => [
+    {
+        title: "Part No",
+        dataIndex: "partNo",
+        key: "partNo",
+    },
+    {
+        title: "Part Qty",
+        dataIndex: "partQty",
+        key: "partQty",
+        align: "center",
+    },
+    {
+        title: "Part Img",
+        dataIndex: "partImage",
+        key: "partImage",
+        render: (image) =>
+            image ? (
+                <img src={image} alt="" className="part-thumb" />
+            ) : (
+                <span className="part-thumb part-thumb--empty">—</span>
+            ),
+    },
+    {
+        title: "Description",
+        dataIndex: "description",
+        key: "description",
+    },
+    {
+        title: "Verified Part",
+        dataIndex: "status",
+        key: "status",
+        align: "center",
+        render: (status, record) => {
+            const isVerified = status === "verified";
+            return (
+                <button
+                    type="button"
+                    className={`verify-toggle ${isVerified ? "is-verified" : "is-pending"}`}
+                    onClick={() => onVerifyClick(record)}
+                    disabled={isVerified}
+                >
+                    <span className="verify-toggle-qty">{isVerified ? record?.partQty : 0}</span>
+                    {isVerified ? (
+                        <CheckCircleFilled className="verify-icon verify-icon--ok" />
+                    ) : (
+                        <ExclamationCircleFilled className="verify-icon verify-icon--pending" />
+                    )}
+                </button>
+            );
+        },
+    },
+];
+
 export const PartsVerification = () => {
     const dispatch = useDispatch();
     const debounceTime = useRef(null);
@@ -98,6 +165,7 @@ export const PartsVerification = () => {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [selectedUsers, setSelectedUsers] = useState(["all"]);
     const [searchTerm, setSearchTerm] = useState("");
+    const [pinnedUserId, setPinnedUserId] = useState(null);
 
     const getVerificationBoard = (date, userFilter, search) =>
         api.get(
@@ -162,6 +230,10 @@ export const PartsVerification = () => {
         }
     };
 
+    const handlePinToggle = (userId) => {
+        setPinnedUserId((prev) => (prev === userId ? null : userId));
+    };
+
     const debounceSearch = (searchValue) => {
         if (debounceTime?.current) clearTimeout(debounceTime.current);
         debounceTime.current = setTimeout(() => {
@@ -180,85 +252,110 @@ export const PartsVerification = () => {
         dispatch(loaderReducer(isFetchingBoard));
     }, [dispatch, isFetchingBoard]);
 
+    const orderedUsers = pinnedUserId
+        ? [...allUsers].sort((a, b) => (a.userId === pinnedUserId ? -1 : b.userId === pinnedUserId ? 1 : 0))
+        : allUsers;
+
     return (
-        <div className="parts-verification-page">
-            <div className="parts-verification-header">
-                <UiDatePicker isStyle={true} value={selectedDate} onChange={setSelectedDate} />
-                <UiSelect
-                    isStyle={true}
-                    mode="multiple"
-                    options={USER_FILTER_OPTIONS}
-                    value={selectedUsers}
-                    onChange={setSelectedUsers}
-                    maxTagCount="responsive"
-                    style={{ minWidth: 180 }}
-                />
-                <UiSearchBox placeholder="Search" handleSearch={handleSearch} className="parts-verification-search" />
+        <div className="monitor-screen">
+            <div className="monitor-header">
+                <div className="monitor-header-titles">
+                    <h2>Monitor Screen</h2>
+                    <p>Live overview of part verification by user</p>
+                </div>
+                <div className="monitor-header-filters">
+                    <UiDatePicker isStyle={true} value={selectedDate} onChange={setSelectedDate} />
+                    <UiSelect
+                        isStyle={true}
+                        mode="multiple"
+                        options={USER_FILTER_OPTIONS}
+                        value={selectedUsers}
+                        onChange={setSelectedUsers}
+                        maxTagCount="responsive"
+                        style={{ minWidth: 180 }}
+                    />
+                    <UiSearchBox placeholder="Search" handleSearch={handleSearch} className="parts-verification-search" />
+                </div>
+            </div>
+
+            <div className="monitor-active-user-row">
+                <span className="monitor-active-user-label">Active User</span>
+                <span className="active-user-count">{allUsers?.length || 0}</span>
             </div>
 
             <div className="parts-verification-board-wrap">
-                <UiButton
-                    className="board-nav-arrow board-nav-arrow--prev"
-                    onClick={() => scrollBoard(-1)}
-                ><ArrowLeftOutlined /></UiButton>
+                <button className="board-nav-arrow board-nav-arrow--prev" onClick={() => scrollBoard(-1)}>
+                    <ArrowLeftOutlined />
+                </button>
                 <div className="parts-verification-board" ref={scrollRef}>
-                    {allUsers.map((user) => {
+                    {orderedUsers.map((user) => {
                         const stats = getPartStats(user.parts);
+                        const isPinned = pinnedUserId === user.userId;
                         return (
-                            <div className="user-panel" key={user.userId}>
+                            <div className={`user-panel ${isPinned ? "is-pinned" : ""}`} key={user.userId}>
                                 <div className="user-panel-header">
                                     <img src={user_icon} alt="" className="user-avatar" />
-                                    <span>{user.userName}</span>
-                                    <PushpinFilled className="pin-icon" />
+                                    <span className="user-name">{user.userName}</span>
+                                    {isPinned && (
+                                        <span className="pinned-badge">
+                                            <PushpinFilled /> Pinned this User
+                                        </span>
+                                    )}
+                                    <button
+                                        type="button"
+                                        className={`pin-toggle ${isPinned ? "is-active" : ""}`}
+                                        onClick={() => handlePinToggle(user.userId)}
+                                        title={isPinned ? "Unpin user" : "Pin user"}
+                                    >
+                                        {isPinned ? <PushpinFilled /> : <PushpinOutlined />}
+                                    </button>
                                 </div>
                                 <div className="user-panel-body">
                                     <div className="device-row">
-                                        <div>
+                                        <div className="device-info">
                                             <div className="device-id">{user.deviceId}</div>
                                             <div className="device-model">{user.deviceModel}</div>
                                         </div>
-                                        <div className="stat-cards">
-                                            <div className="stat-card total">
-                                                <div className="stat-label">Total Part</div>
-                                                <div className="stat-value">
-                                                    <span>{stats.total}</span>
-                                                    <img className="stat-icon total-icon" src={totalPartsIcon} alt="" />
-                                                </div>
+                                        <div className="stat-pills">
+                                            <div className="stat-pill stat-pill--total">
+                                                <span className="stat-pill-label">Total Part Qty</span>
+                                                <span className="stat-pill-value">
+                                                    {stats.total}
+                                                    <img className="stat-pill-icon" src={totalPartsIcon} alt="" />
+                                                </span>
                                             </div>
-
-                                            <div className="stat-card verified">
-                                                <div className="stat-label">Verified Part</div>
-                                                <div className="stat-value">
-                                                    <span>{stats.verified}</span>
-                                                    <img className="stat-icon verified-icon" src={verifyPartsIcon} alt="" />
-                                                </div>
+                                            <div className="stat-pill stat-pill--verified">
+                                                <span className="stat-pill-label">Verified Qty</span>
+                                                <span className="stat-pill-value">
+                                                    {stats.verified}
+                                                    <img className="stat-pill-icon" src={verifyPartsIcon} alt="" />
+                                                </span>
                                             </div>
-
-                                            <div className="stat-card pending">
-                                                <div className="stat-label">Pending Part</div>
-                                                <div className="stat-value">
-                                                    <span>{stats.pending}</span>
-                                                    <img className="stat-icon pending-icon" src={pendingPartsIcon} alt="" />
-                                                </div>
+                                            <div className="stat-pill stat-pill--pending">
+                                                <span className="stat-pill-label">Pending Qty</span>
+                                                <span className="stat-pill-value">
+                                                    {stats.pending}
+                                                    <img className="stat-pill-icon" src={pendingPartsIcon} alt="" />
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                     <UiTable
                                         className="parts-table"
-                                        columns={PART_COLUMN_HEADER((part) => handleVerify(user.userId, part))}
+                                        columns={getPartColumns((part) => handleVerify(user.userId, part))}
                                         dataSource={user.parts}
                                         rowKey="partId"
                                         pagination={false}
+                                        rowClassName={(record) => (record.status === "pending" ? "row-pending" : "")}
                                     />
                                 </div>
                             </div>
                         );
                     })}
                 </div>
-                <UiButton
-                    className="board-nav-arrow board-nav-arrow--next"
-                    onClick={() => scrollBoard(1)}
-                ><ArrowRightOutlined /></UiButton>
+                <button className="board-nav-arrow board-nav-arrow--next" onClick={() => scrollBoard(1)}>
+                    <ArrowRightOutlined />
+                </button>
             </div>
         </div>
     );
