@@ -3,7 +3,8 @@
 
 .layout {
     position: relative;
-    padding-left: 205px;
+    padding-left: calc(var(--sidebar-width, 180px) + 25px);
+    transition: padding-left 0.25s ease;
     background-color: var(--bg-color);
 
     &__container {

@@ -42,8 +42,13 @@ import user_icon from "./user_icon.svg";
 import pendingPartsIcon from "./pendingPartsIcon.svg";
 import totalPartsIcon from "./totalPartsIcon.svg";
 import verifyPartsIcon from "./verifyPartsIcon.svg";
+import icn_MasterData from "./masterData_icon.svg";
+import monitor_inprogress from "./monitor_inprogress.svg";
+import monitor_pending from "./monitor_pending.svg";
 // import techlambdasRightCornerLogo from "./techlambdas-right-corner-logo.svg";
 export {
+    monitor_pending,
+    monitor_inprogress,
     verifyPartsIcon,
     pendingPartsIcon,
     totalPartsIcon,
@@ -92,5 +97,6 @@ export const sideMenuIcon = {
     icn_KanbanUpload,
     icn_Audit,
     icn_Reports,
-    icn_Invoice
+    icn_Invoice,
+    icn_MasterData
 };
