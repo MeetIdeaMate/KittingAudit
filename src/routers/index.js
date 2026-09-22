@@ -57,6 +57,7 @@ export const RouterNavigation = () => {
                         <Route path="/Audit" element={<AuditScreen />} />
                         <Route path="/Reports" element={<ReportScreen />} />
                         <Route path="/Invoice" element={<Invoice />} />
+                        <Route path="/Monitor" element={<PartsVerification />} />
                     </Route>
                 </Routes>
             ) : (
