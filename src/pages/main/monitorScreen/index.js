@@ -285,13 +285,13 @@ export const PartsVerification = () => {
     const liveUsers = useMemo(() => Object.values(sessions), [sessions]);
     const allUsers = liveUsers.length ? liveUsers : DUMMY_SESSIONS;
     const userFilterOptions = useMemo(
-        () => allUsers.map((u) => ({ label: u.userName, value: u.userId })),
+        () => allUsers?.map((userDetails) => ({ label: userDetails?.userName, value: userDetails?.userId })),
         [allUsers]
     );
 
     const visibleUsers =
         selectedUsers
-            ? allUsers.filter((u) => selectedUsers === u.userId)
+            ? allUsers?.filter((userDetails) => selectedUsers === userDetails?.userId)
             : allUsers;
 
     const verifyPart = (payload) => api.post(`${PARTS_VERIFICATION_URL}/verify`, payload);
@@ -304,8 +304,8 @@ export const PartsVerification = () => {
     const queueVerify = async (session, part) => {
         try {
             const response = await verifyPart({
-                cslDetailInfoId: session.cslDetailInfoId,
-                partId: part.partId,
+                cslDetailInfoId: session?.cslDetailInfoId,
+                partId: part?.partId,
             });
             if (response?.statusCode === 200) {
                 showToast.success("Success", "Part verified");
@@ -316,10 +316,10 @@ export const PartsVerification = () => {
                         ...prev,
                         [session.userId]: {
                             ...current,
-                            partDetails: current.partDetails.map((p) =>
-                                p.partId === part.partId
-                                    ? { ...p, status: "VERIFIED", verifiedQty: p.quantity }
-                                    : p
+                            partDetails: current?.partDetails?.map((paetsRecord) =>
+                                paetsRecord.partId === part?.partId
+                                    ? { ...paetsRecord, status: "VERIFIED", verifiedQty: paetsRecord?.quantity }
+                                    : paetsRecord
                             ),
                         },
                     };
@@ -334,13 +334,13 @@ export const PartsVerification = () => {
 
     const handlePinToggle = (userId) => {
         setPinnedUserIds((prev) =>
-            prev.includes(userId) ? prev.filter((id) => id !== userId) : [...prev, userId]
+            prev.includes(userId) ? prev?.filter((id) => id !== userId) : [...prev, userId]
         );
     };
 
-    const orderedUsers = pinnedUserIds.length
+    const orderedUsers = pinnedUserIds?.length
         ? [...visibleUsers].sort(
-            (a, b) => Number(pinnedUserIds.includes(b.userId)) - Number(pinnedUserIds.includes(a.userId))
+            (a, b) => Number(pinnedUserIds?.includes(b?.userId)) - Number(pinnedUserIds?.includes(a?.userId))
         )
         : visibleUsers;
 
@@ -379,13 +379,13 @@ export const PartsVerification = () => {
                     <ArrowLeftOutlined />
                 </button>
                 <div className="parts-verification-board" ref={scrollRef}>
-                    {orderedUsers.map((session) => {
-                        const isPinned = pinnedUserIds.includes(session.userId);
+                    {orderedUsers?.map((session) => {
+                        const isPinned = pinnedUserIds?.includes(session?.userId);
                         return (
-                            <div className={`user-panel ${isPinned ? "is-pinned" : ""}`} key={session.userId}>
+                            <div className={`user-panel ${isPinned ? "is-pinned" : ""}`} key={session?.userId}>
                                 <div className="user-panel-header">
                                     <img src={user_icon} alt="" className="user-avatar" />
-                                    <span className="user-name">{session.userName}</span>
+                                    <span className="user-name">{session?.userName}</span>
                                     <div className="user-panel-actions">
                                         {isPinned && (
                                             <span className="pinned-badge">
@@ -395,7 +395,7 @@ export const PartsVerification = () => {
                                         <button
                                             type="button"
                                             className={`pin-toggle ${isPinned ? "is-active" : ""}`}
-                                            onClick={() => handlePinToggle(session.userId)}
+                                            onClick={() => handlePinToggle(session?.userId)}
                                             title={isPinned ? "Unpin user" : "Pin user"}
                                         >
                                             {isPinned ? <PushpinFilled /> : <PushpinOutlined />}
