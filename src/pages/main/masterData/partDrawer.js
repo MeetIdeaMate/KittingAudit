@@ -37,7 +37,9 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
         enabled: isOpenDrawer && isFormMode,
         refetchOnWindowFocus: false,
         onSuccess: (res) => {
-            setSimilarPartsList(res?.result?.masterDataList || []);
+            if (res?.statusCode === 200) {
+            setSimilarPartsList(res?.result?.masterDataList || []); 
+            }
         },
     });
 
@@ -161,7 +163,6 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
         ...similarPartsList?.find((cat) => cat?.partId === p?.partId),
         ...p,
     }));
-    console.log(addedParts, "addedParts", similarPartsList, formState);
 
     return (
         <UiDrawer
@@ -267,7 +268,7 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                             mode="multiple"
                             isStyle={true}
                             placeholder="Search part name"
-                            value={similarParts?.map((p) => p?.partId) || []}
+                            value={similarParts?.map((partDetails) => partDetails?.partId) || []}
                             options={similarPartsList?.filter(partFill => (formState?.partId ? partFill?.partId !== formState?.partId : true) && partFill?.status === 'ACTIVE')?.map((p) => ({ label: p?.partNumber, value: p?.partId, key: p?.partId }))}
                             onChange={handleSimilarPartsSelect}
                         />

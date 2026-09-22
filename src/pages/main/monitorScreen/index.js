@@ -405,28 +405,28 @@ export const PartsVerification = () => {
                                 <div className="user-panel-body">
                                     <div className="device-row">
                                         <div className="device-info">
-                                            <div className="device-id">{session.crNumber}</div>
-                                            <div className="device-model">{session.fimNumber}</div>
+                                            <div className="device-id">{session?.crNumber}</div>
+                                            <div className="device-model">{session?.fimNumber}</div>
                                         </div>
                                         <div className="stat-pills">
                                             <div className="stat-pill stat-pill--total">
                                                 <span className="stat-pill-label">Total Part Qty</span>
                                                 <span className="stat-pill-value">
-                                                    {session.totalQty ?? 0}
+                                                    {session?.totalQty ?? 0}
                                                     <img className="stat-pill-icon" src={totalPartsIcon} alt="" />
                                                 </span>
                                             </div>
                                             <div className="stat-pill stat-pill--verified">
                                                 <span className="stat-pill-label">Verified Qty</span>
                                                 <span className="stat-pill-value">
-                                                    {session.verifiedQty ?? 0}
+                                                    {session?.verifiedQty ?? 0}
                                                     <img className="stat-pill-icon" src={verifyPartsIcon} alt="" />
                                                 </span>
                                             </div>
                                             <div className="stat-pill stat-pill--pending">
                                                 <span className="stat-pill-label">Pending Qty</span>
                                                 <span className="stat-pill-value">
-                                                    {session.pendingQty ?? 0}
+                                                    {session?.pendingQty ?? 0}
                                                     <img className="stat-pill-icon" src={pendingPartsIcon} alt="" />
                                                 </span>
                                             </div>
@@ -435,7 +435,7 @@ export const PartsVerification = () => {
                                     <UiTable
                                         className="parts-table"
                                         columns={getPartColumns((part) => handleVerify(session, part))}
-                                        dataSource={session.partDetails}
+                                        dataSource={session?.partDetails || []}
                                         rowKey="partId"
                                         pagination={false}
                                         rowClassName={(record) => (record.status === "NOT_MATCHED" ? "row-pending" : "")}

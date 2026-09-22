@@ -41,10 +41,3 @@ export const PART_COLUMN_HEADER = (handleVerify) => [
         align: "right",
     },
 ];
-
-export const getPartStats = (parts = []) => {
-    const total = parts.length;
-    const verified = parts.filter((p) => p.status === "verified").length;
-    const pending = total - verified;
-    return { total, verified, pending };
-};

@@ -19,7 +19,6 @@ export const MasterData = () => {
     const [isOpenDrawer, setIsOpenDrawer] = useState(false);
     const [drawerMode, setDrawerMode] = useState("add");
     const [mainRecord, setMainRecord] = useState({});
-
     const [statusConfirm, setStatusConfirm] = useState({ isOpen: false, record: null });
 
     const [allPartDetails, setAllPartDetails] = useState({});
