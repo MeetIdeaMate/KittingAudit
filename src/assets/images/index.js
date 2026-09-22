@@ -29,14 +29,15 @@ import statuChange from "./statuschange.svg";
 import flotButton from "./DcInput.svg";
 import otislogoPdf from "./otisLogoPdf.png";
 import icn_CSLUpload from "./icn_ExcelUploadIcon.svg";
-import icn_SOBUpload from "./icn_ExcelUploadIcon.svg";
-import icn_KanbanUpload from "./icn_ExcelUploadIcon.svg";
+import icn_SOBUpload from "./icn_SOBUpload.svg";
+import icn_KanbanUpload from "./icn_KanbanUpload.svg";
 import icn_Audit from "./icn_Audit.svg";
 import audit_print_icon from "./audit_print_icon.svg";
 import disatch_icon from "./disatch_icon.svg";
 import tl_pdf_logo from "./tl_pdf_logo.svg";
 import icn_Reports from "./icn_Reports.svg";
 import icn_Invoice from "./icn_invoice.svg";
+import icn_Monitor from "./icn_Monitor.svg";
 import icons_edit from "./icons_edit.svg";
 import user_icon from "./user_icon.svg";
 import pendingPartsIcon from "./pendingPartsIcon.svg";
@@ -98,5 +99,6 @@ export const sideMenuIcon = {
     icn_Audit,
     icn_Reports,
     icn_Invoice,
-    icn_MasterData
+    icn_MasterData,
+    icn_Monitor,
 };
