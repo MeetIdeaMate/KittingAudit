@@ -1,144 +1,167 @@
 import React from "react";
 import "./style.scss";
 import dayjs from "dayjs";
+import { CSLBASEURL, MASTERDATA_URL } from "../../../apiservices/endpoints";
 
+const formatStatusLabel = (status) => {
+    if (!status) return "Pending";
+    return status
+        .toString()
+        .replace(/_/g, " ")
+        .toLowerCase()
+        .replace(/\b\w/g, (changeStatus) => changeStatus.toUpperCase());
+};
 
 const TableHead = () => (
     <thead>
         <tr>
-            <th style={{ width: "8%" }}>SNo</th>
-            <th style={{ width: "16%" }}>Bill of Material</th>
-            <th style={{ width: "8%" }}>Qty as per VEW CSL</th>
-            <th style={{ width: "8%" }}>Week No</th>
-            <th style={{ width: "10%" }}>Gross Weight (in Kg)</th>
-            <th style={{ width: "10%" }}>Quantity as per OTIS CSL</th>
-            <th style={{ width: "10%" }}>Remark</th>
-            <th style={{ width: "15%" }}>Hardware Inspection Remark</th>
-            <th style={{ width: "15%" }}>Kitting Inspection Remark</th>
-            <th style={{ width: "8%" }}>Remark</th>
+            <th style={{ width: "6%" }}>No</th>
+            <th style={{ width: "14%" }}>Bill of Material</th>
+            <th style={{ width: "10%" }}>Qty as per VEW CSL</th>
+            <th style={{ width: "31%" }}>Part Description</th>
+            <th style={{ width: "15%" }}>Remarks</th>
+            <th style={{ width: "14%" }}>CN Number</th>
+            <th style={{ width: "10%" }}>Status</th>
         </tr>
     </thead>
 );
 
+const ImageGallery = ({ images }) => {
+    const resolved = (images || [])?.filter(Boolean);
+    if (!resolved?.length) return null;
+
+    return (
+        <div className="image-gallery">
+            {resolved?.map((src, idx) => (
+                <div className="gallery-item" key={`gallery-${idx}`}>
+                    <img src={src} alt={`part-${idx}`} />
+                </div>
+            ))}
+        </div>
+    );
+};
+const BottomImageStrip = ({ images }) => {
+    const resolved = (images || [])?.filter(Boolean);
+
+    if (!resolved?.length) return null;
+
+    const columns = Math.max(3, resolved?.length);
+
+    return (
+        <div
+            className="captured-strip"
+            style={{
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`
+            }}
+        >
+            {resolved?.map((src, idx) => (
+                <div
+                    className="captured-item"
+                    key={`bottom-img-${idx}`}
+                >
+                    <img src={src} alt={`overflow-small-${idx}`} />
+                </div>
+            ))}
+        </div>
+    );
+};
+
 const BottomSection = ({ selectedRecord }) => (
-    <div style={{ width: "100%" }}>
-        <table className="bottom-layout-table">
-            <tbody>
-                <tr className="meta-row">
-                    <td className="col-label" style={{ padding: "0" }}>Contract Packed Date</td>
-                    <td className="col-value" style={{ padding: "0" }}>
-                        {dayjs().format("DD-MM-YYYY")}
-                    </td>
-                    <td className="signature-cell-container" rowSpan={6} >
-                        <div className="sig-flex-inner">
-                            <div className="sig-interactive-field">
-                                <span >Sign:</span>
-                                <span className="ink-faint-line"></span>
-                            </div>
-                            <div className="sig-interactive-field">
-                                <span>Date:</span>
-                                <span className="ink-faint-line"></span>
-                            </div>
-                        </div>
-                        <div className="outside-approvals-row">
-                            <div className="approval-signature-line">
-                                <span>Checked By:</span>
-                                <span className="">____________________</span>
-                            </div>
-                            <div className="approval-signature-line">
-                                <span>Approved By:</span>
-                                <span className="">_____________________</span>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-                <tr className="meta-row">
-                    <td className="col-label" style={{ padding: "0" }}>No of Boxes</td>
-                    <td className="col-value"></td>
-                </tr>
-                <tr className="meta-row">
-                    <td className="col-label" style={{ padding: "0" }}>Invoice No</td>
-                    <td className="col-value"></td>
-                </tr>
-                <tr className="meta-row">
-                    <td className="col-label" style={{ padding: "0" }}>Invoice Date</td>
-                    <td className="col-value">
-                    </td>
-                </tr>
-                <tr className="meta-row">
-                    <td className="col-label" style={{ padding: "0" }}>Dispatch Date</td>
-                    <td className="col-value">
-                    </td>
-                </tr>
-                <tr className="meta-row">
-                    <td className="col-label" >Material Condition</td>
-                    <td className="col-value"></td>
-                </tr>
-                <tr>
-                    <td className="remark-block-cell" colSpan={2}>
-                        Remark: <span></span>
-                    </td>
-                    <td className="note-block-cell">
-                        Note: <span></span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div className="footer-fixed">
+        <div className="footer-meta-row">
+            <span>
+                <b>Contract Packed Date</b>
+                {selectedRecord?.packingDate
+                    ? dayjs(selectedRecord?.packingDate).format("DD-MM-YYYY")
+                    : dayjs().format("DD-MM-YYYY")}
+            </span>
+            <span>
+                <b>No of Box</b>
+                {selectedRecord?.noOfBox ?? ""}
+            </span>
+            <span>
+                <b>Material Condition</b>
+                {selectedRecord?.materialCondition ?? ""}
+            </span>
+        </div>
+
+        <div className="footer-remark-row">
+            <b>Remarks</b>
+            {selectedRecord?.remark ?? ""}
+        </div>
+
+        <div className="footer-signatures">
+            <div className="sig-block">
+                <span className="sig-line"></span>
+                <span className="sig-label">Checked By</span>
+            </div>
+            <div className="sig-block">
+                <span className="sig-line"></span>
+                <span className="sig-label">Approved By</span>
+            </div>
+        </div>
     </div>
 );
 
+const SMALL_PART_LIMIT = 4;
+const BOTTOM_STRIP_LIMIT = 3;
+
 const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetails ?? [];
-    const combinedParts = Object.values(
-        partDetails?.reduce((acc, item) => {
-            if (acc[item?.partNumber]) {
-                acc[item?.partNumber].quantity += item?.quantity;
-            } else {
-                acc[item?.partNumber] = { ...item };
-            }
-            return acc;
-        }, {})
-    );
-
-    const totalRowCount = combinedParts?.length;
+    const totalRowCount = partDetails?.length;
     const shouldBreakBeforeBottom = totalRowCount > 18;
+    const partThumbs = partDetails?.map(detail => detail?.capturedImageUrls?.[0] || detail?.referenceImageUrl)?.filter(Boolean)?.map(urls=>  `${MASTERDATA_URL}/get_image/${urls}`) || [];
+    const parentImage = selectedRecord?.parentPartImageUrls?.map(urls=>  `${CSLBASEURL}/get_parentPart_image/${urls}`)?.filter(Boolean) || [];
+    const smallGalleryImages = partThumbs.slice(0, SMALL_PART_LIMIT);
+        const overflowSmallImages =partThumbs?.length > 4 ? [...(parentImage?.slice(0, 2) || []), ...(partThumbs?.slice(4,6) || [])] : parentImage.slice(0,BOTTOM_STRIP_LIMIT);
+    const bottomStripImages = overflowSmallImages;
 
     return (
-        <>
-            <div className="audit-report">
+        <div className="audit-report">
+            <div className="report-main">
                 <div className="report-header">
-                    <h3 style={{ padding: 0, margin: 0 }}>{vendorName}</h3>
-                    <p style={{ padding: 0, margin: 0 }}>Contract-Wise Packed Audit Report</p>
-                    <h4 style={{ padding: 0, margin: 0 }}>
-                        Contract No : {selectedRecord?.parentPartNumber || ""}
-                    </h4>
+                    <div className="header-left">
+                        <h3>{vendorName}</h3>
+                        <p>Contract - Wise Packed Audit Report</p>
+                    </div>
+                    <div className="header-right">
+                        <span>Date - {dayjs(selectedRecord?.date).format("DD-MM-YYYY")}</span>
+                        <span>Contract No : {selectedRecord?.parentPartNumber || ""}</span>
+                    </div>
                 </div>
-                <div className="table-wrapper">
-                    <table>
-                        <TableHead />
-                        <tbody>
-                            {combinedParts?.map((details, index) => (
-                                <tr key={`data-${index}`}>
-                                    <td>{index + 1}</td>
-                                    <td className="left">{details?.partNumber ?? ""}</td>
-                                    <td>{details?.qtyVEWCSL ?? details?.quantity ?? ""}</td>
-                                    <td>{selectedRecord?.weekNo ?? ""}</td>
-                                    <td>{details?.grossWeight ?? "-"}</td>
-                                    <td>{details?.qtyOTISCSL ?? details?.quantity ?? ""}</td>
-                                    <td>{details?.remark ?? ""}</td>
-                                    <td>{details?.hardwareInspectionRemark ?? ""}</td>
-                                    <td>{details?.kittingInspectionRemark ?? ""}</td>
-                                    <td>{details?.finalRemark ?? ""}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                <div className={shouldBreakBeforeBottom ? "bottom-section-break" : ""}>
-                    <BottomSection selectedRecord={selectedRecord} />
+
+                <div className="report-body">
+                    <div className="table-section">
+                        <div className="table-wrapper">
+                            <table>
+                                <TableHead />
+                                <tbody>
+                                    {partDetails?.map((details, index) => (
+                                        <tr key={`data-${index}`}>
+                                            <td>{index + 1}</td>
+                                            <td className="left">{details?.partNumber ?? ""}</td>
+                                            <td>{details?.quantity ?? ""}</td>
+                                            <td className="left">{details?.description ?? ""}</td>
+                                            <td className="left">{details?.remark ?? ""}</td>
+                                            <td>{selectedRecord?.crNumber ?? ""}</td>
+                                            <td className="status-cell">
+                                                {formatStatusLabel(details?.status)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    <BottomImageStrip images={bottomStripImages} />
+                    </div>
+
+                    <ImageGallery images={smallGalleryImages} />
                 </div>
             </div>
-        </>
+            <div className={shouldBreakBeforeBottom ? "bottom-section-break" : ""}>
+                <BottomSection selectedRecord={selectedRecord} />
+            </div>
+        </div>
     );
 };
 
