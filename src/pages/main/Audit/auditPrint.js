@@ -37,7 +37,7 @@ const ImageGallery = ({ images }) => {
                     <img src={item?.url} alt={`part-${idx}`} />
                     {item?.partNumber && (
                         <span className="gallery-part-number-overlay">
-                            {item.partNumber}
+                            {item?.partNumber}
                         </span>
                     )}
                 </div>
@@ -49,7 +49,7 @@ const ImageGallery = ({ images }) => {
 const CapturedCell = ({ item, idx }) => {
     if (!item) return <div className="captured-item captured-empty" key={`bottom-img-${idx}`} />;
     if (item?.group) {
-        const groupItems = item.group?.filter(Boolean) || [];
+        const groupItems = item?.group?.filter(Boolean) || [];
         return (
             <div className="captured-item captured-item-group" key={`bottom-img-${idx}`}>
                 {groupItems?.map((sub, subIdx) => (
@@ -57,7 +57,7 @@ const CapturedCell = ({ item, idx }) => {
                         <img src={sub?.url ?? sub} alt={`overflow-small-${idx}-${subIdx}`} />
                         {sub?.partNumber && (
                             <span className="captured-part-number-overlay">
-                                {sub.partNumber}
+                                {sub?.partNumber}
                             </span>
                         )}
                     </div>
@@ -71,7 +71,7 @@ const CapturedCell = ({ item, idx }) => {
             <img src={item?.url ?? item} alt={`overflow-small-${idx}`} />
             {item?.partNumber && (
                 <span className="captured-part-number-overlay">
-                    {item.partNumber}
+                    {item?.partNumber}
                 </span>
             )}
         </div>
@@ -147,17 +147,17 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
 
     const parentImage = selectedRecord?.parentPartImageUrls
         ?.map(urls => ({ url: `${CSLBASEURL}/get_parentPart_image/${urls}`, partNumber: "" }))
-        ?.filter(item => item.url) || [];
+        ?.filter(item => item?.url) || [];
 
-    const smallGalleryImages = partThumbs.slice(0, SMALL_PART_LIMIT);
+    const smallGalleryImages = partThumbs?.slice(0, SMALL_PART_LIMIT);
 
     const overflowSmallImages = partThumbs?.length > 4
         ? [
             parentImage?.[0] || null,
             parentImage?.[1] || null,
-            { group: [partThumbs?.[4], partThumbs?.[5]].filter(Boolean) }
+            { group: [partThumbs?.[4], partThumbs?.[5]]?.filter(Boolean) }
         ]
-        : parentImage.slice(0, BOTTOM_STRIP_LIMIT);
+        : parentImage?.slice(0, BOTTOM_STRIP_LIMIT);
 
     const bottomStripImages = overflowSmallImages?.filter(Boolean);
 

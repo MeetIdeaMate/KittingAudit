@@ -345,7 +345,7 @@ export const PartsVerification = () => {
                                     rowKey="partId"
                                     pagination={false}
                                     scroll={{ y: 1 }} 
-                                    rowClassName={(record) => (record.status === "NOT_MATCHED" ? "row-pending" : "")}
+                                    rowClassName={(record) => (record?.status === "NOT_MATCHED" ? "row-pending" : "")}
                                 />
                             </div>
                         </div>
