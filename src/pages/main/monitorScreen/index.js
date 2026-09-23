@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { UiTable, UiSelect } from "../../../components";
 import * as api from "../../../actions";
-import { PARTS_VERIFICATION_URL } from "../../../apiservices/endpoints";
+import { MASTERDATA_URL, PARTS_VERIFICATION_URL } from "../../../apiservices/endpoints";
 import { useQuery } from "@tanstack/react-query";
 import { showToast } from "../../../components/UiToastNotification";
 import "./Styles.scss";
@@ -14,10 +14,18 @@ import {
     ExclamationCircleFilled,
 } from "@ant-design/icons";
 import { monitor_inprogress, monitor_pending, pendingPartsIcon, totalPartsIcon, user_icon, verifyPartsIcon } from "../../../assets/images";
+import { Image } from "antd";
 
 const PARTS_VERIFICATION_SSE_URL = `${PARTS_VERIFICATION_URL}/monitoring/live_stream`;
 const PARTS_VERIFICATION_GET_ALL_URL = `${PARTS_VERIFICATION_URL}/monitoring/get_active_sessions_users_details`;
 const getPartColumns = (onVerifyClick) => [
+     {
+        title: "S.No",
+        dataIndex: "sno",
+        key: "sno",
+        render: (text, record, index) => index + 1,
+        width: 50,
+    },
     {
         title: "Part No",
         dataIndex: "partNumber",
@@ -37,9 +45,9 @@ const getPartColumns = (onVerifyClick) => [
         key: "partImage",
         width: 60,
         render: (capturedImageUrls, record) => {
-            const image = capturedImageUrls?.[0] || record?.referenceImageUrl;
+            const image =  record?.referenceImageUrl || (capturedImageUrls || [])?.[0];
             return image ? (
-                <img src={image} alt="" className="part-thumb" />
+                <Image src={`${MASTERDATA_URL}/get_image/${image}`} alt="" className="part-thumb" />
             ) : (
                 <span className="part-thumb part-thumb--empty">—</span>
             );
@@ -180,7 +188,7 @@ export const PartsVerification = () => {
     const liveUsers = useMemo(() => Object.values(sessions), [sessions]);
     const allUsers = liveUsers.length ? liveUsers : [];
     const userFilterOptions = useMemo(
-        () => allUsers?.map((userDetails) => ({ label: userDetails?.userName, value: userDetails?.userId })),
+        () => allUsers?.map((userDetails) => ({ label: userDetails?.userName, value: userDetails?.userId, key: userDetails?.userId })),
         [allUsers]
     );
 
@@ -240,7 +248,8 @@ export const PartsVerification = () => {
         : visibleUsers;
 
     return (
-        <div className="monitor-screen">
+    <div className="monitor-screen">
+        <div className="monitor-fixed-top">
             <div className="monitor-header">
                 <div className="monitor-header-titles">
                     <h2>Monitor Screen</h2>
@@ -252,7 +261,7 @@ export const PartsVerification = () => {
                         placeholder={'All User'}
                         options={userFilterOptions}
                         value={selectedUsers}
-                        onChange={setSelectedUsers}
+                        onChange={(userdetails) => setSelectedUsers(userdetails)}
                         style={{ minWidth: 180 }}
                     />
                 </div>
@@ -268,84 +277,87 @@ export const PartsVerification = () => {
                 <span className="monitor-active-user-label">Active User</span>
                 <span className="active-user-count">{allUsers?.length || 0}</span>
             </div>
+        </div>
 
-            <div className="parts-verification-board-wrap">
-                <button className="board-nav-arrow board-nav-arrow--prev" onClick={() => scrollBoard(-1)}>
-                    <ArrowLeftOutlined />
-                </button>
-                <div className="parts-verification-board" ref={scrollRef}>
-                    {orderedUsers?.map((session) => {
-                        const isPinned = pinnedUserIds?.includes(session?.userId);
-                        return (
-                            <div className={`user-panel ${isPinned ? "is-pinned" : ""}`} key={session?.userId}>
-                                <div className="user-panel-header">
-                                    <img src={user_icon} alt="" className="user-avatar" />
-                                    <span className="user-name">{session?.userName}</span>
-                                    <div className="user-panel-actions">
-                                        {isPinned && (
-                                            <span className="pinned-badge">
-                                                <PushpinFilled /> Pinned this User
-                                            </span>
-                                        )}
-                                        <button
-                                            type="button"
-                                            className={`pin-toggle ${isPinned ? "is-active" : ""}`}
-                                            onClick={() => handlePinToggle(session?.userId)}
-                                            title={isPinned ? "Unpin user" : "Pin user"}
-                                        >
-                                            {isPinned ? <PushpinFilled /> : <PushpinOutlined />}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div className="user-panel-body">
-                                    <div className="device-row">
-                                        <div className="device-info">
-                                            <div className="device-id">{session?.crNumber}</div>
-                                            <div className="device-model">{session?.fimNumber}</div>
-                                        </div>
-                                        <div className="stat-pills">
-                                            <div className="stat-pill stat-pill--total">
-                                                <span className="stat-pill-label">Total Part Qty</span>
-                                                <span className="stat-pill-value">
-                                                    {session?.totalQty ?? 0}
-                                                    <img className="stat-pill-icon" src={totalPartsIcon} alt="" />
-                                                </span>
-                                            </div>
-                                            <div className="stat-pill stat-pill--verified">
-                                                <span className="stat-pill-label">Verified Qty</span>
-                                                <span className="stat-pill-value">
-                                                    {session?.verifiedQty ?? 0}
-                                                    <img className="stat-pill-icon" src={verifyPartsIcon} alt="" />
-                                                </span>
-                                            </div>
-                                            <div className="stat-pill stat-pill--pending">
-                                                <span className="stat-pill-label">Pending Qty</span>
-                                                <span className="stat-pill-value">
-                                                    {session?.pendingQty ?? 0}
-                                                    <img className="stat-pill-icon" src={pendingPartsIcon} alt="" />
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <UiTable
-                                        className="parts-table"
-                                        columns={getPartColumns((part) => handleVerify(session, part))}
-                                        dataSource={session?.partDetails || []}
-                                        rowKey="partId"
-                                        pagination={false}
-                                        rowClassName={(record) => (record.status === "NOT_MATCHED" ? "row-pending" : "")}
-                                    />
+        <div className="parts-verification-board-wrap">
+            <button className="board-nav-arrow board-nav-arrow--prev" onClick={() => scrollBoard(-1)}>
+                <ArrowLeftOutlined />
+            </button>
+            <div className="parts-verification-board" ref={scrollRef}>
+                {orderedUsers?.map((session) => {
+                    const isPinned = pinnedUserIds?.includes(session?.userId);
+                    return (
+                        <div className={`user-panel ${isPinned ? "is-pinned" : ""}`} key={session?.userId}>
+                            <div className="user-panel-header">
+                                <img src={user_icon} alt="" className="user-avatar" />
+                                <span className="user-name">{session?.userName}</span>
+                                <div className="user-panel-actions">
+                                    {isPinned && (
+                                        <span className="pinned-badge">
+                                            <PushpinFilled /> Pinned this User
+                                        </span>
+                                    )}
+                                    <button
+                                        type="button"
+                                        className={`pin-toggle ${isPinned ? "is-active" : ""}`}
+                                        onClick={() => handlePinToggle(session?.userId)}
+                                        title={isPinned ? "Unpin user" : "Pin user"}
+                                    >
+                                        {isPinned ? <PushpinFilled /> : <PushpinOutlined />}
+                                    </button>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
-                <button className="board-nav-arrow board-nav-arrow--next" onClick={() => scrollBoard(1)}>
-                    <ArrowRightOutlined />
-                </button>
+
+                            <div className="device-row">
+                                <div className="device-info">
+                                    <div className="device-id">{session?.crNumber}</div>
+                                    <div className="device-model">{session?.fimNumber}</div>
+                                </div>
+                                <div className="stat-pills">
+                                    <div className="stat-pill stat-pill--total">
+                                        <span className="stat-pill-label">Total Part Qty</span>
+                                        <span className="stat-pill-value">
+                                            {session?.totalQty ?? 0}
+                                            <img className="stat-pill-icon" src={totalPartsIcon} alt="" />
+                                        </span>
+                                    </div>
+                                    <div className="stat-pill stat-pill--verified">
+                                        <span className="stat-pill-label">Verified Qty</span>
+                                        <span className="stat-pill-value">
+                                            {session?.verifiedQty ?? 0}
+                                            <img className="stat-pill-icon" src={verifyPartsIcon} alt="" />
+                                        </span>
+                                    </div>
+                                    <div className="stat-pill stat-pill--pending">
+                                        <span className="stat-pill-label">Pending Qty</span>
+                                        <span className="stat-pill-value">
+                                            {session?.pendingQty ?? 0}
+                                            <img className="stat-pill-icon" src={pendingPartsIcon} alt="" />
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="user-panel-body">
+                                <UiTable
+                                    className="parts-table"
+                                    columns={getPartColumns((part) => handleVerify(session, part))}
+                                    dataSource={session?.partDetails || []}
+                                    rowKey="partId"
+                                    pagination={false}
+                                    scroll={{ y: 1 }} 
+                                    rowClassName={(record) => (record.status === "NOT_MATCHED" ? "row-pending" : "")}
+                                />
+                            </div>
+                        </div>
+                    );
+                })}
             </div>
+            <button className="board-nav-arrow board-nav-arrow--next" onClick={() => scrollBoard(1)}>
+                <ArrowRightOutlined />
+            </button>
         </div>
-    );
+    </div>
+);
 };
 
 export default PartsVerification;

@@ -32,35 +32,63 @@ const ImageGallery = ({ images }) => {
 
     return (
         <div className="image-gallery">
-            {resolved?.map((src, idx) => (
+            {resolved?.map((item, idx) => (
                 <div className="gallery-item" key={`gallery-${idx}`}>
-                    <img src={src} alt={`part-${idx}`} />
+                    <img src={item?.url} alt={`part-${idx}`} />
+                    {item?.partNumber && (
+                        <span className="gallery-part-number-overlay">
+                            {item.partNumber}
+                        </span>
+                    )}
                 </div>
             ))}
         </div>
     );
 };
+
+const CapturedCell = ({ item, idx }) => {
+    if (!item) return <div className="captured-item captured-empty" key={`bottom-img-${idx}`} />;
+    if (item?.group) {
+        const groupItems = item.group?.filter(Boolean) || [];
+        return (
+            <div className="captured-item captured-item-group" key={`bottom-img-${idx}`}>
+                {groupItems?.map((sub, subIdx) => (
+                    <div className="captured-sub-item" key={`bottom-img-${idx}-${subIdx}`}>
+                        <img src={sub?.url ?? sub} alt={`overflow-small-${idx}-${subIdx}`} />
+                        {sub?.partNumber && (
+                            <span className="captured-part-number-overlay">
+                                {sub.partNumber}
+                            </span>
+                        )}
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
+    return (
+        <div className="captured-item" key={`bottom-img-${idx}`}>
+            <img src={item?.url ?? item} alt={`overflow-small-${idx}`} />
+            {item?.partNumber && (
+                <span className="captured-part-number-overlay">
+                    {item.partNumber}
+                </span>
+            )}
+        </div>
+    );
+};
+
 const BottomImageStrip = ({ images }) => {
     const resolved = (images || [])?.filter(Boolean);
-
     if (!resolved?.length) return null;
-
-    const columns = Math.max(3, resolved?.length);
-
+    const columns = 3;
     return (
         <div
             className="captured-strip"
-            style={{
-                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`
-            }}
+            style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}
         >
-            {resolved?.map((src, idx) => (
-                <div
-                    className="captured-item"
-                    key={`bottom-img-${idx}`}
-                >
-                    <img src={src} alt={`overflow-small-${idx}`} />
-                </div>
+            {resolved?.map((item, idx) => (
+                <CapturedCell item={item} idx={idx} key={`bottom-img-${idx}`} />
             ))}
         </div>
     );
@@ -68,28 +96,28 @@ const BottomImageStrip = ({ images }) => {
 
 const BottomSection = ({ selectedRecord }) => (
     <div className="footer-fixed">
-        <div className="footer-meta-row">
-            <span>
-                <b>Contract Packed Date</b>
-                {selectedRecord?.packingDate
-                    ? dayjs(selectedRecord?.packingDate).format("DD-MM-YYYY")
-                    : dayjs().format("DD-MM-YYYY")}
-            </span>
-            <span>
-                <b>No of Box</b>
-                {selectedRecord?.noOfBox ?? ""}
-            </span>
-            <span>
-                <b>Material Condition</b>
-                {selectedRecord?.materialCondition ?? ""}
-            </span>
+        <div>
+            <div className="footer-meta-row">
+                <span>
+                    <b>Contract Packed Date</b>
+                    {selectedRecord?.packingDate
+                        ? dayjs(selectedRecord?.packingDate).format("DD-MM-YYYY")
+                        : dayjs().format("DD-MM-YYYY")}
+                </span>
+                <span>
+                    <b>No of Box</b>
+                    {selectedRecord?.noOfBox ?? ""}
+                </span>
+                <span>
+                    <b>Material Condition</b>
+                    {selectedRecord?.materialCondition ?? ""}
+                </span>
+            </div>
+            <div className="footer-remark-row">
+                <b>Remarks</b>
+                {selectedRecord?.remark ?? ""}
+            </div>
         </div>
-
-        <div className="footer-remark-row">
-            <b>Remarks</b>
-            {selectedRecord?.remark ?? ""}
-        </div>
-
         <div className="footer-signatures">
             <div className="sig-block">
                 <span className="sig-line"></span>
@@ -109,12 +137,29 @@ const BOTTOM_STRIP_LIMIT = 3;
 const AuditReport = ({ selectedRecord, vendorName }) => {
     const partDetails = selectedRecord?.partDetails ?? [];
     const totalRowCount = partDetails?.length;
-    const shouldBreakBeforeBottom = totalRowCount > 18;
-    const partThumbs = partDetails?.map(detail => detail?.capturedImageUrls?.[0] || detail?.referenceImageUrl)?.filter(Boolean)?.map(urls=>  `${MASTERDATA_URL}/get_image/${urls}`) || [];
-    const parentImage = selectedRecord?.parentPartImageUrls?.map(urls=>  `${CSLBASEURL}/get_parentPart_image/${urls}`)?.filter(Boolean) || [];
+    const shouldBreakBeforeBottom = totalRowCount > 26;
+
+    const partThumbs = partDetails?.map(detail => {
+        const url = detail?.capturedImageUrls?.[0] || detail?.referenceImageUrl;
+        if (!url) return null;
+        return { url: `${MASTERDATA_URL}/get_image/${url}`, partNumber: detail?.partNumber ?? "" };
+    })?.filter(Boolean) || [];
+
+    const parentImage = selectedRecord?.parentPartImageUrls
+        ?.map(urls => ({ url: `${CSLBASEURL}/get_parentPart_image/${urls}`, partNumber: "" }))
+        ?.filter(item => item.url) || [];
+
     const smallGalleryImages = partThumbs.slice(0, SMALL_PART_LIMIT);
-        const overflowSmallImages =partThumbs?.length > 4 ? [...(parentImage?.slice(0, 2) || []), ...(partThumbs?.slice(4,6) || [])] : parentImage.slice(0,BOTTOM_STRIP_LIMIT);
-    const bottomStripImages = overflowSmallImages;
+
+    const overflowSmallImages = partThumbs?.length > 4
+        ? [
+            parentImage?.[0] || null,
+            parentImage?.[1] || null,
+            { group: [partThumbs?.[4], partThumbs?.[5]].filter(Boolean) }
+        ]
+        : parentImage.slice(0, BOTTOM_STRIP_LIMIT);
+
+    const bottomStripImages = overflowSmallImages?.filter(Boolean);
 
     return (
         <div className="audit-report">
@@ -129,7 +174,6 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                         <span>Contract No : {selectedRecord?.parentPartNumber || ""}</span>
                     </div>
                 </div>
-
                 <div className="report-body">
                     <div className="table-section">
                         <div className="table-wrapper">
@@ -143,7 +187,7 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                                             <td>{details?.quantity ?? ""}</td>
                                             <td className="left">{details?.description ?? ""}</td>
                                             <td className="left">{details?.remark ?? ""}</td>
-                                            <td>{selectedRecord?.crNumber ?? ""}</td>
+                                            <td></td>
                                             <td className="status-cell">
                                                 {formatStatusLabel(details?.status)}
                                             </td>
@@ -152,9 +196,8 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
                                 </tbody>
                             </table>
                         </div>
-                    <BottomImageStrip images={bottomStripImages} />
+                        <BottomImageStrip images={bottomStripImages} />
                     </div>
-
                     <ImageGallery images={smallGalleryImages} />
                 </div>
             </div>

@@ -203,7 +203,7 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                         >
                             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                                 <div style={{ display: "flex", gap: "10px" }}>
-                                    <Image
+                                   { part?.imageUrl ? <Image
                                         src={`${MASTERDATA_URL}/get_image/${part?.imageUrl}`}
                                         alt={part?.partNumber}
                                         style={{
@@ -212,7 +212,7 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                                             borderRadius: "6px",
                                             background: "#f5f5f5",
                                         }}
-                                    />
+                                    />:<p>-</p>}
                                     <div>
                                         <div style={{ fontWeight: 600 }}>{part?.partName}</div>
                                         <div style={{ fontSize: "12px", color: "#888" }}>{part?.subtitle}</div>
@@ -236,8 +236,8 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                             <div style={{ flex: 1 }}>
                                 <UiTextBox
                                     name="partDescription"
-                                    label="Part Name"
-                                    placeholder="Part Name"
+                                    label="Part No"
+                                    placeholder="Part No"
                                     value={partNumber}
                                     onChange={(e) => handleChange(e.target.value, "partNumber")}
                                 />
@@ -286,16 +286,17 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                                 >
                                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                                         <div style={{ display: "flex", gap: "10px" }}>
-                                            <Image
-                                                src={`${MASTERDATA_URL}/get_image/${part?.imageUrl}`}
-                                                alt={part?.partNumber}
-                                                style={{
-                                                    width: "50px",
-                                                    height: "50px",
+                                           {part?.imageUrl ? 
+                                                <Image
+                                                    src={`${MASTERDATA_URL}/get_image/${part?.imageUrl}`}
+                                                    alt={part?.partNumber}
+                                                    style={{
+                                                        width: "50px",
+                                                        height: "50px",
                                                     borderRadius: "6px",
                                                     background: "#f5f5f5",
                                                 }}
-                                            />
+                                            />:<p>-</p>}
                                             <div>
                                                 <div style={{ fontWeight: 600 }}>{part?.partName}</div>
                                                 <div style={{ fontSize: "12px", color: "#888" }}>{part?.subtitle}</div>

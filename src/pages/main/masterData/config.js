@@ -23,7 +23,7 @@ export const PART_COLUMN_HEADER = (handleViewPart, handleStatusSwitchClick) => [
         title: "Part Image",
         dataIndex: "partImageDetails",
         key: "partImageDetails",
-        render: (image) => <Image src={`${MASTERDATA_URL}/get_image/${image?.imageUrl || image?.[0]?.imageUrl}`} alt="part" style={{ width: "50px", height: "50px" }} />,
+        render: (image) =>(image?.imageUrl || image?.[0]?.imageUrl)? <Image src={`${MASTERDATA_URL}/get_image/${image?.imageUrl || image?.[0]?.imageUrl}`} alt="part" style={{ width: "50px", height: "50px" }} /> : "-",
     },
     {
         title: "Similar Parts",
