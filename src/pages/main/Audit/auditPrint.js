@@ -15,7 +15,7 @@ const formatStatusLabel = (status) => {
 const TableHead = () => (
     <thead>
         <tr>
-            <th style={{ width: "6%" }}>No</th>
+            <th style={{ width: "6%" }}>S.No</th>
             <th style={{ width: "14%" }}>Bill of Material</th>
             <th style={{ width: "10%" }}>Qty as per VEW CSL</th>
             <th style={{ width: "31%" }}>Part Description</th>
@@ -99,29 +99,29 @@ const BottomSection = ({ selectedRecord }) => (
         <div>
             <div className="footer-meta-row">
                 <span>
-                    <b>Contract Packed Date</b>
+                    <b>Contract Packed Date: </b>
                     {selectedRecord?.packingDate
                         ? dayjs(selectedRecord?.packingDate).format("DD-MM-YYYY")
                         : dayjs().format("DD-MM-YYYY")}
                 </span>
                 <span>
-                    <b>No of Box</b>
+                    <b>No of Box: </b>
                     {selectedRecord?.noOfBox ?? ""}
                 </span>
                 <span>
-                    <b>Material Condition</b>
+                    <b>Material Condition: </b>
                     {selectedRecord?.materialCondition ?? ""}
                 </span>
             </div>
             <div className="footer-remark-row">
-                <b>Remarks</b>
+                <b>Remarks: </b>
                 {selectedRecord?.remark ?? ""}
             </div>
         </div>
         <div className="footer-signatures">
             <div className="sig-block">
                 <span className="sig-line"></span>
-                <span className="sig-label">Checked By</span>
+                <span className="sig-label">Checked By </span>
             </div>
             <div className="sig-block">
                 <span className="sig-line"></span>
