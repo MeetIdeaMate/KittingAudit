@@ -267,6 +267,7 @@ const PartDrawer = ({ isOpenDrawer, mode, handleClose, record, onSuccess }) => {
                         <UiSelect
                             mode="multiple"
                             isStyle={true}
+                            filterOption={(input, option) =>option?.label?.toLowerCase()?.includes(input?.toLowerCase())}
                             placeholder="Search part name"
                             value={similarParts?.map((partDetails) => partDetails?.partId) || []}
                             options={similarPartsList?.filter(partFill => (formState?.partId ? partFill?.partId !== formState?.partId : true) && partFill?.status === 'ACTIVE')?.map((p) => ({ label: p?.partNumber, value: p?.partId, key: p?.partId }))}
