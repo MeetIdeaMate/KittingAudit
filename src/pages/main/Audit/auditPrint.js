@@ -140,9 +140,9 @@ const AuditReport = ({ selectedRecord, vendorName }) => {
     const shouldBreakBeforeBottom = totalRowCount > 26;
 
     const partThumbs = partDetails?.map(detail => {
-        const url = detail?.capturedImageUrls?.[0] || detail?.referenceImageUrl;
+        const url = detail?.capturedImageUrls?.[0] ? `${CSLBASEURL}/get_scanned_image/${detail?.capturedImageUrls?.[0]}` : detail?.referenceImageUrl ? `${MASTERDATA_URL}/get_image/${detail?.referenceImageUrl}` : "";
         if (!url) return null;
-        return { url: `${MASTERDATA_URL}/get_image/${url}`, partNumber: detail?.partNumber ?? "" };
+        return { url: url, partNumber: detail?.partNumber ?? "" };
     })?.filter(Boolean) || [];
 
     const parentImage = selectedRecord?.parentPartImageUrls

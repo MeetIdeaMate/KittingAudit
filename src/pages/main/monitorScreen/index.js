@@ -18,7 +18,7 @@ import { Image } from "antd";
 
 const PARTS_VERIFICATION_SSE_URL = `${PARTS_VERIFICATION_URL}/monitoring/live_stream`;
 const PARTS_VERIFICATION_GET_ALL_URL = `${PARTS_VERIFICATION_URL}/monitoring/get_active_sessions_users_details`;
-const getPartColumns = (onVerifyClick) => [
+const getPartColumns = () => [
      {
         title: "S.No",
         dataIndex: "sno",
@@ -72,7 +72,6 @@ const getPartColumns = (onVerifyClick) => [
                 <button
                     type="button"
                     className={`verify-toggle ${isVerified ? "is-verified" : "is-pending"}`}
-                    onClick={() => onVerifyClick(record)}
                     disabled={isVerified}
                 >
                     <span className="verify-toggle-qty">
@@ -197,44 +196,6 @@ export const PartsVerification = () => {
             ? allUsers?.filter((userDetails) => selectedUsers === userDetails?.userId)
             : allUsers;
 
-    const verifyPart = (payload) => api.post(`${PARTS_VERIFICATION_URL}/verify`, payload);
-
-    const handleVerify = (session, part) => {
-        if (part.status === "VERIFIED") return;
-        queueVerify(session, part);
-    };
-
-    const queueVerify = async (session, part) => {
-        try {
-            const response = await verifyPart({
-                cslDetailInfoId: session?.cslDetailInfoId,
-                partId: part?.partId,
-            });
-            if (response?.statusCode === 200) {
-                showToast.success("Success", "Part verified");
-                setSessions((prev) => {
-                    const current = prev?.[session.userId];
-                    if (!current) return prev;
-                    return {
-                        ...prev,
-                        [session.userId]: {
-                            ...current,
-                            partDetails: current?.partDetails?.map((paetsRecord) =>
-                                paetsRecord.partId === part?.partId
-                                    ? { ...paetsRecord, status: "VERIFIED", verifiedQty: paetsRecord?.quantity }
-                                    : paetsRecord
-                            ),
-                        },
-                    };
-                });
-            } else {
-                showToast.error("Error", `${response?.error?.message}`);
-            }
-        } catch {
-            showToast.error("Error", "Could not verify part");
-        }
-    };
-
     const handlePinToggle = (userId) => {
         setPinnedUserIds((prev) =>
             prev.includes(userId) ? prev?.filter((id) => id !== userId) : [...prev, userId]
@@ -340,7 +301,7 @@ export const PartsVerification = () => {
                             <div className="user-panel-body">
                                 <UiTable
                                     className="parts-table"
-                                    columns={getPartColumns((part) => handleVerify(session, part))}
+                                    columns={getPartColumns()}
                                     dataSource={session?.partDetails || []}
                                     rowKey="partId"
                                     pagination={false}
